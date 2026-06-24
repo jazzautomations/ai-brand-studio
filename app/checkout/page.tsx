@@ -15,8 +15,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export default function CheckoutPage() {
-  const store = getStore();
-  useStore();
   const router = useRouter();
   const [selected, setSelected] = useState<Tier | null>(null);
   const [email, setEmail] = useState("");
@@ -31,7 +29,7 @@ export default function CheckoutPage() {
     setProcessing(true);
     // Mock payment — production: redirect to Stripe Checkout, then webhook
     // creates the order. Here we create it directly (status: pending_call).
-    const order = store.createOrder({ tier: selected, email, name: name || undefined, country });
+    const order = getStore().createOrder({ tier: selected, email, name: name || undefined, country });
     setTimeout(() => {
       router.push(`/call?order=${order.id}`);
     }, 1100);

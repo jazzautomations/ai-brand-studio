@@ -87,6 +87,12 @@ class Store {
   /* ---------- lifecycle ---------- */
 
   init() {
+    this.hydrate();
+  }
+
+  /** SSR-safe eager hydration. Called from the hook's effect, never mutates
+   *  state mid-render on the client. On the server it is a no-op. */
+  hydrate() {
     if (this.loaded || typeof window === "undefined") return;
     this.loaded = true;
     this.load();
@@ -122,6 +128,12 @@ class Store {
   }
 
   getSnapshot = (): StoreState => this.state;
+
+  /** Stable empty snapshot used for SSR + the client's first paint so the
+   *  hydrated markup matches the server markup. The real (loaded) state is
+   *  swapped in after mount via getSnapshot, with no hydration exception. */
+  private emptyServer: StoreState = emptyState();
+  getServerSnapshot = (): StoreState => this.emptyServer;
 
   /* ---------- ticker ---------- */
 
@@ -680,4 +692,13 @@ let _store: Store | null = null;
 export function getStore(): Store {
   if (!_store) _store = new Store();
   return _store;
+}
+
+/**
+ * Eager client-side hydration. Runs ONCE when this module is first imported
+ * in the browser — before any React render — so the snapshot is stable by
+ * the time useSyncExternalStore reads it. No-op on the server.
+ */
+if (typeof window !== "undefined") {
+  getStore().hydrate();
 }
