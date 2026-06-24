@@ -14,11 +14,14 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 function RevisionsInner() {
-  const { id, order } = useOrderFromQuery();
+  const { id, order, ready } = useOrderFromQuery();
   const [type, setType] = useState<"adjustment" | "structural">("adjustment");
   const [text, setText] = useState("");
   const [lastRevId, setLastRevId] = useState<string | null>(null);
 
+  if (!ready) {
+    return <div className="grid min-h-[60vh] place-items-center text-muted-foreground">Loading…</div>;
+  }
   if (!id || !order) {
     return (
       <div className="mx-auto max-w-md py-20 text-center text-muted-foreground">

@@ -171,7 +171,7 @@ export interface Order {
 export interface Deliverable {
   id: string;
   orderId: string;
-  type: "brand_guide_pdf" | "context_package_zip";
+  type: "brand_guide_pdf" | "context_package_zip" | "market_research_doc" | "strategy_doc";
   fileUrl: string;
   version: number;
   createdAt: string;

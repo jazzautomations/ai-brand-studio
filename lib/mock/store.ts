@@ -258,6 +258,22 @@ class Store {
         version: 1,
         createdAt: new Date().toISOString(),
       });
+      this.state.deliverables.push({
+        id: uid("del"),
+        orderId,
+        type: "market_research_doc",
+        fileUrl: "#market-research.html",
+        version: 1,
+        createdAt: new Date().toISOString(),
+      });
+      this.state.deliverables.push({
+        id: uid("del"),
+        orderId,
+        type: "strategy_doc",
+        fileUrl: "#brand-strategy.html",
+        version: 1,
+        createdAt: new Date().toISOString(),
+      });
     }
     delete this.state.pipeline[orderId];
   }

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import {
   Search, Compass, MessageSquare, Palette, ShieldCheck,
   Phone, ArrowRight, Mic, Sparkles, CheckCircle2, Loader2,
+  FileBox, Boxes,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
@@ -36,9 +37,30 @@ const TRACKER = [
   { key: "qa_review", label: "QA review", icon: ShieldCheck, desc: "4-layer quality validation" },
 ];
 
-function ProgressInner() {
-  const { id, order } = useOrderFromQuery();
+const FINALIZE_TRACKER = [
+  { key: "compiler", label: "Compiler", icon: FileBox, desc: "Assembling the brand guide document" },
+  { key: "packager", label: "Packager", icon: Boxes, desc: "Building tokens, DESIGN.md & document set" },
+];
 
+const AGENT_LABELS: Record<string, string> = {
+  voice_intake: "Voice Intake",
+  research: "Research Agent",
+  strategy: "Strategy Agent",
+  verbal: "Verbal Identity Agent",
+  visual: "Visual Agent",
+  qa_review: "QA Review Agent",
+  creative_director: "Creative Director",
+  auto_apply: "Auto-Apply Agent",
+  compiler: "Compiler Agent",
+  packager: "Packager Agent",
+};
+
+function ProgressInner() {
+  const { id, order, ready } = useOrderFromQuery();
+
+  if (!ready) {
+    return <div className="grid min-h-[60vh] place-items-center text-muted-foreground">Loading…</div>;
+  }
   if (!id) {
     return <NoOrder msg="No project selected." />;
   }
@@ -52,13 +74,16 @@ function ProgressInner() {
   const stageState = (key: string) => {
     const run = runs.find((r) => r.agentName === key);
     if (!run) return "pending";
-    return run.status; // running | done | queued
+    return run.status;
   };
 
   const isCallStage = ["pending_call", "call_in_progress", "call_completed"].includes(order.status);
   const pipelineStarted = !isCallStage;
+  const finalizeStarted = ["final_compile", "delivered"].includes(order.status);
   const readyForReview = order.status === "awaiting_client_review";
   const delivered = order.status === "delivered";
+  const progressRuns = runs.filter((r) => ["voice_intake", "research", "strategy", "verbal", "visual", "qa_review"].includes(r.agentName));
+  const finalizeRuns = runs.filter((r) => ["compiler", "packager"].includes(r.agentName));
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -165,6 +190,68 @@ function ProgressInner() {
           </ol>
         </Card>
       )}
+
+      {finalizeStarted && (
+        <Card className="p-6">
+          <div className="mb-5 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <FileBox className="h-4 w-4 text-primary" /> Delivery assembly
+          </div>
+          <ol className="relative space-y-5 border-l border-border pl-6">
+            {FINALIZE_TRACKER.map((s) => {
+              const run = runs.find((r) => r.agentName === s.key);
+              const done = run?.status === "done";
+              const active = run?.status === "running";
+              return (
+                <li key={s.key} className="relative">
+                  <span
+                    className={cn(
+                      "absolute -left-[31px] grid h-6 w-6 place-items-center rounded-full border",
+                      done && "border-primary bg-primary text-primary-foreground",
+                      active && "border-primary bg-primary/15 text-primary",
+                      !done && !active && "border-border bg-card text-muted-foreground",
+                    )}
+                  >
+                    {done ? <CheckCircle2 className="h-3.5 w-3.5" /> : active ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <s.icon className="h-3 w-3" />}
+                  </span>
+                  <div className={cn("transition", done || active ? "opacity-100" : "opacity-50")}>
+                    <div className="flex items-center gap-2 text-sm font-medium">
+                      {s.label}
+                      {active && <span className="text-xs text-primary">running…</span>}
+                      {done && <span className="text-xs text-muted-foreground">done</span>}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{s.desc}</div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </Card>
+      )}
+
+      <Card className="p-6">
+        <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+          <Sparkles className="h-4 w-4 text-primary" /> Agent activity log
+        </div>
+        <div className="space-y-3">
+          {(finalizeRuns.length ? [...progressRuns, ...finalizeRuns] : progressRuns).length ? (
+            (finalizeRuns.length ? [...progressRuns, ...finalizeRuns] : progressRuns).map((run) => (
+              <div key={run.id} className="rounded-lg border border-border bg-card/50 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="text-sm font-medium">{AGENT_LABELS[run.agentName] || run.agentName}</div>
+                  <Badge variant={run.status === "done" ? "success" : run.status === "running" ? "accent" : "outline"}>
+                    {run.status}
+                  </Badge>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {run.output?.note || "Working…"}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-muted-foreground">No agent logs yet.</p>
+          )}
+        </div>
+      </Card>
 
       {/* ready → directions CTA */}
       {readyForReview && (

@@ -4,13 +4,14 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft, FileText, Package, Download, Loader2, CheckCircle2,
-  Sparkles, Image as ImageIcon, RefreshCw,
+  Sparkles, Image as ImageIcon, RefreshCw, Search, Compass,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
 import { TIERS } from "@/lib/tiers";
 import { STUDIO_NAME } from "@/lib/studio";
-import { buildPackageFiles, buildBrandGuideHtml, mockStrategy, mockVerbal } from "@/lib/mock/package";
+import { buildPackageFiles, buildBrandGuideHtml, buildMarketResearchHtml, buildStrategyHtml, mockStrategy, mockVerbal } from "@/lib/mock/package";
+import { competitorResearchFor } from "@/lib/mock/transcript";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,10 +28,13 @@ function triggerDownload(filename: string, blob: Blob) {
 }
 
 function DeliveryInner() {
-  const { id, order } = useOrderFromQuery();
+  const { id, order, ready } = useOrderFromQuery();
   const [zipping, setZipping] = useState(false);
   const [done, setDone] = useState<string | null>(null);
 
+  if (!ready) {
+    return <div className="grid min-h-[60vh] place-items-center text-muted-foreground">Loading…</div>;
+  }
   if (!id || !order) {
     return (
       <div className="mx-auto max-w-md py-20 text-center text-muted-foreground">
@@ -42,6 +46,8 @@ function DeliveryInner() {
   const tier = TIERS.find((t) => t.id === order.tier);
   const brief = getStore().getBrief(id);
   const sel = getStore().getSelectedDirection(id);
+  const session = getStore().getVoiceSession(id);
+  const competitors = session?.competitorResearch?.length ? session.competitorResearch : competitorResearchFor(brief?.competitors || []);
   const slug = (brief?.businessName || "brand").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
   if (order.status !== "delivered" || !brief || !sel) {
@@ -79,6 +85,22 @@ function DeliveryInner() {
     setDone("guide");
   }
 
+  function downloadMarketResearch() {
+    if (!brief) return;
+    const html = buildMarketResearchHtml(brief, competitors);
+    triggerDownload(`market-research-${slug}.html`, new Blob([html], { type: "text/html" }));
+    setDone("research");
+  }
+
+  function downloadStrategy() {
+    if (!brief) return;
+    const strategy = mockStrategy(brief);
+    const verbal = mockVerbal(brief);
+    const html = buildStrategyHtml(brief, strategy, verbal);
+    triggerDownload(`brand-strategy-${slug}.html`, new Blob([html], { type: "text/html" }));
+    setDone("strategy");
+  }
+
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <div>
@@ -114,6 +136,30 @@ function DeliveryInner() {
           </p>
           <Button className="mt-5 gap-2" onClick={downloadZip} disabled={zipping}>
             {zipping ? <><Loader2 className="h-4 w-4 animate-spin" /> Packaging…</> : done === "zip" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download .zip</>}
+          </Button>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="flex flex-col p-6">
+          <Search className="h-8 w-8 text-primary" />
+          <h3 className="mt-4 text-lg font-medium">Market Research</h3>
+          <p className="mt-1 flex-1 text-sm text-muted-foreground">
+            Competitive landscape, positioning map, and the market gap your brand is built to own. Standalone document — the thinking behind every visual choice.
+          </p>
+          <Button className="mt-5 gap-2" variant="outline" onClick={downloadMarketResearch}>
+            {done === "research" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download research</>}
+          </Button>
+        </Card>
+
+        <Card className="flex flex-col p-6">
+          <Compass className="h-8 w-8 text-primary" />
+          <h3 className="mt-4 text-lg font-medium">Brand Strategy</h3>
+          <p className="mt-1 flex-1 text-sm text-muted-foreground">
+            Archetype, Golden Why, positioning statement, voice &amp; tone, messaging pillars, and tagline candidates — the strategic foundation in one document.
+          </p>
+          <Button className="mt-5 gap-2" variant="outline" onClick={downloadStrategy}>
+            {done === "strategy" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download strategy</>}
           </Button>
         </Card>
       </div>

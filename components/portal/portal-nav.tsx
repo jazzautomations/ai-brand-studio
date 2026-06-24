@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { TIERS } from "@/lib/tiers";
 import { getStore } from "@/lib/mock/store";
-import { useStore } from "@/lib/mock/use-store";
+import { useStoreReady } from "@/lib/mock/use-store";
 import { STUDIO_NAME } from "@/lib/studio";
 import { cn } from "@/lib/utils";
 
@@ -22,12 +22,15 @@ const NAV = [
 function NavInner() {
   const sp = useSearchParams();
   const pathname = usePathname();
-  useStore(); // re-render on store changes
+  const ready = useStoreReady();
   const orderId = sp.get("order") || "";
   const order = orderId ? getStore().getOrder(orderId) : undefined;
   const tier = TIERS.find((t) => t.id === order?.tier);
   const brief = order ? getStore().getBrief(order.id) : undefined;
 
+  if (!ready) {
+    return <div className="h-[57px] border-b border-border bg-card/40" />;
+  }
   if (!order) {
     return (
       <div className="border-b border-border bg-card/50 px-4 py-3 text-sm text-muted-foreground">

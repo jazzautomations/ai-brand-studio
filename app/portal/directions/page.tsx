@@ -16,9 +16,12 @@ import type { Direction } from "@/lib/data/types";
 
 function DirectionsInner() {
   const router = useRouter();
-  const { id, order } = useOrderFromQuery();
+  const { id, order, ready } = useOrderFromQuery();
   const [selected, setSelected] = useState<string | null>(null);
 
+  if (!ready) {
+    return <div className="grid min-h-[60vh] place-items-center text-muted-foreground">Loading…</div>;
+  }
   if (!id || !order) {
     return (
       <div className="mx-auto max-w-md py-20 text-center text-muted-foreground">
@@ -29,10 +32,10 @@ function DirectionsInner() {
 
   const tier = TIERS.find((t) => t.id === order.tier);
   const directions = getStore().getDirections(id);
-  const ready = ["awaiting_client_review", "revision", "final_compile", "delivered"].includes(order.status);
   const alreadySelected = getStore().getSelectedDirection(id);
+  const directionsUnlocked = ["awaiting_client_review", "revision", "final_compile", "delivered"].includes(order.status);
 
-  if (!ready) {
+  if (!directionsUnlocked) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
         <p className="text-muted-foreground">Your directions aren't ready yet.</p>

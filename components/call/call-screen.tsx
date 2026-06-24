@@ -15,6 +15,7 @@ import {
 } from "@/lib/mock/transcript";
 import type { VoiceTurn } from "@/lib/data/types";
 import { getStore } from "@/lib/mock/store";
+import { useStoreReady } from "@/lib/mock/use-store";
 import { Waveform } from "@/components/call/waveform";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,7 @@ type Event =
 
 export function CallScreen({ orderId }: { orderId: string }) {
   const router = useRouter();
+  const ready = useStoreReady();
   const store = getStore();
   const order = store.getOrder(orderId);
   const tier = TIERS.find((t) => t.id === order?.tier) ?? TIERS[1];
@@ -63,14 +65,21 @@ export function CallScreen({ orderId }: { orderId: string }) {
     setTranscript((t) => [...t, { id: `${t.length}-${Date.now()}`, role, text, ts: Date.now() }]);
   };
 
+  // Keep the countdown in sync with the resolved tier. On a fresh page load
+  // the order (and thus tier) isn't known until the store hydrates, so the
+  // initial useState value may use the fallback tier — reseed once resolved.
+  useEffect(() => {
+    setSecondsLeft(tier.callMinutes * 60);
+  }, [tier.callMinutes]);
+
   // connect → call
   useEffect(() => {
-    if (!order) return;
+    if (!ready || !order) return;
     store.startVoiceSession(orderId);
     const t = setTimeout(() => setPhase("call"), 1600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId]);
+  }, [orderId, ready]);
 
   // typing engine
   useEffect(() => {
@@ -135,6 +144,19 @@ export function CallScreen({ orderId }: { orderId: string }) {
     store.completeVoiceSession(orderId, transcript, answers);
     setPhase("building");
     setTimeout(() => router.push(`/portal/progress?order=${orderId}`), 3200);
+  }
+
+  if (!ready) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background">
+        <div className="text-center">
+          <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-primary/10">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+          <p className="text-lg font-medium">Loading your call…</p>
+        </div>
+      </div>
+    );
   }
 
   if (!order) {

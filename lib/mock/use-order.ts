@@ -2,13 +2,15 @@
 
 import { useSearchParams } from "next/navigation";
 import { getStore } from "@/lib/mock/store";
-import { useStore } from "@/lib/mock/use-store";
+import { useStoreReady } from "@/lib/mock/use-store";
 
-/** Reads `?order=` from the URL and returns the matching order reactively. */
+/** Reads `?order=` from the URL and returns the matching order reactively.
+ *  `ready` is false until the store has hydrated persisted state, so callers
+ *  can gate on it to avoid a "not found" flash before localStorage loads. */
 export function useOrderFromQuery() {
   const sp = useSearchParams();
-  useStore(); // subscribe to store changes
+  const ready = useStoreReady();
   const id = sp.get("order") || "";
   const order = id ? getStore().getOrder(id) : undefined;
-  return { id, order };
+  return { id, order, ready };
 }
