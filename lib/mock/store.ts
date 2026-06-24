@@ -80,6 +80,11 @@ function emptyState(): StoreState {
 
 class Store {
   private state: StoreState = emptyState();
+  // Stable snapshot ref used by useSyncExternalStore. A fresh shallow copy
+  // is produced on every emit() so React detects the change and re-renders.
+  // Mutable in-place edits to `state` would otherwise keep the same ref and
+  // silently skip re-renders.
+  private snapshot: StoreState = emptyState();
   private listeners = new Set<Listener>();
   private ticker: ReturnType<typeof setInterval> | null = null;
   private loaded = false;
@@ -90,13 +95,21 @@ class Store {
     this.hydrate();
   }
 
-  /** SSR-safe eager hydration. Called from the hook's effect, never mutates
-   *  state mid-render on the client. On the server it is a no-op. */
+  ensureLoaded() {
+    if (!this.loaded) this.hydrate();
+  }
+
+  /** SSR-safe hydration. Called from the hook's effect (post-mount), never
+   *  mutates state mid-render. On the server it is a no-op. Loads persisted
+   *  state from localStorage, then publishes a fresh snapshot so subscribers
+   *  re-render with the loaded data. */
   hydrate() {
     if (this.loaded || typeof window === "undefined") return;
     this.loaded = true;
     this.load();
+    this.snapshot = { ...this.state };
     this.startTicker();
+    this.emit();
   }
 
   private load() {
@@ -118,16 +131,21 @@ class Store {
   }
 
   private emit() {
+    // Produce a new top-level reference so useSyncExternalStore detects the
+    // change (in-place mutations to `state` keep the same ref otherwise).
+    this.snapshot = { ...this.state };
     this.persist();
     this.listeners.forEach((l) => l());
   }
 
-  subscribe(l: Listener): () => void {
+  subscribe = (l: Listener): (() => void) => {
     this.listeners.add(l);
-    return () => this.listeners.delete(l);
+    return () => {
+      this.listeners.delete(l);
+    };
   }
 
-  getSnapshot = (): StoreState => this.state;
+  getSnapshot = (): StoreState => this.snapshot;
 
   /** Stable empty snapshot used for SSR + the client's first paint so the
    *  hydrated markup matches the server markup. The real (loaded) state is
@@ -262,6 +280,7 @@ class Store {
   /* ---------- auth (mock magic link) ---------- */
 
   loginOrSignup(email: string, name?: string): Client {
+    this.ensureLoaded();
     email = email.trim().toLowerCase();
     let client = this.state.clients.find((c) => c.email === email);
     if (!client) {
@@ -694,11 +713,8 @@ export function getStore(): Store {
   return _store;
 }
 
-/**
- * Eager client-side hydration. Runs ONCE when this module is first imported
- * in the browser — before any React render — so the snapshot is stable by
- * the time useSyncExternalStore reads it. No-op on the server.
- */
-if (typeof window !== "undefined") {
-  getStore().hydrate();
-}
+// NOTE: hydration happens lazily inside the useStore() hook's effect
+// (see lib/mock/use-store.ts). We deliberately do NOT hydrate eagerly at
+// module load time — doing so loads localStorage before React's first
+// client render, which makes the client snapshot diverge from the empty
+// SSR snapshot and throws a hydration exception on store-backed pages.

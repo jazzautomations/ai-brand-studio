@@ -7,7 +7,6 @@ import { ArrowLeft, ShieldCheck, Lock } from "lucide-react";
 import { STUDIO_NAME } from "@/lib/studio";
 import { TIERS, type Tier } from "@/lib/tiers";
 import { getStore } from "@/lib/mock/store";
-import { useStore } from "@/lib/mock/use-store";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +18,6 @@ export default function CheckoutPage() {
   const [selected, setSelected] = useState<Tier | null>(null);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
   const [country, setCountry] = useState("US");
   const [processing, setProcessing] = useState(false);
 
@@ -27,12 +25,8 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!selected || !email) return;
     setProcessing(true);
-    // Mock payment — production: redirect to Stripe Checkout, then webhook
-    // creates the order. Here we create it directly (status: pending_call).
     const order = getStore().createOrder({ tier: selected, email, name: name || undefined, country });
-    setTimeout(() => {
-      router.push(`/call?order=${order.id}`);
-    }, 1100);
+    setTimeout(() => router.push(`/call?order=${order.id}`), 900);
   }
 
   return (
@@ -46,7 +40,6 @@ export default function CheckoutPage() {
           <h1 className="text-3xl font-semibold tracking-tight">Choose your tier</h1>
           <p className="mt-2 text-muted-foreground">Pick a plan and start your brand call immediately after checkout.</p>
 
-          {/* Tier selector */}
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {TIERS.map((t) => (
               <button
@@ -54,9 +47,7 @@ export default function CheckoutPage() {
                 onClick={() => setSelected(t.id)}
                 className={cn(
                   "rounded-xl border p-5 text-left transition-all",
-                  selected === t.id
-                    ? "border-primary bg-primary/5 ring-2 ring-primary/40"
-                    : "border-border bg-card hover:border-muted-foreground/40"
+                  selected === t.id ? "border-primary bg-primary/5 ring-2 ring-primary/40" : "border-border bg-card hover:border-muted-foreground/40",
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -69,7 +60,6 @@ export default function CheckoutPage() {
             ))}
           </div>
 
-          {/* Checkout form */}
           {selected && (
             <Card className="mt-8 p-6">
               <div className="mb-5 flex items-center justify-between">
@@ -83,14 +73,10 @@ export default function CheckoutPage() {
                     <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex Rivera" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Company <span className="text-muted-foreground">(optional)</span></label>
-                    <Input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Acme Inc." />
-                  </div>
-                  <div className="space-y-1.5">
                     <label className="text-sm font-medium">Email</label>
                     <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" />
                   </div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 sm:col-span-2">
                     <label className="text-sm font-medium">Country</label>
                     <select
                       value={country}
@@ -118,21 +104,13 @@ export default function CheckoutPage() {
                     <span>Tax (Stripe Tax)</span>
                     <span>Calculated at payment</span>
                   </div>
-                  <div className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground">
-                    Billed in USD. Your bank may apply conversion fees.
-                  </div>
+                  <div className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground">Billed in USD. Your bank may apply conversion fees.</div>
                 </div>
 
                 <Button type="submit" size="lg" className="w-full" disabled={processing}>
-                  {processing ? (
-                    <>Processing…</>
-                  ) : (
-                    <><ShieldCheck className="h-4 w-4" /> Pay {TIERS.find((t) => t.id === selected)?.priceLabel} & start call</>
-                  )}
+                  {processing ? <>Processing…</> : <><ShieldCheck className="h-4 w-4" /> Pay {TIERS.find((t) => t.id === selected)?.priceLabel} & start call</>}
                 </Button>
-                <p className="text-center text-xs text-muted-foreground">
-                  Demo mode — no real charge. Production uses Stripe Checkout (Card, Apple Pay, Google Pay, Stripe Link) + Stripe Tax.
-                </p>
+                <p className="text-center text-xs text-muted-foreground">Demo mode — no real charge. Production uses Stripe Checkout.</p>
               </form>
             </Card>
           )}

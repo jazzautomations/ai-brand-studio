@@ -1,29 +1,28 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { getStore } from "@/lib/mock/store";
 
 /**
- * React binding for the mock store via useSyncExternalStore.
- * Re-renders on any state change. Swap this module for Supabase
- * realtime subscriptions when wiring the real DB.
+ * Subscribes a component to the in-memory mock store.
  *
- * The store hydrates eagerly at module load (client-only), and we pass a
- * stable empty snapshot as the server snapshot so SSR markup and the first
- * client paint match — preventing hydration mismatches. After mount the
- * real loaded state is used automatically.
+ * Hydration is deferred to a mount effect so the first client render uses
+ * the empty SSR snapshot (getServerSnapshot) — this keeps server and client
+ * markup identical and avoids hydration exceptions. Once mounted, the store
+ * loads localStorage and publishes a fresh snapshot, triggering a re-render
+ * with the real data.
  */
 export function useStore() {
   const store = getStore();
-  return useSyncExternalStore(
+  useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,
     store.getServerSnapshot,
   );
-}
-
-export function useCurrentOrder(orderId: string | undefined) {
-  useStore();
-  if (!orderId) return null;
-  return getStore().getOrder(orderId) ?? null;
+  // Hydrate after mount (client only). useEffect runs once after the initial
+  // render, so the SSR-matching empty snapshot is used for hydration first.
+  useEffect(() => {
+    store.init();
+  }, [store]);
+  return store;
 }
