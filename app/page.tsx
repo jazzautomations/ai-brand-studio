@@ -81,30 +81,32 @@ export default function Home() {
 
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border/60">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
-        <div className="container relative py-24 md:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-accent/[0.05]" />
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-accent/20 to-transparent rounded-full blur-3xl" />
+        <div className="container relative py-24 md:py-36">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="outline" className="mb-6 gap-1.5 animate-fade-in-up">
-              <Sparkles className="h-3.5 w-3.5 text-primary" /> {STUDIO_TAGLINE}
+            <Badge variant="outline" className="mb-8 gap-1.5 animate-fade-in-up border-accent/30 text-accent">
+              <Sparkles className="h-3.5 w-3.5" /> {STUDIO_TAGLINE}
             </Badge>
-            <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl animate-fade-in-up stagger-1">
-              One brand system.<br />Every tool. Every touchpoint.
+            <h1 className="text-balance text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl animate-fade-in-up stagger-1 leading-[1.1]">
+              One brand system.<br />
+              <span className="text-gradient">Every tool.</span> Every touchpoint.
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground animate-fade-in-up stagger-2">
+            <p className="mx-auto mt-7 max-w-2xl text-pretty text-lg text-muted-foreground animate-fade-in-up stagger-2 leading-relaxed">
               Strategy, identity, voice, tokens, and AI skills — delivered in hours.
               Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.
             </p>
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in-up stagger-3">
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
-                <Button size="lg" className="gap-2">
+                <Button size="lg" className="gap-2 px-8 py-6 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-shadow">
                   Get your brand system <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/#problem">
-                <Button size="lg" variant="outline">Why this matters</Button>
+                <Button size="lg" variant="outline" className="px-8 py-6 text-base">Why this matters</Button>
               </Link>
             </div>
-            <p className="mt-5 text-xs text-muted-foreground/70 animate-fade-in-up stagger-4">
+            <p className="mt-6 text-sm text-muted-foreground animate-fade-in-up stagger-4">
               $299–$997 one-time · No retainers · No surprise invoices
             </p>
           </div>
@@ -123,9 +125,9 @@ export default function Home() {
             </div>
           </RevealSection>
 
-          <div className="mx-auto max-w-4xl space-y-8">
+          <div className="mx-auto max-w-4xl space-y-6">
             <RevealSection>
-              <Card className="p-8 border-l-4 border-l-red-500">
+              <Card className="p-8 premium-card border-l-4 border-l-red-400">
                 <h3 className="text-lg font-semibold mb-3">DIY tools give you a logo. Your customers can tell.</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines.
@@ -136,7 +138,7 @@ export default function Home() {
             </RevealSection>
 
             <RevealSection delay={0.1}>
-              <Card className="p-8 border-l-4 border-l-amber-500">
+              <Card className="p-8 premium-card border-l-4 border-l-amber-400">
                 <h3 className="text-lg font-semibold mb-3">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive.
@@ -148,7 +150,7 @@ export default function Home() {
             </RevealSection>
 
             <RevealSection delay={0.2}>
-              <Card className="p-8 border-l-4 border-l-primary">
+              <Card className="p-8 premium-card border-l-4 border-l-primary">
                 <h3 className="text-lg font-semibold mb-3">Every week without a brand system costs you credibility.</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   While you wait for an agency, your competitors launch. Your investors ask
@@ -177,7 +179,7 @@ export default function Home() {
             </div>
           </RevealSection>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: Compass, title: "Strategy your developer can't argue with", body: "Positioning, archetype, Golden Why. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
               { icon: Palette, title: "Identity that scales from favicon to billboard", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system." },
@@ -187,11 +189,11 @@ export default function Home() {
               { icon: Search, title: "Research that informs every decision", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
             ].map((s, i) => (
               <RevealSection key={i} delay={i * 0.08}>
-                <Card className="p-6 h-full">
-                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Card className="p-6 h-full premium-card">
+                  <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent">
                     <s.icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mb-2 text-base font-medium">{s.title}</h3>
+                  <h3 className="mb-2 text-base font-semibold">{s.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
                 </Card>
               </RevealSection>
@@ -214,12 +216,12 @@ export default function Home() {
 
           <div className="mx-auto max-w-4xl">
             <RevealSection>
-              <div className="rounded-xl border border-border overflow-hidden">
-                <div className="grid grid-cols-4 bg-muted/50 text-xs font-medium text-muted-foreground">
-                  <div className="p-4"></div>
-                  <div className="p-4 text-center">DIY Tools</div>
-                  <div className="p-4 text-center">Agencies</div>
-                  <div className="p-4 text-center bg-primary/5 text-primary font-semibold">Forge</div>
+              <div className="rounded-2xl border border-border overflow-hidden shadow-lg">
+                <div className="grid grid-cols-4 bg-muted/30 text-xs font-medium text-muted-foreground">
+                  <div className="p-5"></div>
+                  <div className="p-5 text-center">DIY Tools</div>
+                  <div className="p-5 text-center">Agencies</div>
+                  <div className="p-5 text-center bg-gradient-to-b from-accent/10 to-transparent text-accent font-bold">Forge</div>
                 </div>
                 {[
                   { feature: "Brand strategy", diy: "—", agency: "✓", forge: "✓" },
@@ -237,7 +239,7 @@ export default function Home() {
                     <div className="p-4 font-medium">{row.feature}</div>
                     <div className="p-4 text-center text-muted-foreground">{row.diy}</div>
                     <div className="p-4 text-center text-muted-foreground">{row.agency}</div>
-                    <div className="p-4 text-center font-medium bg-primary/5">{row.forge}</div>
+                    <div className="p-4 text-center font-semibold bg-gradient-to-b from-accent/5 to-transparent">{row.forge}</div>
                   </div>
                 ))}
               </div>
@@ -337,18 +339,23 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="border-t border-border/60 bg-secondary/30 py-20">
-        <div className="container text-center">
+      <section className="relative overflow-hidden border-t border-border/60 py-24">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.05] via-transparent to-accent/[0.05]" />
+        <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-t from-accent/15 to-transparent rounded-full blur-3xl" />
+        <div className="container relative text-center">
           <RevealSection>
-            <h2 className="mx-auto mb-5 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">
-              Stop waiting for a brand. Start using one.
+            <h2 className="mx-auto mb-6 max-w-2xl text-3xl font-bold tracking-tight md:text-5xl leading-tight">
+              Stop waiting for a brand.<br />
+              <span className="text-gradient">Start using one.</span>
             </h2>
-            <p className="mx-auto mb-8 max-w-xl text-muted-foreground">
+            <p className="mx-auto mb-10 max-w-xl text-lg text-muted-foreground leading-relaxed">
               Talk to our strategist, pick a direction, and walk away with a complete brand system —
               strategy, identity, tokens, skills — ready to use everywhere. Today.
             </p>
             <Link href="/checkout">
-              <Button size="lg" className="gap-2">Get your brand system <ArrowRight className="h-4 w-4" /></Button>
+              <Button size="lg" className="gap-2 px-10 py-7 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-shadow">
+                Get your brand system <ArrowRight className="h-4 w-4" />
+              </Button>
             </Link>
           </RevealSection>
         </div>
