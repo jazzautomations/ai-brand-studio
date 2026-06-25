@@ -53,14 +53,8 @@ function AnimatedWaveform() {
   return (
     <div className="flex h-10 items-end gap-1" aria-hidden="true">
       {[6, 14, 9, 18, 12, 22, 8, 16, 11, 20, 7, 13, 10, 17].map((h, i) => (
-        <span
-          key={i}
-          className="w-1 rounded-full bg-accent/50"
-          style={{
-            height: h,
-            animation: `pulse-bar ${0.8 + (i % 3) * 0.2}s ease-in-out ${i * 0.06}s infinite alternate`,
-          }}
-        />
+        <span key={i} className="w-1 rounded-full bg-primary/50"
+          style={{ height: h, animation: `pulse-bar ${0.8 + (i % 3) * 0.2}s ease-in-out ${i * 0.06}s infinite alternate` }} />
       ))}
     </div>
   );
@@ -70,7 +64,6 @@ const LOGOS = ["SaaS", "Agency", "Consultancy", "DTC", "Startup", "Freelancer", 
 
 export default function Home() {
   const [showSticky, setShowSticky] = useState(false);
-
   useEffect(() => {
     const onScroll = () => setShowSticky(window.scrollY > 600);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -81,21 +74,20 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
       <MarketingNav />
 
-      {/* HERO — Refactoring UI: generous whitespace, clear hierarchy */}
+      {/* HERO — inverted headline */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-secondary/50 to-transparent" />
         <div className="container relative py-36 md:py-48">
           <div className="mx-auto max-w-4xl text-center">
-            <Badge variant="outline" className="mb-8 gap-2 animate-fade-in-up border-accent/30 text-accent px-4 py-2">
+            <Badge variant="outline" className="mb-8 gap-2 animate-fade-in-up border-primary/30 text-primary px-4 py-2">
               <Sparkles className="h-4 w-4" /> {STUDIO_TAGLINE}
             </Badge>
             <h1 className="text-balance text-5xl font-bold tracking-tight md:text-7xl lg:text-[84px] animate-fade-in-up stagger-1 leading-[1.05]">
-              One brand system.<br />
-              <span className="text-gradient">Every tool.</span> Every touchpoint.
+              Stop waiting for a brand.<br />
+              <span className="text-gradient">Start using one.</span>
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-xl text-muted-foreground animate-fade-in-up stagger-2 leading-relaxed">
-              Strategy, identity, voice, tokens, and AI skills — delivered in hours.
-              Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.
+              One brand system. Every tool. Every touchpoint. Strategy, identity, voice, tokens, and AI skills — delivered in hours. Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.
             </p>
             <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
@@ -114,7 +106,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LOGO BAR — Refactoring UI: de-emphasize to emphasize */}
+      {/* LOGO BAR */}
       <section className="py-16">
         <div className="container">
           <RevealSection>
@@ -130,7 +122,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE PROBLEM — Refactoring UI: accent borders, not full backgrounds */}
+      {/* THE PROBLEM */}
       <section id="problem" className="py-28 md:py-36">
         <div className="container">
           <RevealSection>
@@ -141,61 +133,39 @@ export default function Home() {
               </h2>
             </div>
           </RevealSection>
-
           <div className="mx-auto max-w-4xl space-y-8">
             <RevealSection>
               <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">DIY tools give you a logo. Your customers can tell.</h3>
-                <p className="text-secondary text-lg leading-relaxed">
-                  Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines.
-                  No system. Your developer can&apos;t use it. Your designer ignores it. And your customers
-                  know it was made in a template. <strong className="text-foreground">You saved money but lost credibility.</strong>
-                </p>
+                <p className="text-secondary text-lg leading-relaxed">Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines. No system. Your developer can&apos;t use it. Your designer ignores it. And your customers know it was made in a template. <strong className="text-foreground">You saved money but lost credibility.</strong></p>
               </div>
             </RevealSection>
-
             <RevealSection delay={0.1}>
-              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left" style={{ borderLeftColor: "hsl(36 70% 50%)" }}>
+              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
-                <p className="text-secondary text-lg leading-relaxed">
-                  6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive.
-                  There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color
-                  should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system.
-                  <strong className="text-foreground"> You paid for a document, not a system.</strong>
-                </p>
+                <p className="text-secondary text-lg leading-relaxed">6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive. There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system. <strong className="text-foreground">You paid for a document, not a system.</strong></p>
               </div>
             </RevealSection>
-
             <RevealSection delay={0.2}>
-              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left" style={{ borderLeftColor: "hsl(220 70% 18%)" }}>
+              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">Every week without a brand system costs you credibility.</h3>
-                <p className="text-secondary text-lg leading-relaxed">
-                  While you wait for an agency, your competitors launch. Your investors ask
-                  &ldquo;where&apos;s the brand?&rdquo; Your developer builds with default styles.
-                  Your landing page looks like everyone else&apos;s.
-                  <strong className="text-foreground"> Every week without a brand system is a week you look like you don&apos;t have your shit together.</strong>
-                </p>
+                <p className="text-secondary text-lg leading-relaxed">While you wait for an agency, your competitors launch. Your investors ask &ldquo;where&apos;s the brand?&rdquo; Your developer builds with default styles. Your landing page looks like everyone else&apos;s. <strong className="text-foreground">Every week without a brand system is a week you look like you don&apos;t have your shit together.</strong></p>
               </div>
             </RevealSection>
           </div>
         </div>
       </section>
 
-      {/* THE SOLUTION — Refactoring UI: shadows, not borders */}
+      {/* THE SOLUTION */}
       <section className="py-28 md:py-36 bg-secondary/30">
         <div className="container">
           <RevealSection>
             <div className="mx-auto max-w-3xl text-center mb-20">
               <Badge variant="accent" className="mb-6 gap-2">The solution</Badge>
-              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                A brand operating system.<br />Not a design project.
-              </h2>
-              <p className="mt-6 text-xl text-secondary">
-                Forge gives you everything a brand needs to function — across every tool, every touchpoint, every time.
-              </p>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">A brand operating system. Not a design project.</h2>
+              <p className="mt-6 text-xl text-secondary">Forge gives you everything a brand needs to function — across every tool, every touchpoint, every time.</p>
             </div>
           </RevealSection>
-
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: Compass, title: "Strategy your developer can't argue with", body: "Positioning, archetype, Golden Why. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
@@ -207,9 +177,7 @@ export default function Home() {
             ].map((s, i) => (
               <RevealSection key={i} delay={i * 0.08}>
                 <div className="rounded-2xl bg-white p-8 shadow-soft premium-card h-full">
-                  <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                    <s.icon className="h-6 w-6" />
-                  </div>
+                  <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><s.icon className="h-6 w-6" /></div>
                   <h3 className="mb-3 text-xl font-bold">{s.title}</h3>
                   <p className="text-secondary leading-relaxed">{s.body}</p>
                 </div>
@@ -219,18 +187,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY FORGE — Refactoring UI: shadows, gradient accent */}
+      {/* WHY FORGE */}
       <section className="py-28 md:py-36">
         <div className="container">
           <RevealSection>
             <div className="mx-auto max-w-3xl text-center mb-20">
               <Badge variant="accent" className="mb-6 gap-2">Why Forge</Badge>
-              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                What you get with Forge<br />vs. everything else
-              </h2>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">What you get with Forge vs. everything else</h2>
             </div>
           </RevealSection>
-
           <div className="mx-auto max-w-5xl">
             <RevealSection>
               <div className="rounded-2xl overflow-hidden shadow-premium">
@@ -238,7 +203,7 @@ export default function Home() {
                   <div className="p-6"></div>
                   <div className="p-6 text-center">DIY Tools</div>
                   <div className="p-6 text-center">Agencies</div>
-                  <div className="p-6 text-center bg-gradient-to-b from-accent/10 to-transparent text-accent font-bold">Forge</div>
+                  <div className="p-6 text-center bg-gradient-to-b from-primary/10 to-transparent text-primary font-bold">Forge</div>
                 </div>
                 {[
                   { feature: "Brand strategy", diy: "—", agency: "✓", forge: "✓" },
@@ -256,7 +221,7 @@ export default function Home() {
                     <div className="p-5 font-semibold">{row.feature}</div>
                     <div className="p-5 text-center text-secondary">{row.diy}</div>
                     <div className="p-5 text-center text-secondary">{row.agency}</div>
-                    <div className="p-5 text-center font-bold bg-gradient-to-b from-accent/5 to-transparent">{row.forge}</div>
+                    <div className="p-5 text-center font-bold bg-gradient-to-b from-primary/5 to-transparent">{row.forge}</div>
                   </div>
                 ))}
               </div>
@@ -265,26 +230,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE DISCOVERY CALL — Refactoring UI: clear hierarchy */}
+      {/* THE DISCOVERY CALL */}
       <section className="py-28 md:py-36 bg-secondary/30">
         <div className="container grid items-center gap-16 lg:grid-cols-2">
           <RevealSection>
-            <Badge variant="accent" className="mb-6 gap-2">
-              <Phone className="h-4 w-4" /> How it starts
-            </Badge>
-            <h2 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
-              Tell us about your business.<br />We&apos;ll build the strategy while you talk.
-            </h2>
-            <p className="text-xl text-secondary mb-10 leading-relaxed">
-              No forms. No mood boards. No scheduling. Just click and talk — our strategist
-              researches your market in real time, captures your positioning, and builds a
-              brief that drives every visual and verbal choice in your brand system.
-            </p>
+            <Badge variant="accent" className="mb-6 gap-2"><Phone className="h-4 w-4" /> How it starts</Badge>
+            <h2 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">Tell us about your business. We&apos;ll build the strategy while you talk.</h2>
+            <p className="text-xl text-secondary mb-10 leading-relaxed">No forms. No mood boards. No scheduling. Just click and talk — our strategist researches your market in real time, captures your positioning, and builds a brief that drives every visual and verbal choice in your brand system.</p>
             <ul className="space-y-5 text-lg">
               {["Real-time competitor research while you speak", "Captures your positioning, not just your preferences", "Produces a strategic brief that drives the entire brand", "Transcript and research included in your deliverables"].map((f) => (
-                <li key={f} className="flex items-center gap-4">
-                  <Check className="h-5 w-5 text-accent shrink-0" /> <span>{f}</span>
-                </li>
+                <li key={f} className="flex items-center gap-4"><Check className="h-5 w-5 text-primary shrink-0" /> {f}</li>
               ))}
             </ul>
           </RevealSection>
@@ -302,7 +257,7 @@ export default function Home() {
                 <div className="space-y-4 text-base">
                   <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary/10 px-5 py-3 animate-slide-in-right stagger-1">We build CRM tools for indie consultants.</div>
                   <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-secondary px-5 py-3 animate-fade-in-up stagger-2">Love it. I&apos;m looking at Notion and Honeybook now — they position around all-in-one. Do you feel that&apos;s what your market expects, or are you going somewhere different?</div>
-                  <div className="flex items-center gap-2 text-sm text-secondary animate-fade-in-up stagger-3"><Sparkles className="h-4 w-4 text-accent animate-pulse" /> Researching Honeybook…</div>
+                  <div className="flex items-center gap-2 text-sm text-secondary animate-fade-in-up stagger-3"><Sparkles className="h-4 w-4 text-primary animate-pulse" /> Researching Honeybook…</div>
                 </div>
                 <div className="mt-8 flex items-end justify-between gap-2">
                   <AnimatedWaveform />
@@ -314,17 +269,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SOCIAL PROOF — Refactoring UI: de-emphasize to emphasize */}
+      {/* SOCIAL PROOF */}
       <section className="py-28 md:py-36">
         <div className="container">
           <RevealSection>
             <div className="mx-auto max-w-3xl text-center mb-20">
-              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                Built for founders who move fast
-              </h2>
-              <p className="mt-6 text-xl text-secondary">
-                Early access clients are building their brands right now. Real case studies land after our first pilot cohort ships.
-              </p>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">Built for founders who move fast</h2>
+              <p className="mt-6 text-xl text-secondary">Early access clients are building their brands right now. Real case studies land after our first pilot cohort ships.</p>
             </div>
           </RevealSection>
           <div className="grid gap-8 md:grid-cols-3">
@@ -335,9 +286,7 @@ export default function Home() {
             ].map((t, i) => (
               <RevealSection key={t.role} delay={i * 0.1}>
                 <div className="rounded-2xl bg-white p-8 shadow-soft premium-card h-full">
-                  <div className="mb-5 flex gap-1 text-accent">
-                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-5 w-5 fill-current" />)}
-                  </div>
+                  <div className="mb-5 flex gap-1 text-primary">{Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-5 w-5 fill-current" />)}</div>
                   <p className="mb-6 text-base text-foreground/90 leading-relaxed">{t.quote}</p>
                   <div className="text-sm text-secondary font-medium">{t.role} · pilot cohort</div>
                 </div>
@@ -347,39 +296,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRICING — Refactoring UI: shadow cards */}
+      {/* PRICING */}
       <section id="pricing" className="py-28 md:py-36 bg-secondary/30">
         <div className="container">
           <RevealSection>
             <div className="mx-auto max-w-3xl text-center mb-20">
               <Badge variant="accent" className="mb-6 gap-2">Pricing</Badge>
-              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                What this would cost otherwise
-              </h2>
-              <p className="mt-6 text-xl text-secondary">
-                A branding agency charges $5k–$50k and takes months. We deliver the same system in hours.
-                One-time payment. No retainers. No surprise invoices.
-              </p>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">What this would cost otherwise</h2>
+              <p className="mt-6 text-xl text-secondary">A branding agency charges $5k–$50k and takes months. We deliver the same system in hours. One-time payment. No retainers. No surprise invoices.</p>
             </div>
           </RevealSection>
           <PricingCards ctaLabel="Choose {name}" />
         </div>
       </section>
 
-      {/* FAQ — Refactoring UI: clean, de-emphasized */}
+      {/* FAQ */}
       <section id="faq" className="py-28 md:py-36">
         <div className="container max-w-3xl">
-          <RevealSection>
-            <h2 className="mb-14 text-center text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">FAQ</h2>
-          </RevealSection>
+          <RevealSection><h2 className="mb-14 text-center text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">FAQ</h2></RevealSection>
           <div className="divide-y divide-border/50">
             {faqs.map((f, i) => (
               <RevealSection key={f.q} delay={i * 0.05}>
                 <details className="group py-7">
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-lg font-semibold list-none">
-                    {f.q}
-                    <span className="text-secondary transition-transform group-open:rotate-45 text-2xl">+</span>
-                  </summary>
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-lg font-semibold list-none">{f.q}<span className="text-secondary transition-transform group-open:rotate-45 text-2xl">+</span></summary>
                   <p className="mt-4 text-base text-secondary leading-relaxed">{f.a}</p>
                 </details>
               </RevealSection>
@@ -388,42 +327,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FINAL CTA — Refactoring UI: gradient + glow */}
+      {/* FINAL CTA */}
       <section className="relative overflow-hidden py-32 md:py-40">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-secondary/30 via-transparent to-secondary/30" />
-        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
         <div className="container relative text-center">
           <RevealSection>
             <h2 className="mx-auto mb-6 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
-              Stop waiting for a brand.<br />
-              <span className="text-gradient">Start using one.</span>
+              Stop waiting for a brand.<br /><span className="text-gradient">Start using one.</span>
             </h2>
-            <p className="mx-auto mb-12 max-w-2xl text-xl text-secondary leading-relaxed">
-              Talk to our strategist, pick a direction, and walk away with a complete brand system —
-              strategy, identity, tokens, skills — ready to use everywhere. Today.
-            </p>
-            <Link href="/checkout">
-              <Button size="lg" className="gap-3 px-12 py-8 text-lg font-semibold shadow-premium hover:shadow-glow transition-all">
-                Get your brand system <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
+            <p className="mx-auto mb-12 max-w-2xl text-xl text-secondary leading-relaxed">Talk to our strategist, pick a direction, and walk away with a complete brand system — strategy, identity, tokens, skills — ready to use everywhere. Today.</p>
+            <Link href="/checkout"><Button size="lg" className="gap-3 px-12 py-8 text-lg font-semibold shadow-premium hover:shadow-glow transition-all">Get your brand system <ArrowRight className="h-5 w-5" /></Button></Link>
           </RevealSection>
         </div>
       </section>
 
       <MarketingFooter />
 
-      {/* Sticky CTA */}
       {showSticky && (
         <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/50 bg-white/95 backdrop-blur-xl py-4 px-6 shadow-lg animate-fade-in-up">
           <div className="container flex items-center justify-between">
-            <div className="hidden sm:block">
-              <span className="text-base font-semibold">One brand system. Every tool.</span>
-              <span className="ml-3 text-sm text-secondary">From $299</span>
-            </div>
-            <Link href="/checkout">
-              <Button className="gap-2 px-6 py-3 font-semibold shadow-sm">Get your brand <ArrowRight className="h-4 w-4" /></Button>
-            </Link>
+            <div className="hidden sm:block"><span className="text-base font-semibold">One brand system. Every tool.</span><span className="ml-3 text-sm text-secondary">From $299</span></div>
+            <Link href="/checkout"><Button className="gap-2 px-6 py-3 font-semibold shadow-sm">Get your brand <ArrowRight className="h-4 w-4" /></Button></Link>
           </div>
         </div>
       )}
