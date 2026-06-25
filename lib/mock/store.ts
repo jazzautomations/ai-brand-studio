@@ -626,7 +626,21 @@ class Store {
     const order = this.state.orders.find((o) => o.id === orderId);
     if (!order) return;
     // no active pipeline — nudge to the next milestone
-    if (order.status === "call_completed") this.startPipeline(orderId);
+    if (order.status === "call_completed") {
+      this.startPipeline(orderId);
+    } else if (order.status === "pending_call") {
+      // create a mock voice session and start pipeline
+      this.startVoiceSession(orderId);
+      const answers = { business: "Demo business", audience: "Demo audience", competitors: "Demo competitor", adjectives: "bold, warm, sharp" };
+      this.completeVoiceSession(orderId, [], answers);
+    } else if (order.status === "awaiting_client_review") {
+      // select the first direction and start finalize
+      const dirs = this.state.directions.filter((d) => d.orderId === orderId);
+      if (dirs[0]) this.selectDirection(orderId, dirs[0].id);
+    } else if (order.status === "revision") {
+      order.status = "awaiting_client_review";
+      this.emit();
+    }
   }
 
   getAgentRuns(orderId: string): AgentRun[] {
