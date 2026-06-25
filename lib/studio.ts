@@ -7,7 +7,7 @@ export const STUDIO_NAME =
 
 export const STUDIO_TAGLINE =
   process.env.NEXT_PUBLIC_STUDIO_TAGLINE ||
-  "Your brand, forged by AI. Delivered in hours, not months.";
+  "Brand infrastructure for the AI era.";
 
 export const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE !== "false";
 

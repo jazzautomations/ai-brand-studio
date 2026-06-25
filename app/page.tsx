@@ -7,7 +7,7 @@ import {
   Clock, Zap, MessageSquare, Star, Check,
   Search, Compass, Palette, Code,
 } from "lucide-react";
-import { STUDIO_NAME } from "@/lib/studio";
+import { STUDIO_NAME, STUDIO_TAGLINE } from "@/lib/studio";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 import { PricingCards } from "@/components/marketing/pricing-cards";
@@ -85,15 +85,14 @@ export default function Home() {
         <div className="container relative py-24 md:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="outline" className="mb-6 gap-1.5 animate-fade-in-up">
-              <Sparkles className="h-3.5 w-3.5 text-primary" /> Brand identity system, not just a logo
+              <Sparkles className="h-3.5 w-3.5 text-primary" /> {STUDIO_TAGLINE}
             </Badge>
             <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl animate-fade-in-up stagger-1">
-              Your brand needs a system.<br />Not a logo file.
+              One brand system.<br />Every tool. Every touchpoint.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground animate-fade-in-up stagger-2">
-              Strategy, visual identity, voice guidelines, design tokens, AI skills, and prompt templates —
-              everything that makes your brand work across every tool, every touchpoint, every time.
-              Delivered in hours. Priced for founders, not enterprises.
+              Strategy, identity, voice, tokens, and AI skills — delivered in hours.
+              Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
@@ -119,7 +118,7 @@ export default function Home() {
             <div className="mx-auto max-w-3xl text-center mb-14">
               <Badge variant="accent" className="mb-5 gap-1.5">The problem</Badge>
               <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                Branding is broken. You&apos;re paying for the overhead, not the craft.
+                You need a brand that works. Not a logo that sits in a folder.
               </h2>
             </div>
           </RevealSection>
@@ -127,22 +126,22 @@ export default function Home() {
           <div className="mx-auto max-w-4xl space-y-8">
             <RevealSection>
               <Card className="p-8 border-l-4 border-l-red-500">
-                <h3 className="text-lg font-semibold mb-3">DIY tools give you a logo. That&apos;s it.</h3>
+                <h3 className="text-lg font-semibold mb-3">DIY tools give you a logo. Your customers can tell.</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Canva, Looka, Hatchful — they spit out a logo in 5 minutes. No strategy. No guidelines.
+                  Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines.
                   No system. Your developer can&apos;t use it. Your designer ignores it. And your customers
-                  can tell it was made in a template. <strong>You saved money but lost credibility.</strong>
+                  know it was made in a template. <strong>You saved money but lost credibility.</strong>
                 </p>
               </Card>
             </RevealSection>
 
             <RevealSection delay={0.1}>
               <Card className="p-8 border-l-4 border-l-amber-500">
-                <h3 className="text-lg font-semibold mb-3">Agencies give you a PDF. That&apos;s it.</h3>
+                <h3 className="text-lg font-semibold mb-3">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  6–16 weeks. $5k–$50k. Three rounds of revisions. You get a beautiful brand guide PDF
-                  that sits in a Google Drive folder. Your developer asks &ldquo;what are the tokens?&rdquo; —
-                  there are none. Your designer asks &ldquo;what font do I use?&rdquo; — it&apos;s buried on page 23.
+                  6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive.
+                  There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color
+                  should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system.
                   <strong> You paid for a document, not a system.</strong>
                 </p>
               </Card>
@@ -150,10 +149,11 @@ export default function Home() {
 
             <RevealSection delay={0.2}>
               <Card className="p-8 border-l-4 border-l-primary">
-                <h3 className="text-lg font-semibold mb-3">The real cost isn&apos;t the money — it&apos;s the time.</h3>
+                <h3 className="text-lg font-semibold mb-3">Every week without a brand system costs you credibility.</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  While you wait 3 months for an agency, your competitors are launching. Your investors
-                  are asking &ldquo;where&apos;s the brand?&rdquo; Your developer is building with default styles.
+                  While you wait for an agency, your competitors launch. Your investors ask
+                  &ldquo;where&apos;s the brand?&rdquo; Your developer builds with default styles.
+                  Your landing page looks like everyone else&apos;s.
                   <strong> Every week without a brand system is a week you look like you don&apos;t have your shit together.</strong>
                 </p>
               </Card>
@@ -169,23 +169,22 @@ export default function Home() {
             <div className="mx-auto max-w-3xl text-center mb-14">
               <Badge variant="accent" className="mb-5 gap-1.5">The solution</Badge>
               <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                A brand system that works everywhere. Not just in a PDF.
+                A brand operating system. Not a design project.
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Forge gives you everything a brand needs to function — strategy, identity, voice, tokens, and AI skills —
-                in one package that works with the tools you already use.
+                Forge gives you everything a brand needs to function — across every tool, every touchpoint, every time.
               </p>
             </div>
           </RevealSection>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: Compass, title: "Strategy that's defensible", body: "Positioning statement, archetype, Golden Why, brand attributes. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
-              { icon: Palette, title: "Identity that scales", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system. Works from favicon to billboard." },
-              { icon: MessageSquare, title: "Voice that's consistent", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself everywhere — website, email, social, ads." },
+              { icon: Compass, title: "Strategy your developer can't argue with", body: "Positioning, archetype, Golden Why. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
+              { icon: Palette, title: "Identity that scales from favicon to billboard", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system." },
+              { icon: MessageSquare, title: "Voice that stays consistent everywhere", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself — website, email, social, ads." },
               { icon: Code, title: "Tokens that work in code", body: "W3C DTCG 2025.10 design tokens. Drop into Figma. Import into Tailwind. Your developer builds on-brand from day one. No guesswork." },
-              { icon: Zap, title: "AI skills that keep you on-brand", body: "Ready-made instructions for Claude, GPT, and Gemini. Paste them in and every AI output sounds like your brand. 5 prompt templates included." },
-              { icon: Search, title: "Research that informs everything", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
+              { icon: Zap, title: "AI skills that keep every output on-brand", body: "Ready-made instructions for Claude, GPT, and Gemini. Paste them in and every AI output sounds like your brand. 5 prompt templates included." },
+              { icon: Search, title: "Research that informs every decision", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
             ].map((s, i) => (
               <RevealSection key={i} delay={i * 0.08}>
                 <Card className="p-6 h-full">
@@ -208,7 +207,7 @@ export default function Home() {
             <div className="mx-auto max-w-3xl text-center mb-14">
               <Badge variant="accent" className="mb-5 gap-1.5">Why Forge</Badge>
               <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                What makes this different from everything else
+                What you get with Forge vs. everything else
               </h2>
             </div>
           </RevealSection>
@@ -296,35 +295,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROOF */}
-      <section className="border-b border-border/60 py-20">
-        <div className="container">
-          <RevealSection>
-            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">Built for founders who move fast</h2>
-            <p className="mx-auto mb-14 max-w-xl text-center text-muted-foreground">
-              Early access clients are building their brands right now. Real case studies land after our first pilot cohort ships.
-            </p>
-          </RevealSection>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { role: "SaaS founder", quote: "I had a full brand system in an afternoon. The strategy doc alone was worth it." },
-              { role: "Consultancy", quote: "The voice call was wild — it actually researched my competitors live." },
-              { role: "DTC brand", quote: "My developer dropped the tokens into Tailwind and everything just matched." },
-            ].map((t, i) => (
-              <RevealSection key={t.role} delay={i * 0.1}>
-                <Card className="p-7 h-full">
-                  <div className="mb-4 flex gap-1 text-primary">
-                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
-                  </div>
-                  <p className="mb-5 text-sm text-foreground/90">{t.quote}</p>
-                  <div className="text-xs text-muted-foreground">{t.role} · pilot cohort</div>
-                </Card>
-              </RevealSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* PRICING */}
       <section id="pricing" className="border-b border-border/60 py-20">
         <div className="container">
@@ -391,7 +361,7 @@ export default function Home() {
         <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/60 bg-background/90 backdrop-blur-xl py-3 px-4 animate-fade-in-up">
           <div className="container flex items-center justify-between">
             <div className="hidden sm:block">
-              <span className="text-sm font-medium">A complete brand identity system.</span>
+              <span className="text-sm font-medium">One brand system. Every tool.</span>
               <span className="ml-2 text-xs text-muted-foreground">From $299</span>
             </div>
             <Link href="/checkout">
