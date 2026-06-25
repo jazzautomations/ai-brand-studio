@@ -3,10 +3,10 @@ import { STUDIO_NAME } from "@/lib/studio";
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-border/60 bg-background">
+    <footer className="bg-white">
       <div className="container flex flex-col items-center justify-between gap-6 py-10 md:flex-row">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground text-xs">
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground text-xs font-bold">
             {STUDIO_NAME.charAt(0)}
           </span>
           <span>{STUDIO_NAME} · Autonomous AI Brand Studio</span>
