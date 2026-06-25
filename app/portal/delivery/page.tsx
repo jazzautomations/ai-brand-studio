@@ -5,17 +5,26 @@ import Link from "next/link";
 import {
   ArrowLeft, FileText, Package, Download, Loader2, CheckCircle2,
   Sparkles, Image as ImageIcon, RefreshCw, Search, Compass,
-  Palette, Share2, Eye,
+  Palette, Share2, Eye, ChevronDown, ChevronRight, Code,
+  MessageSquare, Globe, Zap,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
 import { TIERS } from "@/lib/tiers";
 import { STUDIO_NAME } from "@/lib/studio";
-import { buildPackageFiles, buildBrandGuideHtml, buildMarketResearchHtml, buildStrategyHtml, mockStrategy, mockVerbal, buildMoodBoardHtml, buildSocialMediaKitHtml, buildBrandInContextHtml } from "@/lib/mock/package";
+import {
+  buildPackageFiles, buildBrandGuideHtml, buildMarketResearchHtml,
+  buildStrategyHtml, mockStrategy, mockVerbal,
+  buildMoodBoardHtml, buildSocialMediaKitHtml, buildBrandInContextHtml,
+  buildTokensJson, buildDesignMd, buildClaudeSkill, buildGptInstructions,
+  buildPromptFiles,
+} from "@/lib/mock/package";
+import { renderDirectionVersions } from "@/lib/mock/directions";
 import { competitorResearchFor } from "@/lib/mock/transcript";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 function triggerDownload(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
@@ -28,10 +37,14 @@ function triggerDownload(filename: string, blob: Blob) {
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 
+type PreviewTab = "overview" | "research" | "strategy" | "tokens" | "design" | "guide" | "skills" | "mockups";
+
 function DeliveryInner() {
   const { id, order, ready } = useOrderFromQuery();
   const [zipping, setZipping] = useState(false);
   const [done, setDone] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<PreviewTab>("overview");
+  const [expandedFile, setExpandedFile] = useState<string | null>(null);
 
   if (!ready) {
     return <div className="grid min-h-[60vh] place-items-center text-muted-foreground">Loading…</div>;
@@ -60,6 +73,15 @@ function DeliveryInner() {
     );
   }
 
+  const strategy = mockStrategy(brief);
+  const verbal = mockVerbal(brief);
+  const versions = renderDirectionVersions(sel.direction);
+  const tokensJson = buildTokensJson(sel.direction, brief);
+  const designMd = buildDesignMd(brief, sel.direction, strategy, verbal);
+  const claudeSkill = buildClaudeSkill(brief, strategy);
+  const gptInstructions = buildGptInstructions(brief, strategy);
+  const promptFiles = buildPromptFiles(brief, verbal);
+
   async function downloadZip() {
     if (!brief || !sel || !tier) return;
     setZipping(true);
@@ -79,178 +101,109 @@ function DeliveryInner() {
 
   function downloadGuide() {
     if (!brief || !sel || !tier) return;
-    const strategy = mockStrategy(brief);
-    const verbal = mockVerbal(brief);
     const html = buildBrandGuideHtml(brief, sel.direction, strategy, verbal, tier.id);
     triggerDownload(`brand-guide-${slug}.html`, new Blob([html], { type: "text/html" }));
     setDone("guide");
   }
 
-  function downloadMarketResearch() {
-    if (!brief) return;
-    const html = buildMarketResearchHtml(brief, competitors);
-    triggerDownload(`market-research-${slug}.html`, new Blob([html], { type: "text/html" }));
-    setDone("research");
+  function downloadFile(name: string, content: string, ext = "html") {
+    triggerDownload(`${name}-${slug}.${ext}`, new Blob([content], { type: ext === "json" ? "application/json" : "text/plain" }));
   }
 
-  function downloadStrategy() {
-    if (!brief) return;
-    const strategy = mockStrategy(brief);
-    const verbal = mockVerbal(brief);
-    const html = buildStrategyHtml(brief, strategy, verbal);
-    triggerDownload(`brand-strategy-${slug}.html`, new Blob([html], { type: "text/html" }));
-    setDone("strategy");
-  }
-
-  function downloadMoodBoard() {
-    if (!brief || !sel) return;
-    const strategy = mockStrategy(brief);
-    const html = buildMoodBoardHtml(brief, sel.direction, strategy);
-    triggerDownload(`mood-board-${slug}.html`, new Blob([html], { type: "text/html" }));
-    setDone("mood");
-  }
-
-  function downloadSocialKit() {
-    if (!brief || !sel) return;
-    const strategy = mockStrategy(brief);
-    const verbal = mockVerbal(brief);
-    const html = buildSocialMediaKitHtml(brief, sel.direction, strategy, verbal);
-    triggerDownload(`social-media-kit-${slug}.html`, new Blob([html], { type: "text/html" }));
-    setDone("social");
-  }
-
-  function downloadBrandInContext() {
-    if (!brief || !sel) return;
-    const strategy = mockStrategy(brief);
-    const verbal = mockVerbal(brief);
-    const html = buildBrandInContextHtml(brief, sel.direction, strategy, verbal);
-    triggerDownload(`brand-in-context-${slug}.html`, new Blob([html], { type: "text/html" }));
-    setDone("context");
-  }
+  const tabs: { key: PreviewTab; label: string; icon: React.ElementType }[] = [
+    { key: "overview", label: "Overview", icon: Eye },
+    { key: "research", label: "Market Research", icon: Search },
+    { key: "strategy", label: "Brand Strategy", icon: Compass },
+    { key: "tokens", label: "Tokens & DESIGN.md", icon: Code },
+    { key: "guide", label: "Brand Guide", icon: FileText },
+    { key: "skills", label: "AI Skills & Prompts", icon: Zap },
+    { key: "mockups", label: "Brand in Context", icon: Globe },
+  ];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-5xl space-y-6">
+      {/* Header */}
       <div>
         <Link href={`/portal/progress?order=${id}`} className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Back to progress
         </Link>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="h-6 w-6 text-primary" />
-          <h1 className="text-3xl font-semibold tracking-tight">Your brand is ready</h1>
+        <div className="flex items-center gap-3">
+          <CheckCircle2 className="h-7 w-7 text-primary" />
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight">Your brand is ready</h1>
+            <p className="mt-1 text-muted-foreground">
+              {brief.businessName} — {tier?.name} tier. Preview everything below, then download what you need.
+            </p>
+          </div>
         </div>
-        <p className="mt-2 text-muted-foreground">
-          {brief.businessName} — {tier?.name} tier. Download everything below; it's yours to keep.
-        </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="flex flex-col p-6">
-          <FileText className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Brand Guide</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            The full {tier?.guidePages}-page guidelines document — strategy, voice, logo system, color, typography, do/don't. Opens in your browser; print to PDF.
-          </p>
-          <Button className="mt-5 gap-2" onClick={downloadGuide}>
-            {done === "guide" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download brand guide</>}
-          </Button>
-        </Card>
-
-        <Card className="flex flex-col p-6">
-          <Package className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Brand Context Package</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            W3C DTCG 2025.10 <code className="text-xs">tokens.tokens.json</code>, <code className="text-xs">DESIGN.md</code>, SVG assets{tier && tier.id !== "starter" ? ", /skills, /prompts" : ""}. Drop into Figma, Tailwind, ChatGPT, Cursor.
-          </p>
-          <Button className="mt-5 gap-2" onClick={downloadZip} disabled={zipping}>
-            {zipping ? <><Loader2 className="h-4 w-4 animate-spin" /> Packaging…</> : done === "zip" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download .zip</>}
-          </Button>
-        </Card>
+      {/* Download row */}
+      <div className="flex flex-wrap gap-3">
+        <Button className="gap-2" onClick={downloadGuide}>
+          {done === "guide" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Brand Guide PDF</>}
+        </Button>
+        <Button className="gap-2" onClick={downloadZip} disabled={zipping}>
+          {zipping ? <><Loader2 className="h-4 w-4 animate-spin" /> Packaging…</> : done === "zip" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Full Package .zip</>}
+        </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="flex flex-col p-6">
-          <Search className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Market Research</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            Competitive landscape, positioning map, and the market gap your brand is built to own. Standalone document — the thinking behind every visual choice.
-          </p>
-          <Button className="mt-5 gap-2" variant="outline" onClick={downloadMarketResearch}>
-            {done === "research" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download research</>}
-          </Button>
-        </Card>
-
-        <Card className="flex flex-col p-6">
-          <Compass className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Brand Strategy</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            Archetype, Golden Why, positioning statement, voice &amp; tone, messaging pillars, and tagline candidates — the strategic foundation in one document.
-          </p>
-          <Button className="mt-5 gap-2" variant="outline" onClick={downloadStrategy}>
-            {done === "strategy" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download strategy</>}
-          </Button>
-        </Card>
+      {/* Tabs */}
+      <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActiveTab(t.key)}
+            className={cn(
+              "flex items-center gap-1.5 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+              activeTab === t.key
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <t.icon className="h-4 w-4" />
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="flex flex-col p-6">
-          <Palette className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Mood Board</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            Visual territory — color mood, typography samples, imagery direction, and brand personality. The emotional foundation.
-          </p>
-          <Button className="mt-5 gap-2" variant="outline" onClick={downloadMoodBoard}>
-            {done === "mood" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download mood board</>}
-          </Button>
-        </Card>
-
-        <Card className="flex flex-col p-6">
-          <Share2 className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Social Media Kit</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            Profile templates, post frameworks, hashtag strategy, and brand voice quick reference. Ready to post.
-          </p>
-          <Button className="mt-5 gap-2" variant="outline" onClick={downloadSocialKit}>
-            {done === "social" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download kit</>}
-          </Button>
-        </Card>
-
-        <Card className="flex flex-col p-6">
-          <Eye className="h-8 w-8 text-primary" />
-          <h3 className="mt-4 text-lg font-medium">Brand in Context</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">
-            Website hero, business card, email signature, and social post mockups — see your brand in the real world.
-          </p>
-          <Button className="mt-5 gap-2" variant="outline" onClick={downloadBrandInContext}>
-            {done === "context" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download mockups</>}
-          </Button>
-        </Card>
-      </div>
-
-      <Card className="p-6">
-        <h3 className="text-sm font-medium text-foreground/80">What's inside the package</h3>
-        <div className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-          <span>✓ Design tokens (DTCG 2025.10)</span>
-          <span>✓ DESIGN.md rationale</span>
-          <span>✓ Print-ready SVGs (4 versions)</span>
-          <span>✓ Digital logo + favicon SVG</span>
-          <span>✓ Social avatar SVG</span>
-          <span>✓ Editable master SVG</span>
-          <span>✓ Market research document</span>
-          <span>✓ Brand strategy document</span>
-          <span>✓ Mood board &amp; visual territory</span>
-          <span>✓ Social media kit &amp; templates</span>
-          <span>✓ Brand-in-context mockups</span>
-          {tier && tier.id !== "starter" && <><span>✓ Claude / GPT / Gemini skills</span><span>✓ 5 ready-to-use prompts</span></>}
-        </div>
-      </Card>
-
-      <div>
-        <h3 className="mb-3 text-sm font-medium text-foreground/80">Add more</h3>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <UpsellCard icon={RefreshCw} title="Extra revision round" price="$49" body="One more structural revision round for your project." />
-          <UpsellCard icon={ImageIcon} title="Extra mockup set" price="$29" body="Three additional context mockups of your brand in use." />
-        </div>
-        <p className="mt-3 text-xs text-muted-foreground">Upsells are mocked in this demo — they'll route through Stripe in production.</p>
+      {/* Tab content */}
+      <div className="min-h-[400px]">
+        {activeTab === "overview" && (
+          <OverviewTab brief={brief} strategy={strategy} verbal={verbal} direction={sel.direction} tier={tier!} versions={versions} competitors={competitors} />
+        )}
+        {activeTab === "research" && (
+          <ResearchTab brief={brief} competitors={competitors} />
+        )}
+        {activeTab === "strategy" && (
+          <StrategyTab brief={brief} strategy={strategy} verbal={verbal} />
+        )}
+        {activeTab === "tokens" && (
+          <TokensTab
+            tokensJson={tokensJson}
+            designMd={designMd}
+            expandedFile={expandedFile}
+            setExpandedFile={setExpandedFile}
+            onDownloadTokens={() => downloadFile("tokens", tokensJson, "json")}
+            onDownloadDesignMd={() => downloadFile("DESIGN", designMd, "md")}
+          />
+        )}
+        {activeTab === "guide" && (
+          <GuideTab html={buildBrandGuideHtml(brief, sel.direction, strategy, verbal, tier!.id)} />
+        )}
+        {activeTab === "skills" && (
+          <SkillsTab
+            claudeSkill={claudeSkill}
+            gptInstructions={gptInstructions}
+            promptFiles={promptFiles}
+            tier={tier!}
+            expandedFile={expandedFile}
+            setExpandedFile={setExpandedFile}
+          />
+        )}
+        {activeTab === "mockups" && (
+          <MockupsTab html={buildBrandInContextHtml(brief, sel.direction, strategy, verbal)} />
+        )}
       </div>
 
       <div className="rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
@@ -260,15 +213,369 @@ function DeliveryInner() {
   );
 }
 
-function UpsellCard({ icon: Icon, title, price, body }: { icon: React.ElementType; title: string; price: string; body: string }) {
+/* ==================== TAB COMPONENTS ==================== */
+
+function OverviewTab({ brief, strategy, verbal, direction, tier, versions, competitors }: {
+  brief: any; strategy: any; verbal: any; direction: any; tier: any; versions: any; competitors: any;
+}) {
+  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
+  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
   return (
-    <Card className="flex items-center gap-4 p-4">
-      <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/15 text-primary"><Icon className="h-5 w-5" /></div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2"><span className="font-medium">{title}</span><Badge variant="accent">{price}</Badge></div>
-        <p className="text-xs text-muted-foreground">{body}</p>
+    <div className="space-y-6">
+      {/* Hero card */}
+      <Card className="overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          <div className="flex-1 p-8" style={{ background: primary }}>
+            <div className="text-white/70 text-xs uppercase tracking-widest mb-2">{STUDIO_NAME} Brand Delivery</div>
+            <h2 className="text-4xl font-bold text-white mb-3">{brief.businessName}</h2>
+            <p className="text-white/80 text-lg italic">"{verbal.taglineOptions[0]?.tagline || "Strategy you can see."}"</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {brief.desiredAdjectives.map((a: string) => (
+                <span key={a} className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: accent, color: "#fff" }}>{a}</span>
+              ))}
+            </div>
+          </div>
+          <div className="w-full md:w-72 bg-white p-6 flex flex-col items-center justify-center">
+            <div dangerouslySetInnerHTML={{ __html: versions[0]?.svg || "" }} className="mb-4" />
+            <div className="text-xs text-gray-500 text-center">Full-color lockup</div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="p-4 text-center">
+          <div className="text-2xl font-bold text-primary">{competitors.length}</div>
+          <div className="text-xs text-muted-foreground">Competitors analyzed</div>
+        </Card>
+        <Card className="p-4 text-center">
+          <div className="text-2xl font-bold text-primary">{versions.length}</div>
+          <div className="text-xs text-muted-foreground">Logo versions</div>
+        </Card>
+        <Card className="p-4 text-center">
+          <div className="text-2xl font-bold text-primary">3</div>
+          <div className="text-xs text-muted-foreground">Brand directions</div>
+        </Card>
+        <Card className="p-4 text-center">
+          <div className="text-2xl font-bold text-primary">7</div>
+          <div className="text-xs text-muted-foreground">AI agents used</div>
+        </Card>
       </div>
-      <Sparkles className="h-4 w-4 text-muted-foreground" />
+
+      {/* Logo versions */}
+      <Card className="p-6">
+        <h3 className="font-medium mb-4">Logo System</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {versions.map((v: any) => (
+            <div key={v.key} className="text-center">
+              <div className="rounded-lg border border-border p-4 flex items-center justify-center min-h-[80px]" style={{ background: v.bg }}>
+                <div dangerouslySetInnerHTML={{ __html: v.svg }} />
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground">{v.label}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Color palette */}
+      <Card className="p-6">
+        <h3 className="font-medium mb-4">Color Palette</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {direction.colorTokens.map((c: any) => (
+            <div key={c.hex} className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg border border-black/10 shrink-0" style={{ background: c.hex }} />
+              <div className="text-xs">
+                <div className="font-medium">{c.name}</div>
+                <div className="text-muted-foreground">{c.hex}</div>
+                <div className="text-primary text-[10px]">{c.usage}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Quick strategy */}
+      <Card className="p-6">
+        <h3 className="font-medium mb-3">Strategy Snapshot</h3>
+        <div className="space-y-3 text-sm">
+          <div><span className="text-muted-foreground">Archetype:</span> <span className="font-medium">{strategy.archetypePrimary}</span> (primary) / <span className="font-medium">{strategy.archetypeSecondary}</span> (secondary)</div>
+          <div><span className="text-muted-foreground">Golden Why:</span> <span className="italic">"{strategy.goldenWhy}"</span></div>
+          <div><span className="text-muted-foreground">Positioning:</span> {strategy.positioningStatement}</div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function ResearchTab({ brief, competitors }: { brief: any; competitors: any[] }) {
+  return (
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h3 className="font-medium mb-4 flex items-center gap-2"><Search className="h-4 w-4 text-primary" /> Competitive Landscape</h3>
+        <div className="space-y-4">
+          {competitors.map((c, i) => (
+            <div key={i} className="rounded-lg border border-border p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-medium">{c.name}</span>
+                <Badge variant="outline">{c.priceTier}</Badge>
+              </div>
+              <div className="grid gap-2 text-sm text-muted-foreground">
+                <div><span className="text-foreground/70">Positioning:</span> {c.positioning}</div>
+                <div><span className="text-foreground/70">Visual style:</span> {c.visualStyle}</div>
+                <div><span className="text-foreground/70">Key insight:</span> {c.note}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h3 className="font-medium mb-3">Market Gap Analysis</h3>
+        <p className="text-sm text-muted-foreground">
+          Where incumbents go broad and polished, <strong>{brief.businessName}</strong> can carve a defensible position by being{" "}
+          <strong>{brief.desiredAdjectives.join(", ")}</strong> — and explicitly never {brief.explicitExclusions.toLowerCase()}.
+        </p>
+        <div className="mt-4 rounded-lg bg-primary/5 border border-primary/20 p-4 text-sm">
+          <strong className="text-primary">Recommended wedge:</strong> own the{" "}
+          {brief.desiredAdjectives.slice(0, 2).join(" + ")} position. Currently underserved and aligns with audience preference.
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h3 className="font-medium mb-3">Discovery Brief</h3>
+        <div className="grid gap-2 text-sm">
+          <div><span className="text-muted-foreground">Business:</span> {brief.whatTheySell}</div>
+          <div><span className="text-muted-foreground">Audience:</span> {brief.targetAudience}</div>
+          <div><span className="text-muted-foreground">Market:</span> {brief.primaryMarket}</div>
+          <div><span className="text-muted-foreground">Admiration:</span> {brief.brandAdmirationReference}</div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function StrategyTab({ brief, strategy, verbal }: { brief: any; strategy: any; verbal: any }) {
+  return (
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h3 className="font-medium mb-4 flex items-center gap-2"><Compass className="h-4 w-4 text-primary" /> Strategic Foundation</h3>
+        <div className="space-y-4">
+          <div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Archetype</div>
+            <div className="flex gap-2">
+              <Badge variant="accent">{strategy.archetypePrimary} (primary)</Badge>
+              <Badge variant="outline">{strategy.archetypeSecondary} (secondary)</Badge>
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Golden Why</div>
+            <p className="text-lg italic text-foreground/90">"{strategy.goldenWhy}"</p>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Positioning Statement</div>
+            <p className="text-sm">{strategy.positioningStatement}</p>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Brand Attributes</div>
+            <div className="flex flex-wrap gap-2">
+              {brief.desiredAdjectives.map((a: string) => (
+                <span key={a} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{a}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h3 className="font-medium mb-4 flex items-center gap-2"><MessageSquare className="h-4 w-4 text-primary" /> Voice &amp; Tone</h3>
+        <div className="space-y-3">
+          {verbal.voiceAttributes.map((v: any, i: number) => (
+            <div key={i} className="rounded-lg bg-secondary/40 p-4 text-sm">
+              <div className="font-medium mb-1">{v.name}</div>
+              <div className="text-muted-foreground mb-2">{v.definition}</div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="rounded bg-emerald-500/10 p-2"><strong className="text-emerald-600">Do:</strong> {v.doExample}</div>
+                <div className="rounded bg-red-500/10 p-2"><strong className="text-red-500">Don't:</strong> {v.dontExample}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="p-6">
+          <h3 className="font-medium mb-3">Messaging Pillars</h3>
+          <ul className="space-y-2 text-sm">
+            {verbal.messagingPillars.map((p: string, i: number) => (
+              <li key={i} className="flex gap-2"><span className="text-primary">→</span> {p}</li>
+            ))}
+          </ul>
+        </Card>
+        <Card className="p-6">
+          <h3 className="font-medium mb-3">Tagline Candidates</h3>
+          <ul className="space-y-3 text-sm">
+            {verbal.taglineOptions.map((t: any, i: number) => (
+              <li key={i}>
+                <span className="font-medium">"{t.tagline}"</span>
+                <div className="text-xs text-muted-foreground mt-0.5">{t.rationale}</div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function TokensTab({ tokensJson, designMd, expandedFile, setExpandedFile, onDownloadTokens, onDownloadDesignMd }: {
+  tokensJson: string; designMd: string; expandedFile: string | null;
+  setExpandedFile: (s: string | null) => void; onDownloadTokens: () => void; onDownloadDesignMd: () => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">Machine-readable files that make your brand work in Figma, Tailwind, ChatGPT, and Cursor.</p>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={onDownloadTokens}><Download className="h-3 w-3 mr-1" /> tokens.json</Button>
+          <Button size="sm" variant="outline" onClick={onDownloadDesignMd}><Download className="h-3 w-3 mr-1" /> DESIGN.md</Button>
+        </div>
+      </div>
+
+      {/* tokens.json */}
+      <Card className="overflow-hidden">
+        <button onClick={() => setExpandedFile(expandedFile === "tokens" ? null : "tokens")} className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/30 transition-colors">
+          <div className="flex items-center gap-2">
+            <Code className="h-4 w-4 text-primary" />
+            <span className="font-medium text-sm">tokens.tokens.json</span>
+            <Badge variant="outline" className="text-[10px]">W3C DTCG 2025.10</Badge>
+          </div>
+          {expandedFile === "tokens" ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+        </button>
+        {expandedFile === "tokens" && (
+          <div className="border-t border-border">
+            <pre className="p-4 text-xs leading-relaxed overflow-x-auto bg-secondary/20 max-h-96"><code>{tokensJson}</code></pre>
+          </div>
+        )}
+      </Card>
+
+      {/* DESIGN.md */}
+      <Card className="overflow-hidden">
+        <button onClick={() => setExpandedFile(expandedFile === "design" ? null : "design")} className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/30 transition-colors">
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-primary" />
+            <span className="font-medium text-sm">DESIGN.md</span>
+            <Badge variant="outline" className="text-[10px]">Human-readable</Badge>
+          </div>
+          {expandedFile === "design" ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+        </button>
+        {expandedFile === "design" && (
+          <div className="border-t border-border">
+            <pre className="p-4 text-xs leading-relaxed overflow-x-auto bg-secondary/20 max-h-96 whitespace-pre-wrap">{designMd}</pre>
+          </div>
+        )}
+      </Card>
+
+      {/* Token preview */}
+      <Card className="p-6">
+        <h3 className="font-medium mb-3 text-sm">Token Preview</h3>
+        <div className="grid grid-cols-2 gap-3">
+          {(() => {
+            const parsed = JSON.parse(tokensJson);
+            return Object.entries(parsed.tokens).map(([key, val]: [string, any]) => (
+              <div key={key} className="flex items-center gap-3 rounded-lg border border-border p-3">
+                {val.$type === "color" && <div className="w-8 h-8 rounded border border-black/10 shrink-0" style={{ background: val.$value }} />}
+                <div className="text-xs">
+                  <div className="font-mono font-medium">{key}</div>
+                  <div className="text-muted-foreground">{val.$value}</div>
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function GuideTab({ html }: { html: string }) {
+  return (
+    <Card className="overflow-hidden">
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <FileText className="h-4 w-4 text-primary" /> Brand Guide Preview
+        </div>
+        <Badge variant="outline">Full HTML document</Badge>
+      </div>
+      <iframe
+        srcDoc={html}
+        className="w-full border-0 bg-white"
+        style={{ height: "70vh" }}
+        title="Brand Guide Preview"
+      />
+    </Card>
+  );
+}
+
+function SkillsTab({ claudeSkill, gptInstructions, promptFiles, tier, expandedFile, setExpandedFile }: {
+  claudeSkill: string; gptInstructions: string; promptFiles: Record<string, string>;
+  tier: any; expandedFile: string | null; setExpandedFile: (s: string | null) => void;
+}) {
+  const isStarter = tier.id === "starter";
+  const files: { name: string; content: string; icon: React.ElementType }[] = [];
+  if (!isStarter) {
+    files.push({ name: "skills/claude-skill.md", content: claudeSkill, icon: Sparkles });
+    files.push({ name: "skills/gpt-custom-instructions.md", content: gptInstructions, icon: Sparkles });
+    for (const [name, content] of Object.entries(promptFiles)) {
+      files.push({ name: `prompts/${name}`, content, icon: MessageSquare });
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {isStarter ? (
+        <Card className="p-8 text-center text-muted-foreground text-sm">
+          AI skills and prompts are included in Signature and Authority tiers. Upgrade to get Claude, GPT, and Gemini skills pre-loaded with your brand.
+        </Card>
+      ) : (
+        <>
+          <p className="text-sm text-muted-foreground">Ready-to-use instructions for AI tools. Paste into ChatGPT, Claude, Cursor, or Gemini to get on-brand output instantly.</p>
+          {files.map((f) => (
+            <Card key={f.name} className="overflow-hidden">
+              <button onClick={() => setExpandedFile(expandedFile === f.name ? null : f.name)} className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/30 transition-colors">
+                <div className="flex items-center gap-2">
+                  <f.icon className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-sm">{f.name}</span>
+                </div>
+                {expandedFile === f.name ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+              </button>
+              {expandedFile === f.name && (
+                <div className="border-t border-border">
+                  <pre className="p-4 text-xs leading-relaxed overflow-x-auto bg-secondary/20 max-h-64 whitespace-pre-wrap">{f.content}</pre>
+                </div>
+              )}
+            </Card>
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+function MockupsTab({ html }: { html: string }) {
+  return (
+    <Card className="overflow-hidden">
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <Globe className="h-4 w-4 text-primary" /> Brand in Context
+        </div>
+        <Badge variant="outline">Touchpoint mockups</Badge>
+      </div>
+      <iframe
+        srcDoc={html}
+        className="w-full border-0 bg-white"
+        style={{ height: "70vh" }}
+        title="Brand in Context Preview"
+      />
     </Card>
   );
 }
