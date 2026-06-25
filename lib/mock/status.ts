@@ -17,11 +17,3 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
 export function statusLabel(s: OrderStatus): string {
   return STATUS_LABELS[s] || s;
 }
-
-/** Terminal + review-gating helpers for the portal nav. */
-export function isDelivered(s: OrderStatus) {
-  return s === "delivered";
-}
-export function directionsUnlocked(s: OrderStatus) {
-  return ["awaiting_client_review", "revision", "final_compile", "delivered"].includes(s);
-}

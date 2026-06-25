@@ -97,7 +97,3 @@ export const UPSELLS = [
   { id: "naming-addon", label: "Naming exploration add-on", price: 89 },
   { id: "rush", label: "Rush upgrade (24h delivery)", price: 99 },
 ];
-
-export function getTier(id: Tier): TierConfig {
-  return TIERS.find((t) => t.id === id) || TIERS[1];
-}

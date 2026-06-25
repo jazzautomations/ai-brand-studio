@@ -10,7 +10,7 @@ const BARS = Array.from({ length: 28 }, (_, i) => i);
  */
 export function Waveform({ active }: { active: boolean }) {
   return (
-    <div className="flex h-16 items-center justify-center gap-[3px]">
+    <div className="flex h-16 items-center justify-center gap-[3px]" role="img" aria-label="Voice waveform">
       {BARS.map((i) => (
         <span
           key={i}

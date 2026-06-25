@@ -12,6 +12,21 @@ export const metadata: Metadata = {
     template: `%s · ${STUDIO_NAME}`,
   },
   description: STUDIO_TAGLINE,
+  openGraph: {
+    title: `${STUDIO_NAME} — Autonomous AI Brand Studio`,
+    description: STUDIO_TAGLINE,
+    type: "website",
+    siteName: STUDIO_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${STUDIO_NAME} — Autonomous AI Brand Studio`,
+    description: STUDIO_TAGLINE,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
