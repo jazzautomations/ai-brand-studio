@@ -116,12 +116,11 @@ export function CallScreen({ orderId }: { orderId: string }) {
     if (phase !== "call") return;
     const t = setInterval(() => {
       setSecondsLeft((s) => {
-        if (s <= 1) { finish(); return 0; }
+        if (s <= 0) return 0;
         return s - 1;
       });
     }, 1000);
     return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   // scroll transcript
@@ -174,6 +173,7 @@ export function CallScreen({ orderId }: { orderId: string }) {
   const mm = Math.floor(secondsLeft / 60);
   const ss = String(secondsLeft % 60).padStart(2, "0");
   const progress = Math.round(((tier.callMinutes * 60 - secondsLeft) / (tier.callMinutes * 60)) * 100);
+  const timeUp = secondsLeft <= 0;
 
   // ---- connecting ----
   if (phase === "connecting") {
@@ -226,7 +226,7 @@ export function CallScreen({ orderId }: { orderId: string }) {
           <Badge variant="success" className="ml-2"><span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />Live call</Badge>
         </div>
         <div className="flex items-center gap-3">
-          <span className="font-mono text-sm tabular-nums text-muted-foreground">{mm}:{ss}</span>
+          <span className={cn("font-mono text-sm tabular-nums", timeUp ? "text-red-400" : "text-muted-foreground")}>{timeUp ? "Time's up" : `${mm}:${ss}`}</span>
           <button onClick={() => setShowPanel((v) => !v)} className="text-muted-foreground hover:text-foreground" aria-label="Toggle transcript">
             {showPanel ? <PanelRightClose className="h-5 w-5" /> : <PanelRightOpen className="h-5 w-5" />}
           </button>
@@ -235,7 +235,7 @@ export function CallScreen({ orderId }: { orderId: string }) {
 
       {/* progress bar */}
       <div className="h-1 w-full bg-secondary">
-        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${progress}%` }} />
+        <div className={cn("h-full transition-all duration-1000", timeUp ? "bg-red-500" : "bg-primary")} style={{ width: `${progress}%` }} />
       </div>
 
       <div className="flex flex-1 overflow-hidden">
@@ -342,9 +342,12 @@ export function CallScreen({ orderId }: { orderId: string }) {
       <div className="flex items-center justify-center border-t border-border/60 py-4">
         <button
           onClick={finish}
-          className="inline-flex items-center gap-2 rounded-full bg-red-500/90 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-500"
+          className={cn(
+            "inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-white transition",
+            timeUp ? "bg-red-600 hover:bg-red-500 animate-pulse" : "bg-red-500/90 hover:bg-red-500",
+          )}
         >
-          <PhoneOff className="h-4 w-4" /> End call
+          <PhoneOff className="h-4 w-4" /> {timeUp ? "Finish & build my brand" : "End call"}
         </button>
       </div>
     </div>

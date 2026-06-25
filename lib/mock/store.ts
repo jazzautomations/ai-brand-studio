@@ -2,6 +2,7 @@
 
 import type {
   AgentRun,
+  AgentLogEntry,
   Brief,
   Client,
   CompetitorResearch,
@@ -15,6 +16,7 @@ import type {
   VoiceTurn,
   Deliverable,
 } from "@/lib/data/types";
+import { AGENT_LOG_SEQUENCES } from "@/lib/mock/agent-logs";
 import type { Tier } from "@/lib/tiers";
 import { TIERS } from "@/lib/tiers";
 import { STUDIO_NAME } from "@/lib/studio";
@@ -44,6 +46,7 @@ interface StoreState {
   voiceSessions: VoiceSession[];
   briefs: Brief[];
   agentRuns: AgentRun[];
+  agentLogs: AgentLogEntry[];
   directions: Direction[];
   selectedDirections: SelectedDirection[];
   revisions: Revision[];
@@ -67,6 +70,7 @@ function emptyState(): StoreState {
     voiceSessions: [],
     briefs: [],
     agentRuns: [],
+    agentLogs: [],
     directions: [],
     selectedDirections: [],
     revisions: [],
@@ -198,6 +202,7 @@ class Store {
       ps.stageIdx = nextIdx;
       ps.nextStageAt = Date.now() + next.durationMs;
       this.logAgentRun(orderId, next.agentName, "running", next.preview);
+      this.emitAgentLogs(orderId, next.agentName);
       return;
     }
 
@@ -274,6 +279,30 @@ class Store {
         version: 1,
         createdAt: new Date().toISOString(),
       });
+      this.state.deliverables.push({
+        id: uid("del"),
+        orderId,
+        type: "mood_board",
+        fileUrl: "#mood-board.html",
+        version: 1,
+        createdAt: new Date().toISOString(),
+      });
+      this.state.deliverables.push({
+        id: uid("del"),
+        orderId,
+        type: "social_media_kit",
+        fileUrl: "#social-media-kit.html",
+        version: 1,
+        createdAt: new Date().toISOString(),
+      });
+      this.state.deliverables.push({
+        id: uid("del"),
+        orderId,
+        type: "brand_in_context",
+        fileUrl: "#brand-in-context.html",
+        version: 1,
+        createdAt: new Date().toISOString(),
+      });
     }
     delete this.state.pipeline[orderId];
   }
@@ -290,6 +319,24 @@ class Store {
       qaFlags: [],
       startedAt: new Date().toISOString(),
       completedAt: status === "done" ? new Date().toISOString() : undefined,
+    });
+  }
+
+  private emitAgentLogs(orderId: string, agentName: AgentRun["agentName"]) {
+    const steps = AGENT_LOG_SEQUENCES[agentName];
+    if (!steps) return;
+    steps.forEach((s, i) => {
+      setTimeout(() => {
+        this.state.agentLogs.push({
+          id: uid("alog"),
+          orderId,
+          agentName,
+          step: s.step,
+          detail: s.detail,
+          timestamp: new Date().toISOString(),
+        });
+        this.emit();
+      }, i * 1200);
     });
   }
 
@@ -436,6 +483,21 @@ class Store {
       if (["in_progress", "awaiting_client_review", "delivered"].includes(s.status)) {
         this.logAgentRun(order.id, "research", "done", "Discovery summary generated.");
         this.logAgentRun(order.id, "strategy", "done", "Positioning + archetype documented.");
+        for (const agent of ["research", "strategy", "verbal", "visual", "qa_review"] as AgentRun["agentName"][]) {
+          const steps = AGENT_LOG_SEQUENCES[agent];
+          if (steps) {
+            steps.forEach((step) => {
+              this.state.agentLogs.push({
+                id: uid("alog"),
+                orderId: order.id,
+                agentName: agent,
+                step: step.step,
+                detail: step.detail,
+                timestamp: new Date(Date.now() - Math.random() * 864e5).toISOString(),
+              });
+            });
+          }
+        }
       }
       if (["awaiting_client_review", "delivered"].includes(s.status)) {
         const dirs = generateDirections(brief, s.tier);
@@ -549,6 +611,7 @@ class Store {
       nextStageAt: Date.now() + first.durationMs,
     };
     this.logAgentRun(orderId, first.agentName, "running", first.preview);
+    this.emitAgentLogs(orderId, first.agentName);
     this.emit();
   }
 
@@ -570,6 +633,12 @@ class Store {
     return this.state.agentRuns
       .filter((r) => r.orderId === orderId)
       .sort((a, b) => ((a.startedAt || "") < (b.startedAt || "") ? -1 : 1));
+  }
+
+  getAgentLogs(orderId: string): AgentLogEntry[] {
+    return this.state.agentLogs
+      .filter((l) => l.orderId === orderId)
+      .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1));
   }
 
   /* ---------- directions + selection ---------- */
@@ -600,6 +669,7 @@ class Store {
       nextStageAt: Date.now() + first.durationMs,
     };
     this.logAgentRun(orderId, first.agentName, "running", first.preview);
+    this.emitAgentLogs(orderId, first.agentName);
     this.emit();
   }
 

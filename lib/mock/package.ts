@@ -182,6 +182,266 @@ export function buildPromptFiles(brief: Brief, verbal: VerbalIdentity): Record<s
   };
 }
 
+export function buildMoodBoardHtml(brief: Brief, direction: Direction, strategy: StrategyDoc): string {
+  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
+  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
+
+  const moodKeywords = brief.desiredAdjectives.map(a =>
+    `<span class="keyword" style="border-color:${primary}">${a}</span>`
+  ).join("");
+
+  const paletteSwatches = direction.colorTokens.map(c =>
+    `<div class="swatch"><div class="color" style="background:${c.hex}"></div><span>${c.name}<br><code>${c.hex}</code></span></div>`
+  ).join("");
+
+  const body = `
+  <h2>Mood & Direction</h2>
+  <p>This mood board captures the visual and emotional territory your brand occupies. Every element — color, type, imagery style — reinforces the <b>${brief.desiredAdjectives.join(", ")}</b> promise.</p>
+
+  <div class="keywords">${moodKeywords}</div>
+
+  <h2>Color Territory</h2>
+  <div class="palette">${paletteSwatches}</div>
+  <p class="rationale">${strategy.colorDirection.paletteRationale}</p>
+  <p><b>Avoid:</b> ${strategy.colorDirection.avoid.join(", ")}</p>
+
+  <h2>Typography Territory</h2>
+  <div class="type-showcase">
+    <div class="type-sample" style="font-family:'Inter',system-ui,sans-serif;font-size:32px;font-weight:700;color:${primary}">Aa Bb Cc</div>
+    <div class="type-sample" style="font-family:'Inter',system-ui,sans-serif;font-size:16px;color:${text};margin-top:8px">The quick brown fox jumps over the lazy dog</div>
+  </div>
+  <p>${strategy.typographyDirection.rationale}</p>
+  <p><b>Style:</b> ${strategy.typographyDirection.suggestedStyle}</p>
+
+  <h2>Visual Personality</h2>
+  <div class="personality-grid">
+    <div class="personality-card" style="border-left-color:${primary}">
+      <h4>Primary archetype</h4>
+      <p>${strategy.archetypePrimary}</p>
+    </div>
+    <div class="personality-card" style="border-left-color:${accent}">
+      <h4>Secondary archetype</h4>
+      <p>${strategy.archetypeSecondary}</p>
+    </div>
+  </div>
+
+  <h2>Brand Essence</h2>
+  <div class="callout" style="border-left-color:${accent}">
+    <p style="font-size:18px;font-style:italic;color:${primary}">"${strategy.goldenWhy}"</p>
+  </div>
+
+  <h2>Imagery Style</h2>
+  <p>Photography and illustration should feel <b>${brief.desiredAdjectives.slice(0, 2).join(" and ")}</b> — never ${brief.explicitExclusions.toLowerCase().split(",")[0]}.</p>
+  <div class="imagery-grid">
+    <div class="imagery-note"><b>Do:</b> Natural light, authentic moments, considered compositions.</div>
+    <div class="imagery-note"><b>Don't:</b> Stock photos, heavy filters, overly staged setups.</div>
+  </div>
+  `;
+
+  return docShell(brief.languagePreference || "en", `${brief.businessName} — Mood Board`, "Visual & emotional territory", `Mood Board · ${new Date().getFullYear()}`, `
+  <style>
+    .keywords { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    .keyword { display: inline-block; padding: 6px 16px; border: 2px solid; border-radius: 999px; font-size: 14px; font-weight: 600; color: ${text}; }
+    .palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 16px 0; }
+    .swatch { display: flex; gap: 10px; align-items: center; }
+    .swatch .color { width: 48px; height: 48px; border-radius: 8px; border: 1px solid rgba(0,0,0,.08); }
+    .swatch span { font-size: 13px; color: #666; }
+    .swatch code { font-size: 11px; color: #999; }
+    .rationale { font-style: italic; color: #666; margin: 8px 0; }
+    .type-showcase { background: ${light}; border-radius: 12px; padding: 24px; margin: 16px 0; }
+    .personality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .personality-card { border-left: 4px solid; padding: 16px; background: ${light}; border-radius: 0 8px 8px 0; }
+    .personality-card h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+    .personality-card p { margin: 0; font-size: 18px; font-weight: 600; color: ${primary}; }
+    .imagery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .imagery-note { padding: 16px; border-radius: 8px; font-size: 14px; }
+    .imagery-note:first-child { background: #eafaf1; }
+    .imagery-note:last-child { background: #fdecec; }
+  </style>
+  ${body}
+  `);
+}
+
+export function buildSocialMediaKitHtml(brief: Brief, direction: Direction, strategy: StrategyDoc, verbal: VerbalIdentity): string {
+  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
+  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
+
+  const tagline = verbal.taglineOptions[0]?.tagline || "";
+  const pillars = verbal.messagingPillars.map(p => `<li>${escapeHtml(p)}</li>`).join("");
+
+  const body = `
+  <h2>Social Media Kit</h2>
+  <p>Ready-to-use templates and copy frameworks for your brand's social presence. Every piece stays on-brand using the voice and visual system defined in your brand guide.</p>
+
+  <h2>Profile Templates</h2>
+  <div class="profile-grid">
+    <div class="profile-card">
+      <h4>Twitter / X</h4>
+      <div class="profile-preview" style="background:${primary};color:${light}">
+        <div style="font-weight:700;font-size:16px">${escapeHtml(brief.businessName)}</div>
+        <div style="opacity:0.8;font-size:13px;margin-top:4px">${escapeHtml(tagline)}</div>
+      </div>
+      <p class="template-note">Bio: ${escapeHtml(verbal.voiceAttributes[0]?.definition || "Clear, confident, no filler.")}</p>
+    </div>
+    <div class="profile-card">
+      <h4>LinkedIn</h4>
+      <div class="profile-preview" style="background:${light};color:${text};border:1px solid #ddd">
+        <div style="font-weight:700;font-size:16px">${escapeHtml(brief.businessName)}</div>
+        <div style="font-size:13px;margin-top:4px;color:#666">${escapeHtml(tagline)}</div>
+      </div>
+      <p class="template-note">Headline: ${escapeHtml(brief.businessName)} — ${escapeHtml(tagline)}</p>
+    </div>
+  </div>
+
+  <h2>Content Pillars</h2>
+  <div class="pillars">${pillars}</div>
+
+  <h2>Post Templates</h2>
+  <div class="post-templates">
+    <div class="post-template">
+      <h4>Announcement</h4>
+      <div class="post-preview" style="background:${light};border-left:4px solid ${primary}">
+        <p><b>${escapeHtml(brief.businessName)}</b> — ${escapeHtml(verbal.messagingPillars[0] || "Strategy before pixels.")}</p>
+        <p style="color:${primary};font-weight:600">→ Your CTA here</p>
+      </div>
+    </div>
+    <div class="post-template">
+      <h4>Value Post</h4>
+      <div class="post-preview" style="background:${light};border-left:4px solid ${accent}">
+        <p>Quick tip for ${escapeHtml(brief.targetAudience)}:</p>
+        <p style="font-style:italic">"${escapeHtml(verbal.voiceAttributes[0]?.doExample || "Here's what we recommend and why.")}"</p>
+      </div>
+    </div>
+    <div class="post-template">
+      <h4>Social Proof</h4>
+      <div class="post-preview" style="background:${light};border-left:4px solid ${text}">
+        <p>"${escapeHtml(brief.businessName)} helped us ${escapeHtml(brief.desiredAdjectives[0] || "launch")} our brand in days, not months."</p>
+        <p style="color:#888;font-size:13px">— Client name, Title</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Hashtag Strategy</h2>
+  <div class="hashtags">
+    <span class="hashtag" style="background:${primary};color:${light}">#${brief.businessName.replace(/\s+/g, "")}</span>
+    <span class="hashtag" style="background:${accent};color:#fff">#BrandStrategy</span>
+    <span class="hashtag" style="background:${text};color:${light}">#${brief.industry.replace(/\s+/g, "")}</span>
+  </div>
+
+  <h2>Brand Voice Quick Reference</h2>
+  <div class="voice-ref">
+    ${verbal.voiceAttributes.map(v => `
+      <div class="voice-attr">
+        <b>${escapeHtml(v.name)}</b>: ${escapeHtml(v.definition)}<br>
+        <span style="color:#1f7a4d">✓ ${escapeHtml(v.doExample)}</span><br>
+        <span style="color:#b23b3b">✗ ${escapeHtml(v.dontExample)}</span>
+      </div>
+    `).join("")}
+  </div>
+  `;
+
+  return docShell(brief.languagePreference || "en", `${brief.businessName} — Social Media Kit`, "Templates, voice & content strategy", `Social Media Kit · ${new Date().getFullYear()}`, `
+  <style>
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .profile-card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; margin-bottom: 8px; }
+    .profile-preview { padding: 16px; border-radius: 10px; }
+    .template-note { font-size: 12px; color: #888; margin-top: 8px; }
+    .pillars { margin: 16px 0; }
+    .pillars li { margin-bottom: 8px; padding: 8px 12px; background: ${light}; border-radius: 6px; }
+    .post-templates { display: grid; gap: 16px; margin: 16px 0; }
+    .post-template h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; margin-bottom: 8px; }
+    .post-preview { padding: 16px; border-radius: 8px; }
+    .post-preview p { margin: 4px 0; font-size: 14px; }
+    .hashtags { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    .hashtag { padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+    .voice-ref { margin: 16px 0; }
+    .voice-attr { padding: 12px; background: ${light}; border-radius: 8px; margin-bottom: 8px; font-size: 14px; line-height: 1.6; }
+  </style>
+  ${body}
+  `);
+}
+
+export function buildBrandInContextHtml(brief: Brief, direction: Direction, strategy: StrategyDoc, verbal: VerbalIdentity): string {
+  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
+  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
+
+  const tagline = brief.desiredAdjectives[0] || "Considered";
+
+  const body = `
+  <h2>Brand in Context</h2>
+  <p>See how ${escapeHtml(brief.businessName)} looks across real-world touchpoints. Every mockup uses your approved palette, typography, and voice.</p>
+
+  <h2>Website Hero</h2>
+  <div class="mockup hero-mock" style="background:${primary};color:${light}">
+    <div style="font-size:12px;opacity:0.7;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">${escapeHtml(brief.businessName)}</div>
+    <div style="font-size:36px;font-weight:700;line-height:1.2;max-width:500px">${escapeHtml(verbal.messagingPillars[0] || "Strategy you can see.")}</div>
+    <div style="margin-top:20px;font-size:16px;opacity:0.85;max-width:400px">${escapeHtml(brief.whatTheySell)} — built for ${escapeHtml(brief.targetAudience)}.</div>
+    <div style="margin-top:24px;display:inline-block;padding:12px 28px;background:${accent};color:#fff;border-radius:8px;font-weight:600">Get started →</div>
+  </div>
+
+  <h2>Business Card</h2>
+  <div class="mockup card-mock" style="background:#fff;border:1px solid #eee;border-radius:12px;padding:32px;max-width:400px">
+    <div style="font-size:20px;font-weight:700;color:${primary}">${escapeHtml(brief.businessName)}</div>
+    <div style="font-size:12px;color:${accent};margin-top:4px;text-transform:uppercase;letter-spacing:0.08em">${escapeHtml(tagline)}</div>
+    <div style="margin-top:24px;font-size:13px;color:#666;line-height:1.6">
+      Name · Title<br>
+      email@${brief.businessName.toLowerCase().replace(/\s+/g, "")}.com<br>
+      +1 (555) 000-0000
+    </div>
+    <div style="margin-top:20px;width:32px;height:32px;background:${primary};border-radius:6px"></div>
+  </div>
+
+  <h2>Email Signature</h2>
+  <div class="mockup email-mock" style="background:${light};border-radius:8px;padding:20px;max-width:400px">
+    <div style="font-size:14px;font-weight:600;color:${text}">Best,<br>Name</div>
+    <div style="margin-top:12px;padding-top:12px;border-top:2px solid ${primary}">
+      <div style="font-size:13px;font-weight:600;color:${primary}">${escapeHtml(brief.businessName)}</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">${escapeHtml(tagline)}</div>
+    </div>
+  </div>
+
+  <h2>Social Media Post</h2>
+  <div class="mockup social-mock" style="background:#fff;border:1px solid #eee;border-radius:12px;padding:24px;max-width:400px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="width:40px;height:40px;background:${primary};border-radius:50%"></div>
+      <div>
+        <div style="font-size:14px;font-weight:600">${escapeHtml(brief.businessName)}</div>
+        <div style="font-size:11px;color:#888">Sponsored</div>
+      </div>
+    </div>
+    <div style="font-size:14px;color:${text};line-height:1.5">
+      ${escapeHtml(verbal.voiceAttributes[0]?.doExample || "Here's what we recommend and why.")}
+    </div>
+    <div style="margin-top:16px;padding:10px 16px;background:${primary};color:${light};border-radius:6px;text-align:center;font-size:13px;font-weight:600">Learn more →</div>
+  </div>
+
+  <h2>Brand Consistency Check</h2>
+  <div class="consistency-grid">
+    <div class="check-item pass">✓ Logo uses approved primary color</div>
+    <div class="check-item pass">✓ Typography matches brand guide</div>
+    <div class="check-item pass">✓ Voice tone is ${brief.desiredAdjectives[0] || "clear"}</div>
+    <div class="check-item pass">✓ Clear space maintained around mark</div>
+  </div>
+  `;
+
+  return docShell(brief.languagePreference || "en", `${brief.businessName} — Brand in Context`, "Real-world touchpoint mockups", `Brand in Context · ${new Date().getFullYear()}`, `
+  <style>
+    .mockup { margin: 16px 0; }
+    .hero-mock { padding: 48px; border-radius: 16px; }
+    .card-mock, .email-mock, .social-mock { margin: 16px 0; }
+    .consistency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0; }
+    .check-item { padding: 10px 14px; background: #eafaf1; border-radius: 6px; font-size: 13px; }
+  </style>
+  ${body}
+  `);
+}
+
 export function buildPackageFiles(
   brief: Brief,
   direction: Direction,

@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowRight, Phone, Sparkles, FileText, Package, ShieldCheck,
   Clock, Layers, Zap, MessageSquare, Star, Check,
+  Search, Compass, Palette, Terminal,
 } from "lucide-react";
 import { STUDIO_NAME, STUDIO_TAGLINE } from "@/lib/studio";
 import { MarketingNav } from "@/components/marketing/nav";
@@ -22,7 +23,7 @@ const faqs = [
   },
   {
     q: "What do I actually receive?",
-    a: "Your call transcript, a discovery document, a full brand guide PDF, all logo versions as SVG, and a Brand Context Package zip containing design tokens, a DESIGN.md rationale, and ready-to-use skill/prompt files for your AI tools.",
+    a: "Your call transcript, a discovery document, a full brand guide PDF, all logo versions as SVG, market research, brand strategy, mood board, social media kit, brand-in-context mockups, and a Brand Context Package zip containing design tokens, a DESIGN.md rationale, and ready-to-use skill/prompt files for your AI tools.",
   },
   {
     q: "Will my developer or designer be able to use this?",
@@ -216,6 +217,49 @@ export default function Home() {
               tokens into Figma. Import them into Tailwind. Paste DESIGN.md into ChatGPT or Claude
               and get on-brand content instantly, every time.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* AGENT PIPELINE */}
+      <section className="border-b border-border/60 bg-secondary/30 py-20">
+        <div className="container">
+          <div className="mx-auto mb-14 max-w-2xl text-center">
+            <Badge variant="accent" className="mb-5 gap-1.5"><Terminal className="h-3.5 w-3.5" /> Autonomous pipeline</Badge>
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Watch 7 AI agents build your brand</h2>
+            <p className="mt-4 text-muted-foreground">
+              Every project runs through a fully autonomous pipeline. You can watch each agent work in real time — research, strategy, visual, QA — or just wait for the notification that your brand is ready.
+            </p>
+          </div>
+          <div className="mx-auto max-w-3xl">
+            <div className="relative">
+              <div className="absolute left-6 top-0 bottom-0 w-px bg-border" />
+              <div className="space-y-6">
+                {[
+                  { icon: Search, agent: "Research Agent", time: "~7s demo", desc: "Crawls competitors, maps the market gap, builds competitive profiles.", color: "text-blue-500" },
+                  { icon: Compass, agent: "Strategy Agent", time: "~7s demo", desc: "Selects archetype, crafts Golden Why, writes positioning statement.", color: "text-purple-500" },
+                  { icon: MessageSquare, agent: "Verbal Identity Agent", time: "~6s demo", desc: "Defines voice spectrum, messaging pillars, tagline candidates.", color: "text-emerald-500" },
+                  { icon: Palette, agent: "Visual Agent", time: "~8s demo", desc: "Generates 3 vector logo directions via Recraft V4.1 Pro.", color: "text-amber-500" },
+                  { icon: ShieldCheck, agent: "QA Review Agent", time: "~6s demo", desc: "4-layer validation: visual, strategy, verbal, completeness.", color: "text-red-500" },
+                ].map((s, i) => (
+                  <div key={s.agent} className="relative flex gap-4">
+                    <div className="relative z-10 grid h-12 w-12 place-items-center rounded-xl border border-border bg-background text-lg">
+                      <s.icon className={`h-5 w-5 ${s.color}`} />
+                    </div>
+                    <div className="flex-1 rounded-xl border border-border bg-background p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">{s.agent}</span>
+                        <span className="text-xs text-muted-foreground font-mono">{s.time}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 ml-6 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
+                <p className="text-sm font-medium text-primary">Your brand is ready — review directions in your portal</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

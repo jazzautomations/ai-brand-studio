@@ -99,6 +99,15 @@ export interface AgentRun {
   completedAt?: string;
 }
 
+export interface AgentLogEntry {
+  id: string;
+  orderId: string;
+  agentName: AgentRun["agentName"];
+  step: string;
+  detail: string;
+  timestamp: string;
+}
+
 export interface ColorToken {
   name: string;
   hex: string;
@@ -171,7 +180,7 @@ export interface Order {
 export interface Deliverable {
   id: string;
   orderId: string;
-  type: "brand_guide_pdf" | "context_package_zip" | "market_research_doc" | "strategy_doc";
+  type: "brand_guide_pdf" | "context_package_zip" | "market_research_doc" | "strategy_doc" | "mood_board" | "social_media_kit" | "brand_in_context";
   fileUrl: string;
   version: number;
   createdAt: string;

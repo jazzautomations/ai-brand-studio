@@ -5,12 +5,13 @@ import Link from "next/link";
 import {
   ArrowLeft, FileText, Package, Download, Loader2, CheckCircle2,
   Sparkles, Image as ImageIcon, RefreshCw, Search, Compass,
+  Palette, Share2, Eye,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
 import { TIERS } from "@/lib/tiers";
 import { STUDIO_NAME } from "@/lib/studio";
-import { buildPackageFiles, buildBrandGuideHtml, buildMarketResearchHtml, buildStrategyHtml, mockStrategy, mockVerbal } from "@/lib/mock/package";
+import { buildPackageFiles, buildBrandGuideHtml, buildMarketResearchHtml, buildStrategyHtml, mockStrategy, mockVerbal, buildMoodBoardHtml, buildSocialMediaKitHtml, buildBrandInContextHtml } from "@/lib/mock/package";
 import { competitorResearchFor } from "@/lib/mock/transcript";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -101,6 +102,32 @@ function DeliveryInner() {
     setDone("strategy");
   }
 
+  function downloadMoodBoard() {
+    if (!brief || !sel) return;
+    const strategy = mockStrategy(brief);
+    const html = buildMoodBoardHtml(brief, sel.direction, strategy);
+    triggerDownload(`mood-board-${slug}.html`, new Blob([html], { type: "text/html" }));
+    setDone("mood");
+  }
+
+  function downloadSocialKit() {
+    if (!brief || !sel) return;
+    const strategy = mockStrategy(brief);
+    const verbal = mockVerbal(brief);
+    const html = buildSocialMediaKitHtml(brief, sel.direction, strategy, verbal);
+    triggerDownload(`social-media-kit-${slug}.html`, new Blob([html], { type: "text/html" }));
+    setDone("social");
+  }
+
+  function downloadBrandInContext() {
+    if (!brief || !sel) return;
+    const strategy = mockStrategy(brief);
+    const verbal = mockVerbal(brief);
+    const html = buildBrandInContextHtml(brief, sel.direction, strategy, verbal);
+    triggerDownload(`brand-in-context-${slug}.html`, new Blob([html], { type: "text/html" }));
+    setDone("context");
+  }
+
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <div>
@@ -164,6 +191,41 @@ function DeliveryInner() {
         </Card>
       </div>
 
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="flex flex-col p-6">
+          <Palette className="h-8 w-8 text-primary" />
+          <h3 className="mt-4 text-lg font-medium">Mood Board</h3>
+          <p className="mt-1 flex-1 text-sm text-muted-foreground">
+            Visual territory — color mood, typography samples, imagery direction, and brand personality. The emotional foundation.
+          </p>
+          <Button className="mt-5 gap-2" variant="outline" onClick={downloadMoodBoard}>
+            {done === "mood" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download mood board</>}
+          </Button>
+        </Card>
+
+        <Card className="flex flex-col p-6">
+          <Share2 className="h-8 w-8 text-primary" />
+          <h3 className="mt-4 text-lg font-medium">Social Media Kit</h3>
+          <p className="mt-1 flex-1 text-sm text-muted-foreground">
+            Profile templates, post frameworks, hashtag strategy, and brand voice quick reference. Ready to post.
+          </p>
+          <Button className="mt-5 gap-2" variant="outline" onClick={downloadSocialKit}>
+            {done === "social" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download kit</>}
+          </Button>
+        </Card>
+
+        <Card className="flex flex-col p-6">
+          <Eye className="h-8 w-8 text-primary" />
+          <h3 className="mt-4 text-lg font-medium">Brand in Context</h3>
+          <p className="mt-1 flex-1 text-sm text-muted-foreground">
+            Website hero, business card, email signature, and social post mockups — see your brand in the real world.
+          </p>
+          <Button className="mt-5 gap-2" variant="outline" onClick={downloadBrandInContext}>
+            {done === "context" ? <><CheckCircle2 className="h-4 w-4" /> Downloaded</> : <><Download className="h-4 w-4" /> Download mockups</>}
+          </Button>
+        </Card>
+      </div>
+
       <Card className="p-6">
         <h3 className="text-sm font-medium text-foreground/80">What's inside the package</h3>
         <div className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
@@ -173,6 +235,11 @@ function DeliveryInner() {
           <span>✓ Digital logo + favicon SVG</span>
           <span>✓ Social avatar SVG</span>
           <span>✓ Editable master SVG</span>
+          <span>✓ Market research document</span>
+          <span>✓ Brand strategy document</span>
+          <span>✓ Mood board &amp; visual territory</span>
+          <span>✓ Social media kit &amp; templates</span>
+          <span>✓ Brand-in-context mockups</span>
           {tier && tier.id !== "starter" && <><span>✓ Claude / GPT / Gemini skills</span><span>✓ 5 ready-to-use prompts</span></>}
         </div>
       </Card>

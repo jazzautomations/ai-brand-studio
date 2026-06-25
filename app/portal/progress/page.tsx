@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense } from "react";
+import { useState, Suspense } from "react";
 import {
   Search, Compass, MessageSquare, Palette, ShieldCheck,
   Phone, ArrowRight, Mic, Sparkles, CheckCircle2, Loader2,
-  FileBox, Boxes,
+  FileBox, Boxes, ChevronDown, ChevronRight, Terminal,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
@@ -14,7 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { OrderStatus } from "@/lib/data/types";
+import type { OrderStatus, AgentLogEntry } from "@/lib/data/types";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
   pending_payment: "Awaiting payment",
@@ -230,27 +230,9 @@ function ProgressInner() {
 
       <Card className="p-6">
         <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <Sparkles className="h-4 w-4 text-primary" /> Agent activity log
+          <Terminal className="h-4 w-4 text-primary" /> Agent activity log
         </div>
-        <div className="space-y-3">
-          {(finalizeRuns.length ? [...progressRuns, ...finalizeRuns] : progressRuns).length ? (
-            (finalizeRuns.length ? [...progressRuns, ...finalizeRuns] : progressRuns).map((run) => (
-              <div key={run.id} className="rounded-lg border border-border bg-card/50 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-sm font-medium">{AGENT_LABELS[run.agentName] || run.agentName}</div>
-                  <Badge variant={run.status === "done" ? "success" : run.status === "running" ? "accent" : "outline"}>
-                    {run.status}
-                  </Badge>
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {run.output?.note || "Working…"}
-                </p>
-              </div>
-            ))
-          ) : (
-            <p className="text-sm text-muted-foreground">No agent logs yet.</p>
-          )}
-        </div>
+        <AgentLogPanel orderId={id} runs={finalizeRuns.length ? [...progressRuns, ...finalizeRuns] : progressRuns} />
       </Card>
 
       {/* ready → directions CTA */}
@@ -308,6 +290,91 @@ function DemoControls({ orderId }: { orderId: string }) {
       <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="outline" onClick={skip}>Skip to next stage ▸</Button>
       </div>
+    </div>
+  );
+}
+
+function AgentLogPanel({ orderId, runs }: { orderId: string; runs: Array<{ id: string; agentName: string; status: string; output?: { note?: string } }> }) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const logs = getStore().getAgentLogs(orderId);
+
+  const logsByAgent = new Map<string, AgentLogEntry[]>();
+  for (const log of logs) {
+    const existing = logsByAgent.get(log.agentName) || [];
+    existing.push(log);
+    logsByAgent.set(log.agentName, existing);
+  }
+
+  if (!runs.length) {
+    return <p className="text-sm text-muted-foreground">No agent logs yet.</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {runs.map((run) => {
+        const agentLogs = logsByAgent.get(run.agentName) || [];
+        const isExpanded = expanded === run.agentName;
+        const isRunning = run.status === "running";
+        const isDone = run.status === "done";
+
+        return (
+          <div key={run.id} className="rounded-lg border border-border bg-card/50 overflow-hidden">
+            <button
+              onClick={() => setExpanded(isExpanded ? null : run.agentName)}
+              className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/30 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  "grid h-7 w-7 place-items-center rounded-md text-xs",
+                  isDone && "bg-primary/15 text-primary",
+                  isRunning && "bg-amber-500/15 text-amber-500",
+                  !isDone && !isRunning && "bg-secondary text-muted-foreground",
+                )}>
+                  {isDone ? <CheckCircle2 className="h-4 w-4" /> : isRunning ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="text-xs font-mono">{runs.indexOf(run) + 1}</span>}
+                </div>
+                <div>
+                  <div className="text-sm font-medium">{AGENT_LABELS[run.agentName] || run.agentName}</div>
+                  <div className="text-xs text-muted-foreground">{run.output?.note || "Queued"}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {agentLogs.length > 0 && (
+                  <Badge variant="outline" className="text-xs">{agentLogs.length} steps</Badge>
+                )}
+                {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+              </div>
+            </button>
+
+            {isExpanded && agentLogs.length > 0 && (
+              <div className="border-t border-border/60 bg-secondary/20 px-4 py-3">
+                <div className="space-y-2">
+                  {agentLogs.map((log, i) => (
+                    <div key={log.id} className="flex gap-3 text-xs">
+                      <div className="flex flex-col items-center">
+                        <div className={cn(
+                          "h-2 w-2 rounded-full",
+                          i === agentLogs.length - 1 && isRunning ? "bg-primary animate-pulse" : "bg-primary/60",
+                        )} />
+                        {i < agentLogs.length - 1 && <div className="w-px flex-1 bg-border/60 mt-1" />}
+                      </div>
+                      <div className="pb-2">
+                        <div className="font-medium text-foreground/90">{log.step}</div>
+                        <div className="mt-0.5 text-muted-foreground leading-relaxed">{log.detail}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isExpanded && agentLogs.length === 0 && (
+              <div className="border-t border-border/60 bg-secondary/20 px-4 py-3 text-xs text-muted-foreground">
+                Waiting for agent to produce log entries…
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
