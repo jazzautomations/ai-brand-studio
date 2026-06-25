@@ -85,27 +85,27 @@ export default function Home() {
         <div className="container relative py-24 md:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="outline" className="mb-6 gap-1.5 animate-fade-in-up">
-              <Sparkles className="h-3.5 w-3.5 text-primary" /> Fully autonomous · No humans in the loop
+              <Sparkles className="h-3.5 w-3.5 text-primary" /> Complete brand identity system
             </Badge>
             <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl animate-fade-in-up stagger-1">
-              {STUDIO_TAGLINE}
+              A complete brand identity.<br />Delivered in hours.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground animate-fade-in-up stagger-2">
-              Research-backed strategy. Professional logo. Complete brand guide. Everything your business
-              needs to look like it&apos;s worth trusting — without the agency timeline or the agency invoice.
+              Strategy, visual identity, voice guidelines, design tokens, AI skills, and prompt templates.
+              Everything your business needs to look credible — at a fraction of the agency cost.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
                 <Button size="lg" className="gap-2">
-                  Start your brand <ArrowRight className="h-4 w-4" />
+                  Get your brand <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/#how">
-                <Button size="lg" variant="outline">See how it works</Button>
+                <Button size="lg" variant="outline">See what you get</Button>
               </Link>
             </div>
             <p className="mt-5 text-xs text-muted-foreground/70 animate-fade-in-up stagger-4">
-              Starts with a live AI voice call inside the app · Delivered in hours
+              $299–$997 one-time · No retainers · No surprises
             </p>
           </div>
         </div>
@@ -115,15 +115,18 @@ export default function Home() {
       <section className="border-b border-border/60 py-20">
         <div className="container">
           <RevealSection>
-            <h2 className="mx-auto mb-14 max-w-2xl text-center text-3xl font-semibold tracking-tight md:text-4xl">
-              Branding is stuck between two broken extremes
+            <h2 className="mx-auto mb-6 max-w-2xl text-center text-3xl font-semibold tracking-tight md:text-4xl">
+              Getting a brand that works shouldn&apos;t cost a fortune or take months
             </h2>
+            <p className="mx-auto mb-14 max-w-xl text-center text-muted-foreground">
+              You need a brand that makes you look credible — not a logo file and a prayer.
+            </p>
           </RevealSection>
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { icon: Zap, title: "DIY tools", body: "Fast, cheap, and immediately recognizable as AI-generated. No strategy, no guidelines. Your customers can tell." },
-              { icon: Clock, title: "Traditional agencies", body: "6–16 weeks. $5k–$50k. Most of the cost is overhead, not craft." },
-              { icon: Sparkles, title: STUDIO_NAME, body: "Strategy-led, AI-powered, fully autonomous. Delivered in hours. And it ships with your brand pre-loaded into every AI tool you'll ever use.", highlight: true },
+              { icon: Zap, title: "DIY tools", body: "You get a logo. Maybe a color palette. No strategy, no guidelines, no system. Your developer can't use it. Your designer ignores it. Your customers can tell." },
+              { icon: Clock, title: "Agencies", body: "6–16 weeks. $5k–$50k. Three rounds of revisions. A PDF that sits in a folder. Most of the cost is overhead, not craft. And you still need to integrate it yourself." },
+              { icon: Sparkles, title: "Forge", body: "A complete brand system — strategy, identity, voice, tokens, AI skills — in one package. Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.", highlight: true },
             ].map((s, i) => (
               <RevealSection key={s.title} delay={i * 0.1}>
                 <Card className={`p-7 h-full ${s.highlight ? "border-primary/40 bg-primary/[0.03]" : ""}`}>
@@ -143,30 +146,28 @@ export default function Home() {
       <section id="how" className="border-b border-border/60 py-20">
         <div className="container">
           <RevealSection>
-            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">How it works</h2>
+            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">What you get</h2>
             <p className="mx-auto mb-14 max-w-xl text-center text-muted-foreground">
-              From payment to a complete brand identity — five steps, zero homework.
+              Every brand comes with a complete system — not just a logo, but everything you need to use it everywhere.
             </p>
           </RevealSection>
-          <div className="grid gap-6 md:grid-cols-5">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: ShieldCheck, title: "Pay & start", body: "Pick your tier, check out, and start your brand call immediately." },
-              { icon: Phone, title: "Talk to our AI strategist", body: "Right here in the app. Tell us about your business, customers, and competitors. We research in real time as you speak." },
-              { icon: Layers, title: "Receive directions", body: "Strategy-backed visual directions, each with a rationale. Pick the one that's right." },
-              { icon: MessageSquare, title: "Refine if needed", body: "Adjustments are always free. Bigger changes go through a structured review process." },
-              { icon: Package, title: "Your brand, delivered", body: "PDF brand guide plus the Brand Context Package. Ready to use everywhere." },
+              { icon: FileText, title: "Brand Strategy", body: "Positioning statement, archetype, Golden Why, brand attributes. The strategic foundation that makes every visual and verbal choice defensible." },
+              { icon: Sparkles, title: "Visual Identity", body: "3 custom logo directions with full/mono/reversed/compact versions. Color palette, typography system, usage guidelines." },
+              { icon: MessageSquare, title: "Voice & Tone", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds consistent everywhere." },
+              { icon: Package, title: "Design Tokens", body: "W3C DTCG 2025.10 tokens. Drop into Figma, import into Tailwind. Your whole stack stays on-brand automatically." },
+              { icon: Search, title: "Market Research", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why." },
+              { icon: ShieldCheck, title: "AI Skills & Prompts", body: "Ready-made instructions for Claude, GPT, and Gemini. 5 prompt templates for hero sections, LinkedIn, email, product descriptions, and ads." },
             ].map((s, i) => (
               <RevealSection key={s.title} delay={i * 0.08}>
-                <div className="relative">
-                  <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Card className="p-6 h-full">
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <s.icon className="h-5 w-5" />
                   </div>
-                  <div className="mb-1 flex items-center gap-2">
-                    <span className="text-xs font-semibold text-muted-foreground/60">0{i + 1}</span>
-                    <h3 className="text-base font-medium">{s.title}</h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{s.body}</p>
-                </div>
+                  <h3 className="mb-2 text-base font-medium">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
+                </Card>
               </RevealSection>
             ))}
           </div>
@@ -178,18 +179,18 @@ export default function Home() {
         <div className="container grid items-center gap-12 md:grid-cols-2">
           <RevealSection>
             <Badge variant="accent" className="mb-5 gap-1.5">
-              <Phone className="h-3.5 w-3.5" /> The discovery call
+              <Phone className="h-3.5 w-3.5" /> Discovery call
             </Badge>
             <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
-              Most brand processes start with a form. Ours starts with a conversation.
+              Tell us about your business. We&apos;ll build the strategy while you talk.
             </h2>
             <p className="text-lg text-muted-foreground">
-              Click a button, and our AI brand strategist joins you for 25 minutes, researches your
-              market in real time as you talk, and leaves with everything needed to build your brand
-              from the ground up. No homework. No mood boards. No scheduling. Just click and talk.
+              No forms. No mood boards. No scheduling. Just click and talk — our strategist
+              researches your market in real time, captures your positioning, and builds a
+              brief that drives every visual and verbal choice in your brand system.
             </p>
             <ul className="mt-7 space-y-3 text-sm">
-              {["Real-time competitor research while you speak", "Adaptive follow-up questions", "A richer brief than any form could capture", "Transcript saved to your portal forever"].map((f) => (
+              {["Real-time competitor research while you speak", "Captures your positioning, not just your preferences", "Produces a strategic brief that drives the entire brand", "Transcript and research included in your deliverables"].map((f) => (
                 <li key={f} className="flex items-center gap-2.5">
                   <Check className="h-4 w-4 text-primary" /> {f}
                 </li>
@@ -201,9 +202,9 @@ export default function Home() {
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
               <div className="relative">
                 <div className="mb-6 flex items-center gap-3">
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-medium">A</span>
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-medium">F</span>
                   <div>
-                    <div className="text-sm font-medium">{STUDIO_NAME} AI Strategist</div>
+                    <div className="text-sm font-medium">{STUDIO_NAME} Strategist</div>
                     <div className="flex items-center gap-1.5 text-xs text-emerald-400"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Live · in-app call</div>
                   </div>
                 </div>
@@ -332,15 +333,15 @@ export default function Home() {
       <section id="pricing" className="border-b border-border/60 py-20">
         <div className="container">
           <RevealSection>
-            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">Simple, one-time pricing</h2>
-            <p className="mx-auto mb-14 max-w-xl text-center text-muted-foreground">
-              No retainers. No agency overhead. Adjustments are always free.
+            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">What this would cost otherwise</h2>
+            <p className="mx-auto mb-6 max-w-xl text-center text-muted-foreground">
+              A branding agency charges $5k–$50k and takes months. We deliver the same system in hours.
+            </p>
+            <p className="mx-auto mb-14 max-w-xl text-center text-sm text-muted-foreground/70">
+              One-time payment. No retainers. No surprise invoices. Adjustments are always free.
             </p>
           </RevealSection>
           <PricingCards ctaLabel="Choose {name}" />
-          <p className="mt-8 text-center text-xs text-muted-foreground/70">
-            Billed in USD. Pilot cohort may see local estimates (BRL · EUR · GBP) at checkout.
-          </p>
         </div>
       </section>
 
@@ -371,13 +372,13 @@ export default function Home() {
         <div className="container text-center">
           <RevealSection>
             <h2 className="mx-auto mb-5 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">
-              Your brand is one conversation away.
+              Your brand is one call away.
             </h2>
             <p className="mx-auto mb-8 max-w-xl text-muted-foreground">
-              Pay now, talk to your AI strategist in the next minute, and have a complete brand identity in days.
+              Talk to our strategist, pick a direction, and walk away with a complete brand system — strategy, identity, tokens, skills — ready to use everywhere.
             </p>
             <Link href="/checkout">
-              <Button size="lg" className="gap-2">Start your brand <ArrowRight className="h-4 w-4" /></Button>
+              <Button size="lg" className="gap-2">Get your brand <ArrowRight className="h-4 w-4" /></Button>
             </Link>
           </RevealSection>
         </div>
@@ -390,11 +391,11 @@ export default function Home() {
         <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/60 bg-background/90 backdrop-blur-xl py-3 px-4 animate-fade-in-up">
           <div className="container flex items-center justify-between">
             <div className="hidden sm:block">
-              <span className="text-sm font-medium">Your brand is one conversation away.</span>
+              <span className="text-sm font-medium">A complete brand identity system.</span>
               <span className="ml-2 text-xs text-muted-foreground">From $299</span>
             </div>
             <Link href="/checkout">
-              <Button className="gap-2">Start your brand <ArrowRight className="h-4 w-4" /></Button>
+              <Button className="gap-2">Get your brand <ArrowRight className="h-4 w-4" /></Button>
             </Link>
           </div>
         </div>

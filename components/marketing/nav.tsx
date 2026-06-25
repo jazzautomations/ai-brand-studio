@@ -20,7 +20,7 @@ export function MarketingNav() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          <Link href="/#how" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How it works</Link>
+          <Link href="/#how" className="text-sm text-muted-foreground hover:text-foreground transition-colors">What you get</Link>
           <Link href="/#package" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Brand Package</Link>
           <Link href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
           <Link href="/#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link>
@@ -39,7 +39,7 @@ export function MarketingNav() {
       {open && (
         <div className="border-t border-border/60 bg-background md:hidden">
           <div className="container flex flex-col gap-1 py-4">
-            <Link href="/#how" onClick={() => setOpen(false)} className={cn("py-2 text-sm text-muted-foreground")}>How it works</Link>
+            <Link href="/#how" onClick={() => setOpen(false)} className={cn("py-2 text-sm text-muted-foreground")}>What you get</Link>
             <Link href="/#package" onClick={() => setOpen(false)} className="py-2 text-sm text-muted-foreground">Brand Package</Link>
             <Link href="/#pricing" onClick={() => setOpen(false)} className="py-2 text-sm text-muted-foreground">Pricing</Link>
             <Link href="/#faq" onClick={() => setOpen(false)} className="py-2 text-sm text-muted-foreground">FAQ</Link>
