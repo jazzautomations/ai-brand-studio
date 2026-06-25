@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight, Phone, Sparkles, FileText, Package, ShieldCheck,
-  Clock, Zap, MessageSquare, Star, Check,
+  Zap, MessageSquare, Star, Check,
   Search, Compass, Palette, Code,
 } from "lucide-react";
 import { STUDIO_NAME, STUDIO_TAGLINE } from "@/lib/studio";
@@ -55,7 +55,7 @@ function AnimatedWaveform() {
       {[6, 14, 9, 18, 12, 22, 8, 16, 11, 20, 7, 13, 10, 17].map((h, i) => (
         <span
           key={i}
-          className="w-1 rounded-full bg-primary/50"
+          className="w-1 rounded-full bg-accent/50"
           style={{
             height: h,
             animation: `pulse-bar ${0.8 + (i % 3) * 0.2}s ease-in-out ${i * 0.06}s infinite alternate`,
@@ -65,6 +65,8 @@ function AnimatedWaveform() {
     </div>
   );
 }
+
+const LOGOS = ["SaaS", "Agency", "Consultancy", "DTC", "Startup", "Freelancer", "E-commerce", "Creator"];
 
 export default function Home() {
   const [showSticky, setShowSticky] = useState(false);
@@ -81,55 +83,71 @@ export default function Home() {
 
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border/60">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-accent/[0.05]" />
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-accent/20 to-transparent rounded-full blur-3xl" />
-        <div className="container relative py-24 md:py-36">
-          <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="outline" className="mb-8 gap-1.5 animate-fade-in-up border-accent/30 text-accent">
-              <Sparkles className="h-3.5 w-3.5" /> {STUDIO_TAGLINE}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.03]" />
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-accent/10 to-transparent rounded-full blur-3xl" />
+        <div className="container relative py-32 md:py-44">
+          <div className="mx-auto max-w-4xl text-center">
+            <Badge variant="outline" className="mb-8 gap-2 animate-fade-in-up border-accent/30 text-accent px-4 py-2">
+              <Sparkles className="h-4 w-4" /> {STUDIO_TAGLINE}
             </Badge>
-            <h1 className="text-balance text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl animate-fade-in-up stagger-1 leading-[1.1]">
+            <h1 className="text-balance text-5xl font-bold tracking-tight md:text-7xl lg:text-[80px] animate-fade-in-up stagger-1 leading-[1.05]">
               One brand system.<br />
               <span className="text-gradient">Every tool.</span> Every touchpoint.
             </h1>
-            <p className="mx-auto mt-7 max-w-2xl text-pretty text-lg text-muted-foreground animate-fade-in-up stagger-2 leading-relaxed">
+            <p className="mx-auto mt-8 max-w-2xl text-xl text-muted-foreground animate-fade-in-up stagger-2 leading-relaxed">
               Strategy, identity, voice, tokens, and AI skills — delivered in hours.
               Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.
             </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in-up stagger-3">
+            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
-                <Button size="lg" className="gap-2 px-8 py-6 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-shadow">
-                  Get your brand system <ArrowRight className="h-4 w-4" />
+                <Button size="lg" className="gap-3 px-10 py-7 text-lg font-semibold shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-all">
+                  Get your brand system <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/#problem">
-                <Button size="lg" variant="outline" className="px-8 py-6 text-base">Why this matters</Button>
+                <Button size="lg" variant="outline" className="px-10 py-7 text-lg">Why this matters</Button>
               </Link>
             </div>
-            <p className="mt-6 text-sm text-muted-foreground animate-fade-in-up stagger-4">
+            <p className="mt-8 text-base text-muted-foreground animate-fade-in-up stagger-4">
               $299–$997 one-time · No retainers · No surprise invoices
             </p>
           </div>
         </div>
       </section>
 
-      {/* THE PROBLEM */}
-      <section id="problem" className="border-b border-border/60 py-20">
+      {/* LOGO BAR */}
+      <section className="border-b border-border/60 py-12">
         <div className="container">
           <RevealSection>
-            <div className="mx-auto max-w-3xl text-center mb-14">
-              <Badge variant="accent" className="mb-5 gap-1.5">The problem</Badge>
-              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                You need a brand that works. Not a logo that sits in a folder.
+            <p className="text-center text-sm text-muted-foreground mb-8">Trusted by founders, agencies, and teams who move fast</p>
+          </RevealSection>
+          <div className="relative overflow-hidden logo-bar">
+            <div className="flex gap-12 animate-marquee whitespace-nowrap">
+              {[...LOGOS, ...LOGOS].map((logo, i) => (
+                <span key={i} className="text-lg font-semibold text-muted-foreground/30">{logo}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* THE PROBLEM */}
+      <section id="problem" className="py-24 md:py-32">
+        <div className="container">
+          <RevealSection>
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <Badge variant="accent" className="mb-6 gap-2">The problem</Badge>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
+                You need a brand that works.<br />Not a logo that sits in a folder.
               </h2>
             </div>
           </RevealSection>
 
-          <div className="mx-auto max-w-4xl space-y-6">
+          <div className="mx-auto max-w-5xl space-y-6">
             <RevealSection>
-              <Card className="p-8 premium-card border-l-4 border-l-red-400">
-                <h3 className="text-lg font-semibold mb-3">DIY tools give you a logo. Your customers can tell.</h3>
-                <p className="text-muted-foreground leading-relaxed">
+              <Card className="p-10 premium-card border-l-4 border-l-red-400">
+                <h3 className="text-xl font-bold mb-4">DIY tools give you a logo. Your customers can tell.</h3>
+                <p className="text-muted-foreground leading-relaxed text-lg">
                   Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines.
                   No system. Your developer can&apos;t use it. Your designer ignores it. And your customers
                   know it was made in a template. <strong>You saved money but lost credibility.</strong>
@@ -138,9 +156,9 @@ export default function Home() {
             </RevealSection>
 
             <RevealSection delay={0.1}>
-              <Card className="p-8 premium-card border-l-4 border-l-amber-400">
-                <h3 className="text-lg font-semibold mb-3">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
-                <p className="text-muted-foreground leading-relaxed">
+              <Card className="p-10 premium-card border-l-4 border-l-amber-400">
+                <h3 className="text-xl font-bold mb-4">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
+                <p className="text-muted-foreground leading-relaxed text-lg">
                   6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive.
                   There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color
                   should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system.
@@ -150,9 +168,9 @@ export default function Home() {
             </RevealSection>
 
             <RevealSection delay={0.2}>
-              <Card className="p-8 premium-card border-l-4 border-l-primary">
-                <h3 className="text-lg font-semibold mb-3">Every week without a brand system costs you credibility.</h3>
-                <p className="text-muted-foreground leading-relaxed">
+              <Card className="p-10 premium-card border-l-4 border-l-primary">
+                <h3 className="text-xl font-bold mb-4">Every week without a brand system costs you credibility.</h3>
+                <p className="text-muted-foreground leading-relaxed text-lg">
                   While you wait for an agency, your competitors launch. Your investors ask
                   &ldquo;where&apos;s the brand?&rdquo; Your developer builds with default styles.
                   Your landing page looks like everyone else&apos;s.
@@ -165,21 +183,21 @@ export default function Home() {
       </section>
 
       {/* THE SOLUTION */}
-      <section className="border-b border-border/60 bg-secondary/30 py-20">
+      <section className="border-y border-border/60 bg-secondary/30 py-24 md:py-32">
         <div className="container">
           <RevealSection>
-            <div className="mx-auto max-w-3xl text-center mb-14">
-              <Badge variant="accent" className="mb-5 gap-1.5">The solution</Badge>
-              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                A brand operating system. Not a design project.
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <Badge variant="accent" className="mb-6 gap-2">The solution</Badge>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
+                A brand operating system.<br />Not a design project.
               </h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-6 text-xl text-muted-foreground">
                 Forge gives you everything a brand needs to function — across every tool, every touchpoint, every time.
               </p>
             </div>
           </RevealSection>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: Compass, title: "Strategy your developer can't argue with", body: "Positioning, archetype, Golden Why. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
               { icon: Palette, title: "Identity that scales from favicon to billboard", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system." },
@@ -189,12 +207,12 @@ export default function Home() {
               { icon: Search, title: "Research that informs every decision", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
             ].map((s, i) => (
               <RevealSection key={i} delay={i * 0.08}>
-                <Card className="p-6 h-full premium-card">
-                  <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent">
-                    <s.icon className="h-5 w-5" />
+                <Card className="p-8 h-full premium-card">
+                  <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent">
+                    <s.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 text-base font-semibold">{s.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
+                  <h3 className="mb-3 text-lg font-bold">{s.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{s.body}</p>
                 </Card>
               </RevealSection>
             ))}
@@ -203,25 +221,25 @@ export default function Home() {
       </section>
 
       {/* WHY FORGE */}
-      <section className="border-b border-border/60 py-20">
+      <section className="py-24 md:py-32">
         <div className="container">
           <RevealSection>
-            <div className="mx-auto max-w-3xl text-center mb-14">
-              <Badge variant="accent" className="mb-5 gap-1.5">Why Forge</Badge>
-              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                What you get with Forge vs. everything else
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <Badge variant="accent" className="mb-6 gap-2">Why Forge</Badge>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
+                What you get with Forge<br />vs. everything else
               </h2>
             </div>
           </RevealSection>
 
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-5xl">
             <RevealSection>
-              <div className="rounded-2xl border border-border overflow-hidden shadow-lg">
+              <div className="rounded-2xl border border-border overflow-hidden shadow-xl">
                 <div className="grid grid-cols-4 bg-muted/30 text-xs font-medium text-muted-foreground">
-                  <div className="p-5"></div>
-                  <div className="p-5 text-center">DIY Tools</div>
-                  <div className="p-5 text-center">Agencies</div>
-                  <div className="p-5 text-center bg-gradient-to-b from-accent/10 to-transparent text-accent font-bold">Forge</div>
+                  <div className="p-6"></div>
+                  <div className="p-6 text-center">DIY Tools</div>
+                  <div className="p-6 text-center">Agencies</div>
+                  <div className="p-6 text-center bg-gradient-to-b from-accent/10 to-transparent text-accent font-bold">Forge</div>
                 </div>
                 {[
                   { feature: "Brand strategy", diy: "—", agency: "✓", forge: "✓" },
@@ -236,10 +254,10 @@ export default function Home() {
                   { feature: "Cost", diy: "$0-50", agency: "$5k-50k", forge: "$299-997" },
                 ].map((row, i) => (
                   <div key={i} className={`grid grid-cols-4 text-sm border-t border-border ${i % 2 === 0 ? "bg-background" : "bg-muted/20"}`}>
-                    <div className="p-4 font-medium">{row.feature}</div>
-                    <div className="p-4 text-center text-muted-foreground">{row.diy}</div>
-                    <div className="p-4 text-center text-muted-foreground">{row.agency}</div>
-                    <div className="p-4 text-center font-semibold bg-gradient-to-b from-accent/5 to-transparent">{row.forge}</div>
+                    <div className="p-5 font-semibold">{row.feature}</div>
+                    <div className="p-5 text-center text-muted-foreground">{row.diy}</div>
+                    <div className="p-5 text-center text-muted-foreground">{row.agency}</div>
+                    <div className="p-5 text-center font-bold bg-gradient-to-b from-accent/5 to-transparent">{row.forge}</div>
                   </div>
                 ))}
               </div>
@@ -249,47 +267,47 @@ export default function Home() {
       </section>
 
       {/* THE DISCOVERY CALL */}
-      <section className="border-b border-border/60 bg-secondary/30 py-20">
-        <div className="container grid items-center gap-12 md:grid-cols-2">
+      <section className="border-y border-border/60 bg-secondary/30 py-24 md:py-32">
+        <div className="container grid items-center gap-16 lg:grid-cols-2">
           <RevealSection>
-            <Badge variant="accent" className="mb-5 gap-1.5">
-              <Phone className="h-3.5 w-3.5" /> How it starts
+            <Badge variant="accent" className="mb-6 gap-2">
+              <Phone className="h-4 w-4" /> How it starts
             </Badge>
-            <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
-              Tell us about your business. We&apos;ll build the strategy while you talk.
+            <h2 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
+              Tell us about your business.<br />We&apos;ll build the strategy while you talk.
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-xl text-muted-foreground mb-8">
               No forms. No mood boards. No scheduling. Just click and talk — our strategist
               researches your market in real time, captures your positioning, and builds a
               brief that drives every visual and verbal choice in your brand system.
             </p>
-            <ul className="mt-7 space-y-3 text-sm">
+            <ul className="space-y-4 text-lg">
               {["Real-time competitor research while you speak", "Captures your positioning, not just your preferences", "Produces a strategic brief that drives the entire brand", "Transcript and research included in your deliverables"].map((f) => (
-                <li key={f} className="flex items-center gap-2.5">
-                  <Check className="h-4 w-4 text-primary" /> {f}
+                <li key={f} className="flex items-center gap-3">
+                  <Check className="h-5 w-5 text-accent shrink-0" /> {f}
                 </li>
               ))}
             </ul>
           </RevealSection>
           <RevealSection delay={0.15}>
-            <Card className="relative overflow-hidden p-8">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
+            <Card className="relative overflow-hidden p-10 premium-card">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-accent/[0.03]" />
               <div className="relative">
-                <div className="mb-6 flex items-center gap-3">
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-medium">F</span>
+                <div className="mb-8 flex items-center gap-4">
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-lg font-bold">F</span>
                   <div>
-                    <div className="text-sm font-medium">{STUDIO_NAME} Strategist</div>
-                    <div className="flex items-center gap-1.5 text-xs text-emerald-400"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Live · in-app call</div>
+                    <div className="text-base font-semibold">{STUDIO_NAME} Strategist</div>
+                    <div className="flex items-center gap-1.5 text-sm text-emerald-500"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Live · in-app call</div>
                   </div>
                 </div>
-                <div className="space-y-3 text-sm">
-                  <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary/15 px-4 py-2.5 animate-slide-in-right stagger-1">We build CRM tools for indie consultants.</div>
-                  <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-secondary px-4 py-2.5 animate-fade-in-up stagger-2">Love it. I&apos;m looking at Notion and Honeybook now — they position around all-in-one. Do you feel that&apos;s what your market expects, or are you going somewhere different?</div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground/70 animate-fade-in-up stagger-3"><Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" /> Researching Honeybook…</div>
+                <div className="space-y-4 text-base">
+                  <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary/10 px-5 py-3 animate-slide-in-right stagger-1">We build CRM tools for indie consultants.</div>
+                  <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-secondary px-5 py-3 animate-fade-in-up stagger-2">Love it. I&apos;m looking at Notion and Honeybook now — they position around all-in-one. Do you feel that&apos;s what your market expects, or are you going somewhere different?</div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground/70 animate-fade-in-up stagger-3"><Sparkles className="h-4 w-4 text-accent animate-pulse" /> Researching Honeybook…</div>
                 </div>
-                <div className="mt-6 flex items-end justify-between gap-2">
+                <div className="mt-8 flex items-end justify-between gap-2">
                   <AnimatedWaveform />
-                  <span className="text-xs text-muted-foreground">18:42 remaining</span>
+                  <span className="text-sm text-muted-foreground">18:42 remaining</span>
                 </div>
               </div>
             </Card>
@@ -297,16 +315,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRICING */}
-      <section id="pricing" className="border-b border-border/60 py-20">
+      {/* SOCIAL PROOF */}
+      <section className="py-24 md:py-32">
         <div className="container">
           <RevealSection>
-            <div className="mx-auto max-w-3xl text-center mb-14">
-              <Badge variant="accent" className="mb-5 gap-1.5">Pricing</Badge>
-              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
+                Built for founders who move fast
+              </h2>
+              <p className="mt-6 text-xl text-muted-foreground">
+                Early access clients are building their brands right now. Real case studies land after our first pilot cohort ships.
+              </p>
+            </div>
+          </RevealSection>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { role: "SaaS founder", quote: "I had a full brand system in an afternoon. The strategy doc alone was worth it." },
+              { role: "Consultancy", quote: "The voice call was wild — it actually researched my competitors live." },
+              { role: "DTC brand", quote: "My developer dropped the tokens into Tailwind and everything just matched." },
+            ].map((t, i) => (
+              <RevealSection key={t.role} delay={i * 0.1}>
+                <Card className="p-8 h-full premium-card">
+                  <div className="mb-5 flex gap-1 text-accent">
+                    {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-5 w-5 fill-current" />)}
+                  </div>
+                  <p className="mb-6 text-base text-foreground/90 leading-relaxed">{t.quote}</p>
+                  <div className="text-sm text-muted-foreground font-medium">{t.role} · pilot cohort</div>
+                </Card>
+              </RevealSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="pricing" className="border-y border-border/60 bg-secondary/30 py-24 md:py-32">
+        <div className="container">
+          <RevealSection>
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <Badge variant="accent" className="mb-6 gap-2">Pricing</Badge>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
                 What this would cost otherwise
               </h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-6 text-xl text-muted-foreground">
                 A branding agency charges $5k–$50k and takes months. We deliver the same system in hours.
                 One-time payment. No retainers. No surprise invoices.
               </p>
@@ -317,20 +368,20 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-20">
+      <section id="faq" className="py-24 md:py-32">
         <div className="container max-w-3xl">
           <RevealSection>
-            <h2 className="mb-10 text-center text-3xl font-semibold tracking-tight md:text-4xl">FAQ</h2>
+            <h2 className="mb-12 text-center text-4xl font-bold tracking-tight md:text-5xl">FAQ</h2>
           </RevealSection>
           <div className="divide-y divide-border">
             {faqs.map((f, i) => (
               <RevealSection key={f.q} delay={i * 0.05}>
-                <details className="group py-5">
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-base font-medium list-none">
+                <details className="group py-6">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-lg font-semibold list-none">
                     {f.q}
-                    <span className="text-muted-foreground transition-transform group-open:rotate-45">+</span>
+                    <span className="text-muted-foreground transition-transform group-open:rotate-45 text-2xl">+</span>
                   </summary>
-                  <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
+                  <p className="mt-4 text-base text-muted-foreground leading-relaxed">{f.a}</p>
                 </details>
               </RevealSection>
             ))}
@@ -339,22 +390,22 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="relative overflow-hidden border-t border-border/60 py-24">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.05] via-transparent to-accent/[0.05]" />
-        <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-t from-accent/15 to-transparent rounded-full blur-3xl" />
+      <section className="relative overflow-hidden border-t border-border/60 py-28 md:py-36">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.04]" />
+        <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-t from-accent/10 to-transparent rounded-full blur-3xl" />
         <div className="container relative text-center">
           <RevealSection>
-            <h2 className="mx-auto mb-6 max-w-2xl text-3xl font-bold tracking-tight md:text-5xl leading-tight">
+            <h2 className="mx-auto mb-6 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl leading-tight">
               Stop waiting for a brand.<br />
               <span className="text-gradient">Start using one.</span>
             </h2>
-            <p className="mx-auto mb-10 max-w-xl text-lg text-muted-foreground leading-relaxed">
+            <p className="mx-auto mb-12 max-w-2xl text-xl text-muted-foreground leading-relaxed">
               Talk to our strategist, pick a direction, and walk away with a complete brand system —
               strategy, identity, tokens, skills — ready to use everywhere. Today.
             </p>
             <Link href="/checkout">
-              <Button size="lg" className="gap-2 px-10 py-7 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-shadow">
-                Get your brand system <ArrowRight className="h-4 w-4" />
+              <Button size="lg" className="gap-3 px-12 py-8 text-lg font-semibold shadow-lg shadow-accent/20 hover:shadow-accent/30 transition-all">
+                Get your brand system <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
           </RevealSection>
@@ -365,14 +416,14 @@ export default function Home() {
 
       {/* Sticky CTA */}
       {showSticky && (
-        <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/60 bg-background/90 backdrop-blur-xl py-3 px-4 animate-fade-in-up">
+        <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/60 bg-background/95 backdrop-blur-xl py-4 px-6 animate-fade-in-up">
           <div className="container flex items-center justify-between">
             <div className="hidden sm:block">
-              <span className="text-sm font-medium">One brand system. Every tool.</span>
-              <span className="ml-2 text-xs text-muted-foreground">From $299</span>
+              <span className="text-base font-semibold">One brand system. Every tool.</span>
+              <span className="ml-3 text-sm text-muted-foreground">From $299</span>
             </div>
             <Link href="/checkout">
-              <Button className="gap-2">Get your brand <ArrowRight className="h-4 w-4" /></Button>
+              <Button className="gap-2 px-6 py-3 font-semibold">Get your brand <ArrowRight className="h-4 w-4" /></Button>
             </Link>
           </div>
         </div>
