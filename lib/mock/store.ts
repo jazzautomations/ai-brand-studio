@@ -243,67 +243,18 @@ class Store {
   private completeFinalizePhase(orderId: string) {
     const order = this.state.orders.find((o) => o.id === orderId);
     if (!order) return;
-    const sel = this.state.selectedDirections.find((s) => s.orderId === orderId);
     order.status = "delivered";
     order.deliveredAt = new Date().toISOString();
-    if (sel) {
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "brand_guide_pdf",
-        fileUrl: "#brand-guide.pdf",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "context_package_zip",
-        fileUrl: "#brand-context.zip",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "market_research_doc",
-        fileUrl: "#market-research.html",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "strategy_doc",
-        fileUrl: "#brand-strategy.html",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "mood_board",
-        fileUrl: "#mood-board.html",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "social_media_kit",
-        fileUrl: "#social-media-kit.html",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-      this.state.deliverables.push({
-        id: uid("del"),
-        orderId,
-        type: "brand_in_context",
-        fileUrl: "#brand-in-context.html",
-        version: 1,
-        createdAt: new Date().toISOString(),
-      });
-    }
+    // always create deliverables — the mock doesn't need a real selection
+    this.state.deliverables.push(
+      { id: uid("del"), orderId, type: "brand_guide_pdf", fileUrl: "#brand-guide.pdf", version: 1, createdAt: new Date().toISOString() },
+      { id: uid("del"), orderId, type: "context_package_zip", fileUrl: "#brand-context.zip", version: 1, createdAt: new Date().toISOString() },
+      { id: uid("del"), orderId, type: "market_research_doc", fileUrl: "#market-research.html", version: 1, createdAt: new Date().toISOString() },
+      { id: uid("del"), orderId, type: "strategy_doc", fileUrl: "#brand-strategy.html", version: 1, createdAt: new Date().toISOString() },
+      { id: uid("del"), orderId, type: "mood_board", fileUrl: "#mood-board.html", version: 1, createdAt: new Date().toISOString() },
+      { id: uid("del"), orderId, type: "social_media_kit", fileUrl: "#social-media-kit.html", version: 1, createdAt: new Date().toISOString() },
+      { id: uid("del"), orderId, type: "brand_in_context", fileUrl: "#brand-in-context.html", version: 1, createdAt: new Date().toISOString() },
+    );
     delete this.state.pipeline[orderId];
   }
 
@@ -615,26 +566,37 @@ class Store {
     this.emit();
   }
 
-  /** Demo helper: instantly jump to the next status. */
+  /** Demo helper: instantly jump to the next milestone. Handles every status transition. */
   skipStage(orderId: string) {
     const ps = this.state.pipeline[orderId];
     if (ps) {
+      // Pipeline is running — complete all remaining stages instantly
+      const stages = ps.phase === "pipeline" ? PIPELINE_STAGES : FINALIZE_STAGES;
+      for (let i = ps.stageIdx; i < stages.length; i++) {
+        const stage = stages[i];
+        const run = this.state.agentRuns.find(
+          (r) => r.orderId === orderId && r.agentName === stage.agentName && r.status === "running",
+        );
+        if (run) { run.status = "done"; run.completedAt = new Date().toISOString(); }
+      }
       ps.nextStageAt = 0;
-      this.tick();
+      if (ps.phase === "pipeline") {
+        this.completePipelinePhase(orderId);
+      } else {
+        this.completeFinalizePhase(orderId);
+      }
+      this.emit();
       return;
     }
     const order = this.state.orders.find((o) => o.id === orderId);
     if (!order) return;
-    // no active pipeline — nudge to the next milestone
-    if (order.status === "call_completed") {
-      this.startPipeline(orderId);
-    } else if (order.status === "pending_call") {
-      // create a mock voice session and start pipeline
+    if (order.status === "pending_call") {
       this.startVoiceSession(orderId);
       const answers = { business: "Demo business", audience: "Demo audience", competitors: "Demo competitor", adjectives: "bold, warm, sharp" };
       this.completeVoiceSession(orderId, [], answers);
+    } else if (order.status === "call_completed") {
+      this.startPipeline(orderId);
     } else if (order.status === "awaiting_client_review") {
-      // select the first direction and start finalize
       const dirs = this.state.directions.filter((d) => d.orderId === orderId);
       if (dirs[0]) this.selectDirection(orderId, dirs[0].id);
     } else if (order.status === "revision") {

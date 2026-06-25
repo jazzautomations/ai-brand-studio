@@ -60,11 +60,13 @@ function DeliveryInner() {
   const tier = TIERS.find((t) => t.id === order.tier);
   const brief = getStore().getBrief(id);
   const sel = getStore().getSelectedDirection(id);
+  const dirs = getStore().getDirections(id);
+  const direction = sel?.direction || dirs[0];
   const session = getStore().getVoiceSession(id);
   const competitors = session?.competitorResearch?.length ? session.competitorResearch : competitorResearchFor(brief?.competitors || []);
   const slug = (brief?.businessName || "brand").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-  if (order.status !== "delivered" || !brief || !sel) {
+  if (order.status !== "delivered" || !brief || !direction) {
     return (
       <div className="mx-auto max-w-md py-20 text-center">
         <p className="text-muted-foreground">Your delivery isn't ready yet.</p>
@@ -75,19 +77,19 @@ function DeliveryInner() {
 
   const strategy = mockStrategy(brief);
   const verbal = mockVerbal(brief);
-  const versions = renderDirectionVersions(sel.direction);
-  const tokensJson = buildTokensJson(sel.direction, brief);
-  const designMd = buildDesignMd(brief, sel.direction, strategy, verbal);
+  const versions = renderDirectionVersions(direction);
+  const tokensJson = buildTokensJson(direction, brief);
+  const designMd = buildDesignMd(brief, direction, strategy, verbal);
   const claudeSkill = buildClaudeSkill(brief, strategy);
   const gptInstructions = buildGptInstructions(brief, strategy);
   const promptFiles = buildPromptFiles(brief, verbal);
 
   async function downloadZip() {
-    if (!brief || !sel || !tier) return;
+    if (!brief || !tier) return;
     setZipping(true);
     try {
       const JSZip = (await import("jszip")).default;
-      const files = buildPackageFiles(brief, sel.direction, tier.id);
+      const files = buildPackageFiles(brief, direction, tier.id);
       const zip = new JSZip();
       const root = zip.folder(`brand-context-${slug}-v1`)!;
       for (const [path, content] of Object.entries(files)) root.file(path, content);
@@ -100,8 +102,8 @@ function DeliveryInner() {
   }
 
   function downloadGuide() {
-    if (!brief || !sel || !tier) return;
-    const html = buildBrandGuideHtml(brief, sel.direction, strategy, verbal, tier.id);
+    if (!brief || !tier) return;
+    const html = buildBrandGuideHtml(brief, direction, strategy, verbal, tier.id);
     triggerDownload(`brand-guide-${slug}.html`, new Blob([html], { type: "text/html" }));
     setDone("guide");
   }
@@ -170,7 +172,7 @@ function DeliveryInner() {
       {/* Tab content */}
       <div className="min-h-[400px]">
         {activeTab === "overview" && (
-          <OverviewTab brief={brief} strategy={strategy} verbal={verbal} direction={sel.direction} tier={tier!} versions={versions} competitors={competitors} />
+          <OverviewTab brief={brief} strategy={strategy} verbal={verbal} direction={direction} tier={tier!} versions={versions} competitors={competitors} />
         )}
         {activeTab === "research" && (
           <ResearchTab brief={brief} competitors={competitors} />
@@ -189,7 +191,7 @@ function DeliveryInner() {
           />
         )}
         {activeTab === "guide" && (
-          <GuideTab html={buildBrandGuideHtml(brief, sel.direction, strategy, verbal, tier!.id)} />
+          <GuideTab html={buildBrandGuideHtml(brief, direction, strategy, verbal, tier!.id)} />
         )}
         {activeTab === "skills" && (
           <SkillsTab
@@ -202,7 +204,7 @@ function DeliveryInner() {
           />
         )}
         {activeTab === "mockups" && (
-          <MockupsTab html={buildBrandInContextHtml(brief, sel.direction, strategy, verbal)} />
+          <MockupsTab html={buildBrandInContextHtml(brief, direction, strategy, verbal)} />
         )}
       </div>
 
