@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   ArrowRight, Phone, Sparkles, FileText, Package, ShieldCheck,
   Clock, Layers, Zap, MessageSquare, Star, Check,
-  Search, Compass, Palette, Terminal,
+  Search, Compass, Palette, Terminal, Code,
 } from "lucide-react";
 import { STUDIO_NAME, STUDIO_TAGLINE } from "@/lib/studio";
 import { MarketingNav } from "@/components/marketing/nav";
@@ -40,13 +40,13 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
 }
 
 const faqs = [
-  { q: "Is this just AI slop?", a: "Every direction is validated by our QA system before you see it. No unreviewed AI output ever reaches you — four automated review layers check visual quality, strategy alignment, verbal-visual consistency, and completeness." },
-  { q: "What's the difference between adjustments and structural changes?", a: "Adjustments are small tweaks — a color shift, spacing, a copy edit — and they're unlimited and free on every tier. Structural changes swap a concept, overhaul the palette, or change the archetype, and they consume a revision round." },
-  { q: "What do I actually receive?", a: "Your call transcript, a discovery document, a full brand guide PDF, all logo versions as SVG, market research, brand strategy, mood board, social media kit, brand-in-context mockups, and a Brand Context Package zip containing design tokens, a DESIGN.md rationale, and ready-to-use skill/prompt files for your AI tools." },
-  { q: "Will my developer or designer be able to use this?", a: "Yes. The Brand Context Package uses the W3C DTCG 2025.10 token standard — drag tokens into Figma, import into Tailwind, and your whole stack stays on-brand without manual configuration." },
-  { q: "Can I use this with ChatGPT, Cursor, or Midjourney?", a: "Yes. The /skills/ folder ships ready-made instructions for Claude, GPT, and Gemini, plus prompt templates for hero sections, LinkedIn posts, emails, product descriptions, and ad creative." },
-  { q: "How long does it take?", a: "Starter and Signature deliver in around 5 business days. Authority is priority delivery in 24 hours. The discovery call happens the moment you pay — no scheduling." },
-  { q: "What if I don't like what I receive?", a: "You get structural revision rounds based on your tier, and unlimited free adjustments. Our Creative Director agent responds to bigger changes with strategic reasoning — and after one pushback, applies your call with a documented trade-off." },
+  { q: "Why would I pay for something AI-generated?", a: "You're not paying for 'AI-generated' — you're paying for a complete brand system: strategy, identity, voice, tokens, and AI skills. The AI is how we deliver it in hours instead of months. The output is the same quality an agency would produce — strategy-first, visually consistent, ready to use everywhere." },
+  { q: "Is this just a logo?", a: "No. You get a complete brand system: positioning strategy, visual identity (3 directions, 4 logo versions each), voice guidelines, design tokens (W3C DTCG 2025.10), market research, AI skills for ChatGPT/Claude/Gemini, and 5 prompt templates. A logo is maybe 10% of what we deliver." },
+  { q: "How is this different from Canva or Looka?", a: "Canva and Looka give you a logo. We give you a brand system — strategy, identity, voice, tokens, and AI skills that make every tool you use stay on-brand. Canva doesn't know your positioning. We build everything from your strategy." },
+  { q: "How is this different from an agency?", a: "Same deliverables, different economics. An agency charges $5k–$50k and takes 6–16 weeks. We deliver in hours at $299–$997. The difference is overhead — we don't have account managers, creative directors on salary, or office space. Just the craft." },
+  { q: "What if I don't like what I receive?", a: "You get revision rounds based on your tier (1–3 structural rounds), plus unlimited free adjustments. Our Creative Director agent responds to bigger changes with strategic reasoning — and after one pushback, applies your call with a documented trade-off." },
+  { q: "Will my developer or designer be able to use this?", a: "Yes. The Brand Context Package uses the W3C DTCG 2025.10 token standard — drag tokens into Figma, import into Tailwind, and your whole stack stays on-brand. We also ship AI skills for Claude, GPT, and Gemini so every AI output sounds like your brand." },
+  { q: "How long does it take?", a: "The discovery call happens immediately after checkout — no scheduling. The brand system is built in hours. Starter and Signature deliver same-day. Authority is priority delivery within 24 hours." },
 ];
 
 function AnimatedWaveform() {
@@ -85,60 +85,214 @@ export default function Home() {
         <div className="container relative py-24 md:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="outline" className="mb-6 gap-1.5 animate-fade-in-up">
-              <Sparkles className="h-3.5 w-3.5 text-primary" /> Complete brand identity system
+              <Sparkles className="h-3.5 w-3.5 text-primary" /> Brand identity system, not just a logo
             </Badge>
             <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl animate-fade-in-up stagger-1">
-              A complete brand identity.<br />Delivered in hours.
+              Your brand needs a system.<br />Not a logo file.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground animate-fade-in-up stagger-2">
-              Strategy, visual identity, voice guidelines, design tokens, AI skills, and prompt templates.
-              Everything your business needs to look credible — at a fraction of the agency cost.
+              Strategy, visual identity, voice guidelines, design tokens, AI skills, and prompt templates —
+              everything that makes your brand work across every tool, every touchpoint, every time.
+              Delivered in hours. Priced for founders, not enterprises.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
                 <Button size="lg" className="gap-2">
-                  Get your brand <ArrowRight className="h-4 w-4" />
+                  Get your brand system <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/#how">
-                <Button size="lg" variant="outline">See what you get</Button>
+              <Link href="/#problem">
+                <Button size="lg" variant="outline">Why this matters</Button>
               </Link>
             </div>
             <p className="mt-5 text-xs text-muted-foreground/70 animate-fade-in-up stagger-4">
-              $299–$997 one-time · No retainers · No surprises
+              $299–$997 one-time · No retainers · No surprise invoices
             </p>
           </div>
         </div>
       </section>
 
-      {/* PROBLEM */}
-      <section className="border-b border-border/60 py-20">
+      {/* THE PROBLEM */}
+      <section id="problem" className="border-b border-border/60 py-20">
         <div className="container">
           <RevealSection>
-            <h2 className="mx-auto mb-6 max-w-2xl text-center text-3xl font-semibold tracking-tight md:text-4xl">
-              Getting a brand that works shouldn&apos;t cost a fortune or take months
-            </h2>
-            <p className="mx-auto mb-14 max-w-xl text-center text-muted-foreground">
-              You need a brand that makes you look credible — not a logo file and a prayer.
-            </p>
+            <div className="mx-auto max-w-3xl text-center mb-14">
+              <Badge variant="accent" className="mb-5 gap-1.5">The problem</Badge>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                Branding is broken. You&apos;re paying for the overhead, not the craft.
+              </h2>
+            </div>
           </RevealSection>
-          <div className="grid gap-6 md:grid-cols-3">
+
+          <div className="mx-auto max-w-4xl space-y-8">
+            <RevealSection>
+              <Card className="p-8 border-l-4 border-l-red-500">
+                <h3 className="text-lg font-semibold mb-3">DIY tools give you a logo. That&apos;s it.</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Canva, Looka, Hatchful — they spit out a logo in 5 minutes. No strategy. No guidelines.
+                  No system. Your developer can&apos;t use it. Your designer ignores it. And your customers
+                  can tell it was made in a template. <strong>You saved money but lost credibility.</strong>
+                </p>
+              </Card>
+            </RevealSection>
+
+            <RevealSection delay={0.1}>
+              <Card className="p-8 border-l-4 border-l-amber-500">
+                <h3 className="text-lg font-semibold mb-3">Agencies give you a PDF. That&apos;s it.</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  6–16 weeks. $5k–$50k. Three rounds of revisions. You get a beautiful brand guide PDF
+                  that sits in a Google Drive folder. Your developer asks &ldquo;what are the tokens?&rdquo; —
+                  there are none. Your designer asks &ldquo;what font do I use?&rdquo; — it&apos;s buried on page 23.
+                  <strong> You paid for a document, not a system.</strong>
+                </p>
+              </Card>
+            </RevealSection>
+
+            <RevealSection delay={0.2}>
+              <Card className="p-8 border-l-4 border-l-primary">
+                <h3 className="text-lg font-semibold mb-3">The real cost isn&apos;t the money — it&apos;s the time.</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  While you wait 3 months for an agency, your competitors are launching. Your investors
+                  are asking &ldquo;where&apos;s the brand?&rdquo; Your developer is building with default styles.
+                  <strong> Every week without a brand system is a week you look like you don&apos;t have your shit together.</strong>
+                </p>
+              </Card>
+            </RevealSection>
+          </div>
+        </div>
+      </section>
+
+      {/* THE SOLUTION */}
+      <section className="border-b border-border/60 bg-secondary/30 py-20">
+        <div className="container">
+          <RevealSection>
+            <div className="mx-auto max-w-3xl text-center mb-14">
+              <Badge variant="accent" className="mb-5 gap-1.5">The solution</Badge>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                A brand system that works everywhere. Not just in a PDF.
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Forge gives you everything a brand needs to function — strategy, identity, voice, tokens, and AI skills —
+                in one package that works with the tools you already use.
+              </p>
+            </div>
+          </RevealSection>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: Zap, title: "DIY tools", body: "You get a logo. Maybe a color palette. No strategy, no guidelines, no system. Your developer can't use it. Your designer ignores it. Your customers can tell." },
-              { icon: Clock, title: "Agencies", body: "6–16 weeks. $5k–$50k. Three rounds of revisions. A PDF that sits in a folder. Most of the cost is overhead, not craft. And you still need to integrate it yourself." },
-              { icon: Sparkles, title: "Forge", body: "A complete brand system — strategy, identity, voice, tokens, AI skills — in one package. Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.", highlight: true },
+              { icon: Compass, title: "Strategy that&apos;s defensible", body: "Positioning statement, archetype, Golden Why, brand attributes. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
+              { icon: Palette, title: "Identity that scales", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system. Works from favicon to billboard." },
+              { icon: MessageSquare, title: "Voice that&apos;s consistent", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself everywhere — website, email, social, ads." },
+              { icon: Code, title: "Tokens that work in code", body: "W3C DTCG 2025.10 design tokens. Drop into Figma. Import into Tailwind. Your developer builds on-brand from day one. No guesswork." },
+              { icon: Zap, title: "AI skills that keep you on-brand", body: "Ready-made instructions for Claude, GPT, and Gemini. Paste them in and every AI output sounds like your brand. 5 prompt templates included." },
+              { icon: Search, title: "Research that informs everything", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
             ].map((s, i) => (
-              <RevealSection key={s.title} delay={i * 0.1}>
-                <Card className={`p-7 h-full ${s.highlight ? "border-primary/40 bg-primary/[0.03]" : ""}`}>
-                  <div className={`mb-4 inline-flex rounded-lg p-2.5 ${s.highlight ? "bg-primary/10" : "bg-secondary"}`}>
-                    <s.icon className={`h-5 w-5 ${s.highlight ? "text-primary" : "text-muted-foreground"}`} />
+              <RevealSection key={i} delay={i * 0.08}>
+                <Card className="p-6 h-full">
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <s.icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mb-2 text-lg font-medium">{s.title}</h3>
-                  <p className="text-sm text-muted-foreground">{s.body}</p>
+                  <h3 className="mb-2 text-base font-medium" dangerouslySetInnerHTML={{ __html: s.title }} />
+                  <p className="text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: s.body }} />
                 </Card>
               </RevealSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* WHY FORGE */}
+      <section className="border-b border-border/60 py-20">
+        <div className="container">
+          <RevealSection>
+            <div className="mx-auto max-w-3xl text-center mb-14">
+              <Badge variant="accent" className="mb-5 gap-1.5">Why Forge</Badge>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                What makes this different from everything else
+              </h2>
+            </div>
+          </RevealSection>
+
+          <div className="mx-auto max-w-4xl">
+            <RevealSection>
+              <div className="rounded-xl border border-border overflow-hidden">
+                <div className="grid grid-cols-4 bg-muted/50 text-xs font-medium text-muted-foreground">
+                  <div className="p-4"></div>
+                  <div className="p-4 text-center">DIY Tools</div>
+                  <div className="p-4 text-center">Agencies</div>
+                  <div className="p-4 text-center bg-primary/5 text-primary font-semibold">Forge</div>
+                </div>
+                {[
+                  { feature: "Brand strategy", diy: "—", agency: "✓", forge: "✓" },
+                  { feature: "Visual identity", diy: "Logo only", agency: "✓", forge: "✓" },
+                  { feature: "Voice guidelines", diy: "—", agency: "Partial", forge: "✓" },
+                  { feature: "Design tokens", diy: "—", agency: "—", forge: "✓" },
+                  { feature: "AI skills / prompts", diy: "—", agency: "—", forge: "✓" },
+                  { feature: "Works in Figma", diy: "—", agency: "PDF", forge: "✓ Tokens" },
+                  { feature: "Works in code", diy: "—", agency: "—", forge: "✓ Tailwind" },
+                  { feature: "Works in ChatGPT", diy: "—", agency: "—", forge: "✓ Skills" },
+                  { feature: "Delivery time", diy: "Minutes", agency: "6-16 weeks", forge: "Hours" },
+                  { feature: "Cost", diy: "$0-50", agency: "$5k-50k", forge: "$299-997" },
+                ].map((row, i) => (
+                  <div key={i} className={`grid grid-cols-4 text-sm border-t border-border ${i % 2 === 0 ? "bg-background" : "bg-muted/20"}`}>
+                    <div className="p-4 font-medium">{row.feature}</div>
+                    <div className="p-4 text-center text-muted-foreground">{row.diy}</div>
+                    <div className="p-4 text-center text-muted-foreground">{row.agency}</div>
+                    <div className="p-4 text-center font-medium bg-primary/5">{row.forge}</div>
+                  </div>
+                ))}
+              </div>
+            </RevealSection>
+          </div>
+        </div>
+      </section>
+
+      {/* THE DISCOVERY CALL */}
+      <section className="border-b border-border/60 bg-secondary/30 py-20">
+        <div className="container grid items-center gap-12 md:grid-cols-2">
+          <RevealSection>
+            <Badge variant="accent" className="mb-5 gap-1.5">
+              <Phone className="h-3.5 w-3.5" /> How it starts
+            </Badge>
+            <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
+              Tell us about your business. We&apos;ll build the strategy while you talk.
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              No forms. No mood boards. No scheduling. Just click and talk — our strategist
+              researches your market in real time, captures your positioning, and builds a
+              brief that drives every visual and verbal choice in your brand system.
+            </p>
+            <ul className="mt-7 space-y-3 text-sm">
+              {["Real-time competitor research while you speak", "Captures your positioning, not just your preferences", "Produces a strategic brief that drives the entire brand", "Transcript and research included in your deliverables"].map((f) => (
+                <li key={f} className="flex items-center gap-2.5">
+                  <Check className="h-4 w-4 text-primary" /> {f}
+                </li>
+              ))}
+            </ul>
+          </RevealSection>
+          <RevealSection delay={0.15}>
+            <Card className="relative overflow-hidden p-8">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
+              <div className="relative">
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-medium">F</span>
+                  <div>
+                    <div className="text-sm font-medium">{STUDIO_NAME} Strategist</div>
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-400"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Live · in-app call</div>
+                  </div>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary/15 px-4 py-2.5 animate-slide-in-right stagger-1">We build CRM tools for indie consultants.</div>
+                  <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-secondary px-4 py-2.5 animate-fade-in-up stagger-2">Love it. I&apos;m looking at Notion and Honeybook now — they position around all-in-one. Do you feel that&apos;s what your market expects, or are you going somewhere different?</div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground/70 animate-fade-in-up stagger-3"><Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" /> Researching Honeybook…</div>
+                </div>
+                <div className="mt-6 flex items-end justify-between gap-2">
+                  <AnimatedWaveform />
+                  <span className="text-xs text-muted-foreground">18:42 remaining</span>
+                </div>
+              </div>
+            </Card>
+          </RevealSection>
         </div>
       </section>
 
@@ -223,83 +377,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BRAND PACKAGE */}
-      <section id="package" className="border-b border-border/60 py-20">
-        <div className="container grid items-center gap-12 md:grid-cols-2">
-          <RevealSection>
-            <Card className="order-2 p-7 md:order-1">
-              <pre className="overflow-x-auto rounded-lg bg-background/60 p-4 text-xs leading-relaxed text-muted-foreground"><code>{`brand-context-yourbrand-v1/
-├── tokens.tokens.json    ← W3C DTCG 2025.10
-├── DESIGN.md             ← rationale
-├── assets/
-│   ├── print/  digital/  social/  editable/
-├── skills/               ← Claude · GPT · Gemini
-└── prompts/              ← hero · linkedin · email · ads`}</code></pre>
-            </Card>
-          </RevealSection>
-          <RevealSection delay={0.1}>
-            <div className="order-1 md:order-2">
-              <Badge variant="outline" className="mb-5 gap-1.5"><Package className="h-3.5 w-3.5 text-primary" /> Brand Context Package</Badge>
-              <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
-                Your brand, pre-loaded into every AI tool you&apos;ll ever use.
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Every deliverable includes a structured file that speaks natively to AI tools. Drag
-                tokens into Figma. Import them into Tailwind. Paste DESIGN.md into ChatGPT or Claude
-                and get on-brand content instantly, every time.
-              </p>
-            </div>
-          </RevealSection>
-        </div>
-      </section>
-
-      {/* AGENT PIPELINE */}
-      <section className="border-b border-border/60 bg-secondary/30 py-20">
-        <div className="container">
-          <RevealSection>
-            <div className="mx-auto mb-14 max-w-2xl text-center">
-              <Badge variant="accent" className="mb-5 gap-1.5"><Terminal className="h-3.5 w-3.5" /> Autonomous pipeline</Badge>
-              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Watch 7 AI agents build your brand</h2>
-              <p className="mt-4 text-muted-foreground">
-                Every project runs through a fully autonomous pipeline. You can watch each agent work in real time — research, strategy, visual, QA — or just wait for the notification that your brand is ready.
-              </p>
-            </div>
-          </RevealSection>
-          <div className="mx-auto max-w-3xl">
-            <div className="relative">
-              <div className="absolute left-6 top-0 bottom-0 w-px bg-border" />
-              <div className="space-y-6">
-                {[
-                  { icon: Search, agent: "Research Agent", time: "~7s demo", desc: "Crawls competitors, maps the market gap, builds competitive profiles.", color: "text-blue-500" },
-                  { icon: Compass, agent: "Strategy Agent", time: "~7s demo", desc: "Selects archetype, crafts Golden Why, writes positioning statement.", color: "text-purple-500" },
-                  { icon: MessageSquare, agent: "Verbal Identity Agent", time: "~6s demo", desc: "Defines voice spectrum, messaging pillars, tagline candidates.", color: "text-emerald-500" },
-                  { icon: Palette, agent: "Visual Agent", time: "~8s demo", desc: "Generates 3 vector logo directions via Recraft V4.1 Pro.", color: "text-amber-500" },
-                  { icon: ShieldCheck, agent: "QA Review Agent", time: "~6s demo", desc: "4-layer validation: visual, strategy, verbal, completeness.", color: "text-red-500" },
-                ].map((s, i) => (
-                  <RevealSection key={s.agent} delay={i * 0.1}>
-                    <div className="relative flex gap-4">
-                      <div className="relative z-10 grid h-12 w-12 place-items-center rounded-xl border border-border bg-background text-lg">
-                        <s.icon className={`h-5 w-5 ${s.color}`} />
-                      </div>
-                      <div className="flex-1 rounded-xl border border-border bg-background p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">{s.agent}</span>
-                          <span className="text-xs text-muted-foreground font-mono">{s.time}</span>
-                        </div>
-                        <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
-                      </div>
-                    </div>
-                  </RevealSection>
-                ))}
-              </div>
-              <div className="mt-6 ml-6 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
-                <p className="text-sm font-medium text-primary">Your brand is ready — review directions in your portal</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* PROOF */}
       <section className="border-b border-border/60 py-20">
         <div className="container">
@@ -333,13 +410,16 @@ export default function Home() {
       <section id="pricing" className="border-b border-border/60 py-20">
         <div className="container">
           <RevealSection>
-            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">What this would cost otherwise</h2>
-            <p className="mx-auto mb-6 max-w-xl text-center text-muted-foreground">
-              A branding agency charges $5k–$50k and takes months. We deliver the same system in hours.
-            </p>
-            <p className="mx-auto mb-14 max-w-xl text-center text-sm text-muted-foreground/70">
-              One-time payment. No retainers. No surprise invoices. Adjustments are always free.
-            </p>
+            <div className="mx-auto max-w-3xl text-center mb-14">
+              <Badge variant="accent" className="mb-5 gap-1.5">Pricing</Badge>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                What this would cost otherwise
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                A branding agency charges $5k–$50k and takes months. We deliver the same system in hours.
+                One-time payment. No retainers. No surprise invoices.
+              </p>
+            </div>
           </RevealSection>
           <PricingCards ctaLabel="Choose {name}" />
         </div>
@@ -372,13 +452,14 @@ export default function Home() {
         <div className="container text-center">
           <RevealSection>
             <h2 className="mx-auto mb-5 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">
-              Your brand is one call away.
+              Stop waiting for a brand. Start using one.
             </h2>
             <p className="mx-auto mb-8 max-w-xl text-muted-foreground">
-              Talk to our strategist, pick a direction, and walk away with a complete brand system — strategy, identity, tokens, skills — ready to use everywhere.
+              Talk to our strategist, pick a direction, and walk away with a complete brand system —
+              strategy, identity, tokens, skills — ready to use everywhere. Today.
             </p>
             <Link href="/checkout">
-              <Button size="lg" className="gap-2">Get your brand <ArrowRight className="h-4 w-4" /></Button>
+              <Button size="lg" className="gap-2">Get your brand system <ArrowRight className="h-4 w-4" /></Button>
             </Link>
           </RevealSection>
         </div>
