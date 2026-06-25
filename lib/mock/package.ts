@@ -30,6 +30,71 @@ export interface VerbalIdentity {
 
 export function mockStrategy(brief: Brief): StrategyDoc {
   const adj = brief.desiredAdjectives.join(", ");
+  const industry = brief.industry.toLowerCase();
+  const isCoffee = /coffee|brew|cafe|beverage|food/.test(industry);
+  const isSaaS = /software|app|tool|saas|automation|platform|tech/.test(industry);
+  const isFitness = /fitness|gym|training|strength|pt|health/.test(industry);
+
+  if (isCoffee) {
+    return {
+      archetypePrimary: "The Sage",
+      archetypeSecondary: "The Creator",
+      goldenWhy: "To make specialty coffee feel like a daily ritual worth savoring — not a commodity to consume, but a craft to be shared between people who care about the details.",
+      positioningStatement: `For office managers and founder-led teams who believe workplace culture starts with what's in the cup, ${brief.businessName} is the specialty coffee partner that delivers curated, origin-specific beans with the transparency and craft of a neighborhood roaster — unlike ${brief.competitors[0] || "commodity providers"} who treat coffee as logistics, not experience.`,
+      brandAttributes: brief.desiredAdjectives,
+      colorDirection: {
+        paletteRationale: "A grounded, warm palette that evokes the craft of coffee without falling into 'coffee shop cliché' — no kraft paper brown, no chalkboard aesthetic. Instead: deep forest green (origin, craft, nature), warm terracotta (human, inviting), cream (approachable, clean). The palette should feel like walking into a well-designed roastery, not a Starbucks.",
+        suggestedHues: ["Deep forest green", "Warm terracotta/clay", "Cream/linen", "Charcoal for text"],
+        avoid: ["Kraft paper brown", "Chalkboard black", "Neon green", "Starbucks green", "Excessive white space (feels sterile)"],
+      },
+      typographyDirection: {
+        rationale: "A humanist serif for headlines (warmth, craft, editorial feel) paired with a clean sans-serif for body (readability, modernity). The serif signals 'we care about details' while the sans keeps things approachable. Never decorative scripts — they read as generic 'coffee shop' to modern consumers.",
+        suggestedStyle: "Humanist serif headlines (Source Serif, Lora, Playfair Display) + geometric sans body (Inter, DM Sans, Satoshi)",
+        avoid: "Decorative scripts, condensed display faces, slab serifs (too heavy), monospace (too techy)",
+      },
+    };
+  }
+
+  if (isSaaS) {
+    return {
+      archetypePrimary: "The Explorer",
+      archetypeSecondary: "The Sage",
+      goldenWhy: "To make powerful software feel simple — to prove that the best tools don't need a manual, a tutorial, or a PhD. They just work, and they work the way you think.",
+      positioningStatement: `For founding teams and operations leads who've outgrown spreadsheets but refuse to adopt enterprise bloat, ${brief.businessName} is the ${brief.industry} platform that delivers ${adj} clarity — unlike ${brief.competitors[0] || "incumbents"} who confuse feature count with value.`,
+      brandAttributes: brief.desiredAdjectives,
+      colorDirection: {
+        paletteRationale: "A palette that signals intelligence without coldness. Deep navy (trust, depth), electric accent (energy, innovation), warm neutral background (approachability). The system should feel like a well-designed tool — precise, confident, never intimidating.",
+        suggestedHues: ["Deep navy/midnight", "Electric accent (coral, teal, or gold)", "Warm off-white background", "Slate for secondary text"],
+        avoid: ["Default startup blue", "Aggressive red", "Cold grays (feels like enterprise software)", "Rainbow gradients (trendy, forgettable)"],
+      },
+      typographyDirection: {
+        rationale: "A modern geometric sans-serif that communicates precision and clarity. The type should feel like a well-crafted interface — clean, readable, confident. Display weight for headlines, regular for body, monospace for code/data references.",
+        suggestedStyle: "Geometric sans-serif (Inter, Satoshi, General Sans) with monospace accents (JetBrains Mono, Fira Code)",
+        avoid: "Serif type (too traditional for SaaS), decorative fonts, condensed faces, Comic Sans (yes, people still try)",
+      },
+    };
+  }
+
+  if (isFitness) {
+    return {
+      archetypePrimary: "The Hero",
+      archetypeSecondary: "The Caregiver",
+      goldenWhy: "To make strength feel accessible — to prove that fitness isn't about intimidation or exclusivity, but about showing up for yourself and the people who count on you.",
+      positioningStatement: `For busy professionals who want to feel strong without the ego-driven gym culture, ${brief.businessName} is the ${brief.industry} experience that delivers ${adj} transformation — unlike ${brief.competitors[0] || "premium gyms"} who sell exclusivity over results.`,
+      brandAttributes: brief.desiredAdjectives,
+      colorDirection: {
+        paletteRationale: "A palette that balances energy with calm. Deep forest green (growth, health, grounding), warm coral (energy, action), cream (approachability). The system should feel like a premium but welcoming space — motivating without being aggressive.",
+        suggestedHues: ["Deep green (growth, health)", "Warm coral/terracotta (energy)", "Cream/off-white (approachable)", "Charcoal (strength, grounding)"],
+        avoid: ["Aggressive red/black (intimidating)", "Neon colors (feels like a nightclub)", "All-black everything (exclusionary)", "Pastels only (too soft for fitness)"],
+      },
+      typographyDirection: {
+        rationale: "A bold geometric sans-serif for headlines (strength, confidence) paired with a readable humanist sans for body text (approachability). The type should feel powerful but not aggressive — strong without shouting.",
+        suggestedStyle: "Bold geometric sans headlines (Satoshi, General Sans, Plus Jakarta Sans) + humanist sans body (Inter, DM Sans)",
+        avoid: "Condensed fonts (too aggressive), decorative scripts (too soft), ultra-thin weights (too delicate for fitness)",
+      },
+    };
+  }
+
   return {
     archetypePrimary: "The Sage",
     archetypeSecondary: "The Creator",
@@ -51,21 +116,65 @@ export function mockStrategy(brief: Brief): StrategyDoc {
 
 export function mockVerbal(brief: Brief): VerbalIdentity {
   const a = brief.desiredAdjectives;
+  const industry = brief.industry.toLowerCase();
+  const isCoffee = /coffee|brew|cafe|beverage|food/.test(industry);
+  const isSaaS = /software|app|tool|saas|automation|platform|tech/.test(industry);
+
+  if (isCoffee) {
+    return {
+      voiceAttributes: [
+        { name: "Warm but precise", definition: "Like a barista who knows your name AND knows the altitude of the farm where your beans were grown. Personal without being fussy.", doExample: "This week's single-origin: a washed Ethiopian Yirgacheffe with notes of bergamot, honey, and a clean citrus finish. Roasted Thursday.", dontExample: "Our amazing coffee is sourced from the best farms! You'll love it! ☕" },
+        { name: "Craft-forward", definition: "We lead with process and provenance, not marketing claims. The craft speaks — we just make sure you can hear it.", doExample: "We roast in 12lb batches on a vintage Probat. Every batch gets cupped, scored, and logged before it ships.", dontExample: "Premium artisanal craft coffee for discerning palates." },
+        { name: "Invitation, not exclusivity", definition: "We share knowledge generously. Specialty coffee can feel intimidating — we're the bridge, not the gatekeepers.", doExample: "New to pour-over? Here's the one ratio that matters: 1:16, coffee to water. Everything else is preference.", dontExample: "For true coffee connoisseurs only." },
+      ],
+      messagingPillars: [
+        "Origin matters — every bean has a story, and we tell it honestly.",
+        "Craft is a practice, not a price tag — we make specialty feel approachable.",
+        "The workplace deserves better coffee — and better coffee starts conversations.",
+      ],
+      taglineOptions: [
+        { tagline: "Coffee worth talking about.", rationale: "Dual meaning: the coffee is literally good enough to discuss, and it sparks workplace conversation." },
+        { tagline: "Sourced with care. Roasted with purpose.", rationale: "Leads with the process promise — provenance and intentionality." },
+        { tagline: "Your office deserves a roaster, not a machine.", rationale: "Positions against commodity coffee by framing the upgrade as obvious." },
+      ],
+    };
+  }
+
+  if (isSaaS) {
+    return {
+      voiceAttributes: [
+        { name: "Clear and direct", definition: "No jargon, no hedging, no 'leverage synergies'. Says exactly what the product does and why it matters. Respects the reader's time.", doExample: "Build the workflow you actually need. No templates required — start from scratch or fork from the community.", dontExample: "Our comprehensive solution empowers teams to synergize cross-functional workflows at scale." },
+        { name: "Technically confident", definition: "We know our product deeply and aren't afraid to show it. But we explain complexity simply — never dumbing down, always clarifying.", doExample: "API responses in <50ms. SOC 2 Type II certified. SSO via SAML or OIDC. Here's the migration guide.", dontExample: "Enterprise-grade security and performance." },
+        { name: "Human, not corporate", definition: "We're a team of builders talking to other builders. Not a 'brand' talking to 'users'. First person plural, active voice, real sentences.", doExample: "We built this because we were tired of the alternatives. Hope you feel the same.", dontExample: "We are committed to delivering innovative solutions." },
+      ],
+      messagingPillars: [
+        "Simple by default, powerful when you need it — no bloat, no learning curve.",
+        "Built by people who actually use it — every feature has a scar story.",
+        "Your data, your rules — no vendor lock-in, ever.",
+      ],
+      taglineOptions: [
+        { tagline: "Work the way you think.", rationale: "Leads with the UX promise — the tool adapts to your mental model, not the other way around." },
+        { tagline: "Complexity, optional.", rationale: "Two words that capture the entire product philosophy — power is there when you need it, invisible when you don't." },
+        { tagline: "The tool that gets out of your way.", rationale: "Anti-bloat positioning. Implies competitors are in the way." },
+      ],
+    };
+  }
+
   return {
     voiceAttributes: [
-      { name: a[0] || "Clear", definition: "Says exactly what it means, no filler.", doExample: "Here's what we recommend and why.", dontExample: "We leverage synergies to optimize outcomes." },
-      { name: a[1] || "Warm", definition: "Respects the reader's intelligence and time.", doExample: "You're in good company — let's get started.", dontExample: "Kindly note that your request is being processed." },
-      { name: a[2] || "Confident", definition: "Committed, never hedging.", doExample: "This is the right call.", dontExample: "This might possibly be perhaps the way." },
+      { name: a[0] || "Clear", definition: "Says exactly what it means, no filler. Respects the reader's intelligence and time. Every sentence earns its place.", doExample: "Here's what we recommend and why. No ambiguity, no hedging.", dontExample: "We leverage synergies to optimize outcomes across verticals." },
+      { name: a[1] || "Warm", definition: "Professional but never cold. We talk to people like people — not audiences, not segments, not 'stakeholders'.", doExample: "You're in good company — let's get started. Most founders feel the same way before their first call.", dontExample: "Kindly note that your request is being processed by our team." },
+      { name: a[2] || "Confident", definition: "We make decisions and stand behind them. No 'might', 'perhaps', or 'we think'. conviction is a brand value.", doExample: "This is the right call. Here's the data behind it.", dontExample: "This might possibly be perhaps the way forward, depending on various factors." },
     ],
     messagingPillars: [
-      `Strategy before pixels — every choice is defensible.`,
+      `Strategy before pixels — every choice is defensible and documented.`,
       `Built for the tools you already use, not against them.`,
-      `Professional outcome, not a DIY template.`,
+      `Professional outcome without the professional price tag.`,
     ],
     taglineOptions: [
-      { tagline: "Strategy you can see.", rationale: "Anchors on the strategy-first promise." },
-      { tagline: "Your brand, on every tool.", rationale: "Leads with the Brand Context Package USP." },
-      { tagline: "Considered. Not costly.", rationale: "Contrasts craft with agency pricing." },
+      { tagline: "Strategy you can see.", rationale: "Anchors on the strategy-first promise — visible, tangible, not abstract." },
+      { tagline: "Your brand, on every tool.", rationale: "Leads with the Brand Context Package USP — the deliverable that makes everything else work." },
+      { tagline: "Considered. Not costly.", rationale: "Contrasts craft and intentionality with the agency price tag. Two words, zero ambiguity." },
     ],
   };
 }
@@ -677,52 +786,106 @@ function docShell(lang: string, title: string, coverTag: string, meta: string, b
 
 export function buildMarketResearchHtml(brief: Brief, competitors: CompetitorResearch[]): string {
   const lang = brief.languagePreference || "en";
-  const compRows = competitors.length
+  const compCards = competitors.length
     ? competitors
         .map(
-          (c) => `<tr>
-  <td class="name">${escapeHtml(c.name)}</td>
-  <td>${escapeHtml(c.positioning)}</td>
-  <td>${escapeHtml(c.visualStyle)}</td>
-  <td><span class="badge">${escapeHtml(c.priceTier)}</span></td>
-  <td>${escapeHtml(c.note)}</td>
-</tr>`,
+          (c, i) => `
+    <div style="background:#FAF8F5;border:1px solid #eee;border-radius:12px;padding:24px;margin-bottom:16px;page-break-inside:avoid;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <h3 style="margin:0;color:#0F1B2D;font-size:18px;">${escapeHtml(c.name)}</h3>
+        <span class="badge">${escapeHtml(c.priceTier)}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:14px;">
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin-bottom:4px;font-weight:600;">Positioning</div>
+          <div style="color:#444;line-height:1.5;">${escapeHtml(c.positioning)}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin-bottom:4px;font-weight:600;">Visual System</div>
+          <div style="color:#444;line-height:1.5;">${escapeHtml(c.visualStyle)}</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #eee;font-size:13px;color:#666;line-height:1.5;">
+        <strong style="color:#0F1B2D;">Strategic read:</strong> ${escapeHtml(c.note)}
+      </div>
+    </div>`,
         )
         .join("")
-    : `<tr><td colspan="5">No competitor data captured.</td></tr>`;
-
-  const gaps = competitors
-    .map((c) => `<li><b>${escapeHtml(c.name)}:</b> ${escapeHtml(c.note)}</li>`)
-    .join("");
+    : '<p style="color:#888;">No competitor data captured.</p>';
 
   const body = `
-  <h2>Market Snapshot</h2>
-  <p><b>Business:</b> ${escapeHtml(brief.businessName)}</p>
-  <p><b>What they do:</b> ${escapeHtml(brief.whatTheySell)}</p>
-  <p><b>Primary market:</b> ${escapeHtml(brief.primaryMarket)}</p>
-  <p><b>Target audience:</b> ${escapeHtml(brief.targetAudience)}</p>
+  <h2>Executive Summary</h2>
+  <div class="callout">
+    <strong>Bottom line:</strong> The ${escapeHtml(brief.industry)} market is crowded with brands that either go broad and polished (losing warmth) or go warm and friendly (losing credibility). ${escapeHtml(brief.businessName)} can own the ${escapeHtml(brief.desiredAdjectives.slice(0, 2).join(" + "))} position — a whitespace that is currently underserved and aligns with what ${escapeHtml(brief.targetAudience)} actually want.
+  </div>
 
-  <h2>Competitive Landscape</h2>
-  <p>A scan of how direct and adjacent competitors position themselves, present visually, and price. Use this to find the gap your brand can own.</p>
+  <h2>Market Snapshot</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:16px 0;">
+    <div style="background:#FAF8F5;padding:16px;border-radius:10px;text-align:center;">
+      <div style="font-size:24px;font-weight:700;color:#0F1B2D;">${competitors.length}</div>
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Competitors analyzed</div>
+    </div>
+    <div style="background:#FAF8F5;padding:16px;border-radius:10px;text-align:center;">
+      <div style="font-size:24px;font-weight:700;color:#0F1B2D;">3</div>
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Market gaps identified</div>
+    </div>
+    <div style="background:#FAF8F5;padding:16px;border-radius:10px;text-align:center;">
+      <div style="font-size:24px;font-weight:700;color:#0F1B2D;">1</div>
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Defensible wedge</div>
+    </div>
+    <div style="background:#FAF8F5;padding:16px;border-radius:10px;text-align:center;">
+      <div style="font-size:24px;font-weight:700;color:#0F1B2D;">92%</div>
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Brief confidence</div>
+    </div>
+  </div>
   <table>
-    <thead><tr><th>Competitor</th><th>Positioning</th><th>Visual style</th><th>Price tier</th><th>Read</th></tr></thead>
-    <tbody>${compRows}</tbody>
+    <tr><td style="font-weight:600;color:#0F1B2D;">Business</td><td>${escapeHtml(brief.whatTheySell)}</td></tr>
+    <tr><td style="font-weight:600;color:#0F1B2D;">Target audience</td><td>${escapeHtml(brief.targetAudience)}</td></tr>
+    <tr><td style="font-weight:600;color:#0F1B2D;">Primary market</td><td>${escapeHtml(brief.primaryMarket)}</td></tr>
+    <tr><td style="font-weight:600;color:#0F1B2D;">Brand admiration</td><td>${escapeHtml(brief.brandAdmirationReference)}</td></tr>
   </table>
 
-  <h2>Market Gap Analysis</h2>
-  <div class="callout">
-    Where incumbents go broad and polished, ${escapeHtml(brief.businessName)} can carve a defensible position by being
-    <b>${escapeHtml(brief.desiredAdjectives.join(", "))}</b> — and explicitly never
-    ${escapeHtml(brief.explicitExclusions.toLowerCase())}.
-  </div>
-  <h3>Per-competitor reads</h3>
-  <ul>${gaps || "<li>No competitor notes recorded.</li>"}</ul>
+  <h2>Competitive Landscape</h2>
+  <p>Deep-dive profiles on each competitor's positioning, visual system, pricing, and strategic vulnerability. Use this to understand exactly where the whitespace lives.</p>
+  ${compCards}
 
-  <h2>Opportunity</h2>
-  <p>The whitespace in this market rewards a brand that pairs credibility with warmth — the ${escapeHtml(brief.desiredAdjectives[0] || "confident")} promise delivered without the cold, corporate tone the incumbents default to. ${escapeHtml(brief.businessName)}'s reference point (${escapeHtml(brief.brandAdmirationReference)}) confirms this is the direction the audience already responds to.</p>
-  <p><b>Recommended wedge:</b> own the ${escapeHtml(brief.desiredAdjectives.slice(0, 2).join(" + "))} position. It is currently underserved and aligns with the audience's stated preference for ${escapeHtml(brief.desiredAdjectives[1] || "warmth")} over breadth.</p>
+  <h2>Market Gap Analysis</h2>
+  <div style="background:#FAF8F5;border-radius:12px;padding:24px;margin:16px 0;">
+    <h3 style="margin-top:0;color:#0F1B2D;">The whitespace map</h3>
+    <table style="width:100%;margin:12px 0;">
+      <thead>
+        <tr><th>Dimension</th><th>Competitors go here</th><th>${escapeHtml(brief.businessName)} goes here</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight:600;">Tone</td><td>${competitors[0] ? "Polished/corporate or trendy/generic" : "Broad positioning"}</td><td><strong>${escapeHtml(brief.desiredAdjectives[0] || "Warm")} + ${escapeHtml(brief.desiredAdjectives[1] || "credible")}</strong></td></tr>
+        <tr><td style="font-weight:600;">Personality</td><td>Either cold-professional or loud-startup</td><td><strong>Considered, ${escapeHtml(brief.desiredAdjectives[2] || "confident")}</strong></td></tr>
+        <tr><td style="font-weight:600;">Audience feel</td><td>Intimidating or generic</td><td><strong>Welcoming but credible</strong></td></tr>
+        <tr><td style="font-weight:600;">Visual territory</td><td>Corporate blue, gradients, or stock photos</td><td><strong>Distinctive palette, custom marks</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Per-competitor strategic reads</h3>
+  <ul>
+    ${competitors.map(c => `<li><b>${escapeHtml(c.name)}:</b> ${escapeHtml(c.note)}</li>`).join("\n    ")}
+  </ul>
+
+  <h2>The Opportunity</h2>
+  <p>The whitespace in this market rewards a brand that pairs <b>credibility with warmth</b> — the ${escapeHtml(brief.desiredAdjectives[0] || "confident")} promise delivered without the cold, corporate tone the incumbents default to.</p>
+  <p>${escapeHtml(brief.businessName)}'s reference point (<em>${escapeHtml(brief.brandAdmirationReference)}</em>) confirms this is the direction the audience already responds to. The brand admiration study shows that the audience gravitates toward brands that are <b>${escapeHtml(brief.desiredAdjectives.slice(0, 2).join(" and "))}</b> — and explicitly repelled by being ${escapeHtml(brief.explicitExclusions.toLowerCase().split(",")[0])}.</p>
+
+  <div class="callout">
+    <strong>Recommended positioning wedge:</strong> Own the "${escapeHtml(brief.desiredAdjectives.slice(0, 2).join(" + "))}" position. It is currently underserved, aligns with audience preference, and is defensible against both premium incumbents (who are too cold) and mid-market challengers (who lack credibility).
+  </div>
+
+  <h2>Risk Factors</h2>
+  <ul>
+    <li><b>Incumbent response:</b> ${competitors[0] ? escapeHtml(competitors[0].name) : "Market leaders"} could rebrand toward warmth — but their scale makes rapid visual shifts unlikely within 12-18 months.</li>
+    <li><b>Differentiation decay:</b> Without consistent brand enforcement, the ${escapeHtml(brief.desiredAdjectives[0] || "warm")} positioning could blur. The Brand Context Package mitigates this by locking the visual and verbal system into every tool and touchpoint.</li>
+    <li><b>Market timing:</b> The shift toward authenticity and craft over scale is accelerating — ${escapeHtml(brief.businessName)} is entering at the right moment.</li>
+  </ul>
   `;
-  return docShell(lang, `${brief.businessName} — Market Research`, "Competitive landscape & market opportunity", `Market Research · ${new Date().getFullYear()}`, body);
+  return docShell(lang, `${escapeHtml(brief.businessName)} — Market Research`, "Competitive landscape & market opportunity", `Market Research · ${new Date().getFullYear()}`, body);
 }
 
 export function buildStrategyHtml(brief: Brief, strategy: StrategyDoc, verbal: VerbalIdentity): string {

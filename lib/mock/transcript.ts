@@ -197,6 +197,34 @@ const SAMPLE_COMPETITOR_RESEARCH: CompetitorResearch[] = [
 ];
 
 /**
+ * Rich competitor research profiles by industry — each one reads like
+ * a real competitive intelligence brief from a brand strategist.
+ */
+const COMPETITOR_PROFILES: Record<string, CompetitorResearch[]> = {
+  coffee: [
+    { name: "Stumptown Coffee Roasters", positioning: "Portland-founded specialty pioneer. Positions on craft, origin transparency, and barista expertise. Sells direct-to-consumer and wholesale.", visualStyle: "Hand-drawn illustration, vintage Americana palette, kraft textures, condensed display type. Feels artisanal but slightly nostalgic.", priceTier: "Premium ($18-22/lb)", note: "Owned by Peet's since 2015 — lost indie credibility with some purists. Strong brand equity but aging visual system. Opportunity: own the 'modern craft' space they're leaving behind." },
+    { name: "Blue Bottle Coffee", positioning: "Japanese-influenced minimalism meets third-wave craft. Premium retail and subscription model. Known for 48-hour freshness promise.", visualStyle: "Blue monogram on white. Extreme minimalism — lots of whitespace, thin serif type, muted photography. Every touchpoint screams considered restraint.", priceTier: "Luxury ($19-26/lb)", note: "Nestlé-owned since 2017 — similar corporate acquisition fatigue. Visual system is beautiful but cold. Warmth and personality are the gap." },
+    { name: "Trade Coffee", positioning: "Tech-forward discovery platform. Algorithm-matched subscriptions connecting consumers to 450+ roasters. Positioned as the 'Spotify of coffee'.", visualStyle: "App-first design, bright accent colors, product photography focused on packaging. Modern DTC aesthetic — clean but generic.", priceTier: "Mid-High ($15-20/lb)", note: "Strong UX, weak brand personality. No emotional resonance — feels like a logistics company. The 'curated experience' promise lacks soul." },
+  ],
+  saas: [
+    { name: "Notion", positioning: "All-in-one workspace for docs, wikis, and project management. Developer-to-executive appeal. Community-driven growth.", visualStyle: "Black and white minimalism, geometric sans-serif, illustration-heavy docs. Feels like a design tool pretending to be productivity software.", priceTier: "Freemium ($8-15/user/mo)", note: "Massive brand equity but increasingly cluttered product. New users report 'template paralysis'. Opportunity: own simplicity and focus." },
+    { name: "Coda", positioning: 'Documents that grow with your team. "The doc that grows with you" — emphasis on customization and power-user flexibility.', visualStyle: "Purple gradient accents, clean illustration, slightly more playful than Notion. Developer-forward but approachable.", priceTier: "Freemium ($10-30/user/mo)", note: "Strong product, weak brand recall. Most users can't describe Coda's personality in three words. The power-user positioning alienates mainstream buyers." },
+    { name: "Monday.com", positioning: "Work management OS. Visual, colorful, enterprise-friendly. Heavy on TV advertising and brand awareness.", visualStyle: "Bright color system (green, yellow, pink), rounded UI, friendly illustration. Deliberately 'fun enterprise' — the anti-Salesforce.", priceTier: "Mid ($8-16/seat/mo)", note: "Strong awareness but generic positioning — could be any project management tool. Visual identity is loud but not distinctive. Confuses 'colorful' with 'branded'." },
+  ],
+  fitness: [
+    { name: "Equinox", positioning: "Ultra-premium fitness and lifestyle club. Positions on exclusivity, performance, and luxury. 'It's not fitness. It's life.'", visualStyle: "Black and white photography, editorial layout, sans-serif type. Every ad looks like a fashion campaign. Aspirational to the point of intimidation.", priceTier: "Luxury ($260-350/mo)", note: "Strong brand but completely inaccessible to 95% of the market. Creates aspiration but not belonging. The 'elite' positioning limits TAM." },
+    { name: "F45 Training", positioning: "45-minute functional group fitness. Franchise model, community-driven, high-energy. 'Team training, life changing.'", visualStyle: "High-contrast black and yellow, aggressive typography, action photography. Feels like a sports brand — intense and motivational.", priceTier: "Mid-Premium ($150-200/mo)", note: "High energy but zero nuance. The 'go hard' messaging alienates beginners and older demographics. Visual system is loud and forgettable." },
+    { name: "Peloton", positioning: "Connected fitness platform. Premium equipment + streaming classes. Community and leaderboard-driven. Post-pandemic identity crisis.", visualStyle: "Dark mode aesthetic, neon accents, tech-forward UI. Feels more like a software product than a fitness brand. Slick but impersonal.", priceTier: "Premium ($44/mo + equipment)", note: "Massive installed base but brand is associated with pandemic-era excess. Struggling to redefine beyond the bike. The 'tech company' identity feels cold." },
+  ],
+};
+
+const GENERIC_PROFILES: CompetitorResearch[] = [
+  { name: "Industry Leader A", positioning: "Established market leader with broad appeal. Conservative visual identity, enterprise-focused messaging. Strong distribution but aging brand.", visualStyle: "Corporate blue, serif headlines, stock photography. Clean but forgettable — the default 'professional' template.", priceTier: "Premium", note: "Dominant market share but vulnerable to challenger brands with stronger emotional resonance. Visual system hasn't been updated in 5+ years." },
+  { name: "Digital-First Challenger", positioning: "DTC-native upstart. App-first experience, aggressive growth, social-media-driven acquisition. Strong product, emerging brand.", visualStyle: "Bright gradients, rounded sans-serif, illustration-heavy. Modern startup aesthetic — trendy but already showing signs of visual fatigue.", priceTier: "Mid", note: "Fast-growing but brand personality is 'generic Silicon Valley'. No distinctive voice or visual territory. Scaling faster than branding can keep up." },
+  { name: "Heritage Incumbent", positioning: "Traditional player with decades of trust. Risk-averse branding, mass-market positioning. Losing relevance with younger demographics.", visualStyle: "Warm but dated palette, serif typography, lifestyle photography. Feels like a 2015 rebrand that never got refreshed.", priceTier: "Mid-Premium", note: "Trust is the moat, but trust without relevance erodes. The 'safe' positioning is becoming a liability as market tastes shift toward authenticity and specificity." },
+];
+
+/**
  * Mock Brief Extraction sub-agent — turns the conversation into a
  * structured brief with confidence scores. Production: Claude processes
  * the transcript and scores every field; low-confidence fields get probed.
@@ -244,9 +272,15 @@ export function buildBriefFromTranscript(
 }
 
 export function competitorResearchFor(competitors: string[]): CompetitorResearch[] {
-  if (!competitors.length) return SAMPLE_COMPETITOR_RESEARCH;
+  if (!competitors.length) return GENERIC_PROFILES;
+  // Try to match by industry keywords, fallback to generic
+  const allText = competitors.join(" ").toLowerCase();
+  if (/coffee|brew|cafe|beverage|tea|food/.test(allText)) return COMPETITOR_PROFILES.coffee;
+  if (/software|app|tool|saas|automation|platform|notion|coda/.test(allText)) return COMPETITOR_PROFILES.saas;
+  if (/fitness|gym|training|strength|pt|health|equinox|peloton/.test(allText)) return COMPETITOR_PROFILES.fitness;
+  // For named competitors, create detailed profiles
   return competitors.slice(0, 3).map((name, i) => ({
-    ...SAMPLE_COMPETITOR_RESEARCH[i % SAMPLE_COMPETITOR_RESEARCH.length],
+    ...GENERIC_PROFILES[i % GENERIC_PROFILES.length],
     name,
   }));
 }
