@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight, Phone, Sparkles, FileText, Package, ShieldCheck,
-  Clock, Layers, Zap, MessageSquare, Star, Check,
-  Search, Compass, Palette, Terminal, Code,
+  Clock, Zap, MessageSquare, Star, Check,
+  Search, Compass, Palette, Code,
 } from "lucide-react";
-import { STUDIO_NAME, STUDIO_TAGLINE } from "@/lib/studio";
+import { STUDIO_NAME } from "@/lib/studio";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 import { PricingCards } from "@/components/marketing/pricing-cards";
@@ -44,7 +44,7 @@ const faqs = [
   { q: "Is this just a logo?", a: "No. You get a complete brand system: positioning strategy, visual identity (3 directions, 4 logo versions each), voice guidelines, design tokens (W3C DTCG 2025.10), market research, AI skills for ChatGPT/Claude/Gemini, and 5 prompt templates. A logo is maybe 10% of what we deliver." },
   { q: "How is this different from Canva or Looka?", a: "Canva and Looka give you a logo. We give you a brand system — strategy, identity, voice, tokens, and AI skills that make every tool you use stay on-brand. Canva doesn't know your positioning. We build everything from your strategy." },
   { q: "How is this different from an agency?", a: "Same deliverables, different economics. An agency charges $5k–$50k and takes 6–16 weeks. We deliver in hours at $299–$997. The difference is overhead — we don't have account managers, creative directors on salary, or office space. Just the craft." },
-  { q: "What if I don't like what I receive?", a: "You get revision rounds based on your tier (1–3 structural rounds), plus unlimited free adjustments. Our Creative Director agent responds to bigger changes with strategic reasoning — and after one pushback, applies your call with a documented trade-off." },
+  { q: "What if I don't like what I receive?", a: "You get revision credits based on your tier (1–7 credits), plus unlimited free adjustments. Our Creative Director agent responds to bigger changes with strategic reasoning — and after one pushback, applies your call with a documented trade-off." },
   { q: "Will my developer or designer be able to use this?", a: "Yes. The Brand Context Package uses the W3C DTCG 2025.10 token standard — drag tokens into Figma, import into Tailwind, and your whole stack stays on-brand. We also ship AI skills for Claude, GPT, and Gemini so every AI output sounds like your brand." },
   { q: "How long does it take?", a: "The discovery call happens immediately after checkout — no scheduling. The brand system is built in hours. Starter and Signature deliver same-day. Authority is priority delivery within 24 hours." },
 ];
@@ -180,9 +180,9 @@ export default function Home() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: Compass, title: "Strategy that&apos;s defensible", body: "Positioning statement, archetype, Golden Why, brand attributes. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
+              { icon: Compass, title: "Strategy that's defensible", body: "Positioning statement, archetype, Golden Why, brand attributes. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
               { icon: Palette, title: "Identity that scales", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system. Works from favicon to billboard." },
-              { icon: MessageSquare, title: "Voice that&apos;s consistent", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself everywhere — website, email, social, ads." },
+              { icon: MessageSquare, title: "Voice that's consistent", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself everywhere — website, email, social, ads." },
               { icon: Code, title: "Tokens that work in code", body: "W3C DTCG 2025.10 design tokens. Drop into Figma. Import into Tailwind. Your developer builds on-brand from day one. No guesswork." },
               { icon: Zap, title: "AI skills that keep you on-brand", body: "Ready-made instructions for Claude, GPT, and Gemini. Paste them in and every AI output sounds like your brand. 5 prompt templates included." },
               { icon: Search, title: "Research that informs everything", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
@@ -192,8 +192,8 @@ export default function Home() {
                   <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <s.icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mb-2 text-base font-medium" dangerouslySetInnerHTML={{ __html: s.title }} />
-                  <p className="text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: s.body }} />
+                  <h3 className="mb-2 text-base font-medium">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
                 </Card>
               </RevealSection>
             ))}
@@ -253,87 +253,6 @@ export default function Home() {
           <RevealSection>
             <Badge variant="accent" className="mb-5 gap-1.5">
               <Phone className="h-3.5 w-3.5" /> How it starts
-            </Badge>
-            <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
-              Tell us about your business. We&apos;ll build the strategy while you talk.
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              No forms. No mood boards. No scheduling. Just click and talk — our strategist
-              researches your market in real time, captures your positioning, and builds a
-              brief that drives every visual and verbal choice in your brand system.
-            </p>
-            <ul className="mt-7 space-y-3 text-sm">
-              {["Real-time competitor research while you speak", "Captures your positioning, not just your preferences", "Produces a strategic brief that drives the entire brand", "Transcript and research included in your deliverables"].map((f) => (
-                <li key={f} className="flex items-center gap-2.5">
-                  <Check className="h-4 w-4 text-primary" /> {f}
-                </li>
-              ))}
-            </ul>
-          </RevealSection>
-          <RevealSection delay={0.15}>
-            <Card className="relative overflow-hidden p-8">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
-              <div className="relative">
-                <div className="mb-6 flex items-center gap-3">
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-medium">F</span>
-                  <div>
-                    <div className="text-sm font-medium">{STUDIO_NAME} Strategist</div>
-                    <div className="flex items-center gap-1.5 text-xs text-emerald-400"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Live · in-app call</div>
-                  </div>
-                </div>
-                <div className="space-y-3 text-sm">
-                  <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary/15 px-4 py-2.5 animate-slide-in-right stagger-1">We build CRM tools for indie consultants.</div>
-                  <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-secondary px-4 py-2.5 animate-fade-in-up stagger-2">Love it. I&apos;m looking at Notion and Honeybook now — they position around all-in-one. Do you feel that&apos;s what your market expects, or are you going somewhere different?</div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground/70 animate-fade-in-up stagger-3"><Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" /> Researching Honeybook…</div>
-                </div>
-                <div className="mt-6 flex items-end justify-between gap-2">
-                  <AnimatedWaveform />
-                  <span className="text-xs text-muted-foreground">18:42 remaining</span>
-                </div>
-              </div>
-            </Card>
-          </RevealSection>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section id="how" className="border-b border-border/60 py-20">
-        <div className="container">
-          <RevealSection>
-            <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight md:text-4xl">What you get</h2>
-            <p className="mx-auto mb-14 max-w-xl text-center text-muted-foreground">
-              Every brand comes with a complete system — not just a logo, but everything you need to use it everywhere.
-            </p>
-          </RevealSection>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: FileText, title: "Brand Strategy", body: "Positioning statement, archetype, Golden Why, brand attributes. The strategic foundation that makes every visual and verbal choice defensible." },
-              { icon: Sparkles, title: "Visual Identity", body: "3 custom logo directions with full/mono/reversed/compact versions. Color palette, typography system, usage guidelines." },
-              { icon: MessageSquare, title: "Voice & Tone", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds consistent everywhere." },
-              { icon: Package, title: "Design Tokens", body: "W3C DTCG 2025.10 tokens. Drop into Figma, import into Tailwind. Your whole stack stays on-brand automatically." },
-              { icon: Search, title: "Market Research", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why." },
-              { icon: ShieldCheck, title: "AI Skills & Prompts", body: "Ready-made instructions for Claude, GPT, and Gemini. 5 prompt templates for hero sections, LinkedIn, email, product descriptions, and ads." },
-            ].map((s, i) => (
-              <RevealSection key={s.title} delay={i * 0.08}>
-                <Card className="p-6 h-full">
-                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <s.icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="mb-2 text-base font-medium">{s.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
-                </Card>
-              </RevealSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* THE CALL */}
-      <section className="border-b border-border/60 bg-secondary/30 py-20">
-        <div className="container grid items-center gap-12 md:grid-cols-2">
-          <RevealSection>
-            <Badge variant="accent" className="mb-5 gap-1.5">
-              <Phone className="h-3.5 w-3.5" /> Discovery call
             </Badge>
             <h2 className="mb-5 text-3xl font-semibold tracking-tight md:text-4xl">
               Tell us about your business. We&apos;ll build the strategy while you talk.
