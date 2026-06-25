@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import {
-  ArrowLeft, Wand2, RefreshCw, MessageSquare, Sparkles, AlertTriangle, Send,
+  ArrowLeft, Wand2, RefreshCw, MessageSquare, Sparkles, AlertTriangle, Send, Coins,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
@@ -32,7 +32,9 @@ function RevisionsInner() {
 
   const tier = TIERS.find((t) => t.id === order.tier)!;
   const revisions = getStore().getRevisions(id);
-  const creditsLeft = order.revisionCredits ?? tier.revisionCredits;
+  const totalCredits = tier.revisionCredits;
+  const creditsUsed = revisions.filter((r) => r.type === "structural" && r.status === "auto_applied").length;
+  const creditsLeft = Math.max(0, totalCredits - creditsUsed);
   const lastRev = revisions.find((r) => r.id === lastRevId);
 
   const submit = () => {
@@ -56,9 +58,49 @@ function RevisionsInner() {
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Request a change</h1>
         <p className="text-muted-foreground">
-          Adjustments (color, spacing, copy) are always free. Bigger changes — a different concept, palette, or archetype — use a revision round.
+          Adjustments (color, spacing, copy) are always free. Bigger changes use a revision credit.
         </p>
       </div>
+
+      {/* Credit counter — always visible */}
+      <Card className="p-5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/10 text-primary">
+              <Coins className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-sm font-medium">Revision credits</div>
+              <div className="text-xs text-muted-foreground">
+                {creditsLeft > 0
+                  ? `${creditsLeft} of ${totalCredits} remaining · ${tier.name} tier`
+                  : "No credits remaining"}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalCredits }).map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "h-3 w-3 rounded-full transition-colors",
+                  i < creditsUsed
+                    ? "bg-muted-foreground/30"
+                    : "bg-primary",
+                )}
+              />
+            ))}
+          </div>
+        </div>
+        {creditsLeft === 0 && (
+          <div className="mt-4 flex flex-col gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs">
+            <span className="flex items-center gap-1.5 font-medium text-amber-300">
+              <AlertTriangle className="h-3.5 w-3.5" /> No credits left
+            </span>
+            <span className="text-muted-foreground">Upgrade your tier to get more revision credits.</span>
+          </div>
+        )}
+      </Card>
 
       <Card className="space-y-5 p-6">
         {/* type selector */}
@@ -71,7 +113,7 @@ function RevisionsInner() {
             )}
           >
             <span className="flex items-center gap-2 font-medium"><Wand2 className="h-4 w-4 text-primary" /> Small adjustment</span>
-            <span className="text-xs text-muted-foreground">Color tweak, spacing, copy edit — free & instant</span>
+            <span className="text-xs text-muted-foreground">Color tweak, spacing, copy edit — free &amp; instant</span>
           </button>
           <button
             onClick={() => setType("structural")}
@@ -81,30 +123,17 @@ function RevisionsInner() {
             )}
           >
             <span className="flex items-center gap-2 font-medium"><RefreshCw className="h-4 w-4 text-primary" /> Bigger change</span>
-            <span className="text-xs text-muted-foreground">Concept, palette, or archetype swap — uses a round</span>
+            <span className="text-xs text-muted-foreground">Concept, palette, or archetype swap — uses 1 credit</span>
           </button>
         </div>
-
-        {/* credits remaining */}
-        {type === "structural" && (
-          <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/40 px-4 py-2.5 text-sm">
-            <span className="text-muted-foreground">Revision credits remaining</span>
-            <Badge variant={creditsLeft > 0 ? "accent" : "warning"}>{creditsLeft} of {tier.revisionCredits}</Badge>
-          </div>
-        )}
 
         {structuralBlocked && (
           <div className="flex flex-col gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
             <span className="flex items-center gap-2 font-medium text-amber-300"><AlertTriangle className="h-4 w-4" /> No credits remaining</span>
-            <span className="text-muted-foreground">Upgrade to get more revision credits, or buy an extra credit.</span>
-            <div className="flex gap-2">
-              <Link href="/checkout" className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
-                Upgrade tier
-              </Link>
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground">
-                Buy 1 credit — $19
-              </span>
-            </div>
+            <span className="text-muted-foreground">Upgrade to get more revision credits.</span>
+            <Link href="/checkout" className="inline-flex w-fit items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
+              Upgrade tier
+            </Link>
           </div>
         )}
 
@@ -141,7 +170,7 @@ function RevisionsInner() {
             {lastRev.type === "structural" && lastRev.status === "pushback_sent" && (
               <div className="flex flex-wrap gap-2 pt-1">
                 <Button size="sm" variant="default" className="gap-1.5" onClick={persist}>
-                  <RefreshCw className="h-3.5 w-3.5" /> I still want this — apply it
+                  <RefreshCw className="h-3.5 w-3.5" /> I still want this — use 1 credit
                 </Button>
                 <Link href={`/portal/directions?order=${id}`}>
                   <Button size="sm" variant="outline">Keep current direction</Button>
