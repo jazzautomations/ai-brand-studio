@@ -172,7 +172,7 @@ export interface Order {
   status: OrderStatus;
   deliverySlaHours: number;
   selectedDirectionId?: string;
-  revisionsRemaining?: number;
+  revisionCredits: number;
   createdAt: string;
   deliveredAt?: string;
 }

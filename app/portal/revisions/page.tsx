@@ -32,8 +32,7 @@ function RevisionsInner() {
 
   const tier = TIERS.find((t) => t.id === order.tier)!;
   const revisions = getStore().getRevisions(id);
-  const structuralApplied = revisions.filter((r) => r.type === "structural" && r.status === "auto_applied").length;
-  const roundsLeft = Math.max(0, tier.revisionRounds - structuralApplied);
+  const creditsLeft = order.revisionCredits ?? tier.revisionCredits;
   const lastRev = revisions.find((r) => r.id === lastRevId);
 
   const submit = () => {
@@ -47,7 +46,7 @@ function RevisionsInner() {
     if (lastRevId) getStore().persistRevision(id, lastRevId);
   };
 
-  const structuralBlocked = type === "structural" && roundsLeft === 0;
+  const structuralBlocked = type === "structural" && creditsLeft === 0;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -86,21 +85,26 @@ function RevisionsInner() {
           </button>
         </div>
 
-        {/* rounds remaining */}
+        {/* credits remaining */}
         {type === "structural" && (
           <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/40 px-4 py-2.5 text-sm">
-            <span className="text-muted-foreground">Structural revision rounds remaining</span>
-            <Badge variant={roundsLeft > 0 ? "accent" : "warning"}>{roundsLeft} of {tier.revisionRounds}</Badge>
+            <span className="text-muted-foreground">Revision credits remaining</span>
+            <Badge variant={creditsLeft > 0 ? "accent" : "warning"}>{creditsLeft} of {tier.revisionCredits}</Badge>
           </div>
         )}
 
         {structuralBlocked && (
           <div className="flex flex-col gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
-            <span className="flex items-center gap-2 font-medium text-amber-300"><AlertTriangle className="h-4 w-4" /> No structural rounds left</span>
-            <span className="text-muted-foreground">Buy an extra round to keep iterating on the concept.</span>
-            <Link href="/checkout" className="inline-flex w-fit items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
-              Add a round — $49
-            </Link>
+            <span className="flex items-center gap-2 font-medium text-amber-300"><AlertTriangle className="h-4 w-4" /> No credits remaining</span>
+            <span className="text-muted-foreground">Upgrade to get more revision credits, or buy an extra credit.</span>
+            <div className="flex gap-2">
+              <Link href="/checkout" className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
+                Upgrade tier
+              </Link>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground">
+                Buy 1 credit — $19
+              </span>
+            </div>
           </div>
         )}
 

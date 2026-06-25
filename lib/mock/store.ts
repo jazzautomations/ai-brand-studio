@@ -343,6 +343,7 @@ class Store {
       stripeSessionId: "mock_sess_" + uid("s"),
       status: "pending_call",
       deliverySlaHours: tier === "authority" ? 24 : 120,
+      revisionCredits: cfg.revisionCredits,
       createdAt: new Date().toISOString(),
     };
     this.state.orders.push(order);
@@ -408,6 +409,7 @@ class Store {
         stripeSessionId: "mock_" + uid("s"),
         status: s.status,
         deliverySlaHours: s.tier === "authority" ? 24 : 120,
+        revisionCredits: t.revisionCredits,
         createdAt: new Date(Date.now() - s.days * 864e5).toISOString(),
         deliveredAt: s.status === "delivered" ? new Date().toISOString() : undefined,
       };
@@ -658,7 +660,6 @@ class Store {
   submitRevision(orderId: string, text: string, type: "adjustment" | "structural"): Revision {
     const order = this.state.orders.find((o) => o.id === orderId);
     const brief = this.state.briefs.find((b) => b.orderId === orderId);
-    const round = this.state.revisions.filter((r) => r.orderId === orderId && r.type === "structural").length;
 
     if (type === "adjustment") {
       const rev: Revision = {
@@ -678,9 +679,15 @@ class Store {
     }
 
     // structural — Creative Director Agent
+    // Check if this is a repeat request on the same topic
+    const prevStructural = this.state.revisions.filter(
+      (r) => r.orderId === orderId && r.type === "structural",
+    );
+    const isFirstStructural = prevStructural.length === 0;
     const adj = brief?.desiredAdjectives.join(", ") || "confident and considered";
-    const firstPushback = round === 0;
-    if (firstPushback) {
+
+    if (isFirstStructural) {
+      // First structural request — CD pushes back, doesn't use a credit yet
       const rev: Revision = {
         id: uid("rev"),
         orderId,
@@ -696,13 +703,17 @@ class Store {
       this.emit();
       return rev;
     }
-    // second push on same topic → client is right, auto-apply with trade-off
+
+    // Repeat structural request — use 1 credit and auto-apply
+    if (order && order.revisionCredits > 0) {
+      order.revisionCredits -= 1;
+    }
     const rev: Revision = {
       id: uid("rev"),
       orderId,
       requestText: text,
       type: "structural",
-      agentResponseText: `You've made the call twice, so it's yours — applied. Trade-off noted: this pulls the identity slightly away from the “${adj}” direction we built in the discovery call, so some downstream materials may feel a touch less aligned. Flagged for the QA record; no further action needed on your end.`,
+      agentResponseText: `Applied. Trade-off noted: this pulls the identity slightly away from the "${adj}" direction we built in the discovery call, so some downstream materials may feel a touch less aligned. ${order && order.revisionCredits > 0 ? `${order.revisionCredits} credits remaining.` : "No credits remaining — upgrade to get more."}`,
       status: "auto_applied",
       pushbackRound: 2,
       createdAt: new Date().toISOString(),

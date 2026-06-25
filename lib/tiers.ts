@@ -10,6 +10,7 @@ export interface TierConfig {
   callMinutes: number;
   directionCount: number;
   revisionRounds: number;
+  revisionCredits: number;
   guidePages: number;
   mockups: number;
   deliveryLabel: string;
@@ -26,6 +27,7 @@ export const TIERS: TierConfig[] = [
     callMinutes: 15,
     directionCount: 1,
     revisionRounds: 1,
+    revisionCredits: 1,
     guidePages: 12,
     mockups: 0,
     deliveryLabel: "5 business days",
@@ -48,7 +50,8 @@ export const TIERS: TierConfig[] = [
     recommended: true,
     callMinutes: 25,
     directionCount: 3,
-    revisionRounds: 2,
+    revisionRounds: 3,
+    revisionCredits: 5,
     guidePages: 30,
     mockups: 6,
     deliveryLabel: "5 business days",
@@ -61,7 +64,7 @@ export const TIERS: TierConfig[] = [
       "Voice & tone guide",
       "AI skills for Claude, GPT, and Gemini",
       "5 ready-to-use prompt templates",
-      "2 structural revision rounds",
+      "5 revision credits (vs. 3 rounds)",
       "Unlimited free adjustments",
     ],
   },
@@ -73,7 +76,8 @@ export const TIERS: TierConfig[] = [
     blurb: "Priority delivery. Extended messaging framework. For brands that move fast.",
     callMinutes: 35,
     directionCount: 3,
-    revisionRounds: 3,
+    revisionRounds: 5,
+    revisionCredits: 10,
     guidePages: 30,
     mockups: 10,
     deliveryLabel: "24 hours — priority",
@@ -83,7 +87,7 @@ export const TIERS: TierConfig[] = [
       "Extended messaging framework",
       "10 context mockups",
       "Priority delivery (24 hours)",
-      "3 structural revision rounds",
+      "10 revision credits (vs. 5 rounds)",
       "Unlimited free adjustments",
     ],
   },
