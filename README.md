@@ -6,7 +6,7 @@ Vercel with zero API keys. The data layer is isolated so swapping in real
 Supabase + Stripe + Inngest + ElevenLabs/Recraft is a matter of replacing one
 module each — see [Swapping mocks for real services](#swapping-mocks-for-real-services).
 
-> Studio name is a placeholder. Set `NEXT_PUBLIC_STUDIO_NAME` (defaults to `Lumen`)
+> Studio name is a placeholder. Set `NEXT_PUBLIC_STUDIO_NAME` (defaults to `Forge`)
 > before launch and replace it everywhere.
 
 ## What works in this MVP
