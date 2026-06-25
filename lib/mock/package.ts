@@ -183,17 +183,18 @@ export function buildPromptFiles(brief: Brief, verbal: VerbalIdentity): Record<s
 }
 
 export function buildMoodBoardHtml(brief: Brief, direction: Direction, strategy: StrategyDoc): string {
-  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
-  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
-  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
-  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
+  const primary = direction.colorTokens[0]?.hex || "#0F1B2D";
+  const accent = direction.colorTokens[1]?.hex || "#C9A96E";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background|ivory|linen|cloud/i.test(c.usage))?.hex || "#FAF8F5";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal|ink/i.test(c.usage))?.hex || "#1A1D23";
+  const secondary = direction.colorTokens.find((c) => /sage|slate|terracotta|secondary|muted/i.test(c.usage))?.hex || accent;
 
   const moodKeywords = brief.desiredAdjectives.map(a =>
-    `<span class="keyword" style="border-color:${primary}">${a}</span>`
+    `<span class="keyword" style="border-color:${primary};color:${primary}">${a}</span>`
   ).join("");
 
   const paletteSwatches = direction.colorTokens.map(c =>
-    `<div class="swatch"><div class="color" style="background:${c.hex}"></div><span>${c.name}<br><code>${c.hex}</code></span></div>`
+    `<div class="swatch"><div class="color" style="background:${c.hex}"></div><div><b>${c.name}</b><br><code>${c.hex}</code><br><span class="usage">${c.usage}</span></div></div>`
   ).join("");
 
   const body = `
@@ -243,32 +244,33 @@ export function buildMoodBoardHtml(brief: Brief, direction: Direction, strategy:
   return docShell(brief.languagePreference || "en", `${brief.businessName} — Mood Board`, "Visual & emotional territory", `Mood Board · ${new Date().getFullYear()}`, `
   <style>
     .keywords { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
-    .keyword { display: inline-block; padding: 6px 16px; border: 2px solid; border-radius: 999px; font-size: 14px; font-weight: 600; color: ${text}; }
-    .palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 16px 0; }
+    .keyword { display: inline-block; padding: 8px 20px; border: 2px solid; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
+    .palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin: 16px 0; }
     .swatch { display: flex; gap: 10px; align-items: center; }
-    .swatch .color { width: 48px; height: 48px; border-radius: 8px; border: 1px solid rgba(0,0,0,.08); }
-    .swatch span { font-size: 13px; color: #666; }
+    .swatch .color { width: 52px; height: 52px; border-radius: 10px; border: 1px solid rgba(0,0,0,.06); flex: none; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .swatch span, .swatch div { font-size: 12px; color: #666; line-height: 1.4; }
     .swatch code { font-size: 11px; color: #999; }
+    .usage { color: ${primary}; font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
     .rationale { font-style: italic; color: #666; margin: 8px 0; }
-    .type-showcase { background: ${light}; border-radius: 12px; padding: 24px; margin: 16px 0; }
+    .type-showcase { background: ${light}; border-radius: 16px; padding: 32px; margin: 16px 0; border: 1px solid rgba(0,0,0,.04); }
     .personality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-    .personality-card { border-left: 4px solid; padding: 16px; background: ${light}; border-radius: 0 8px 8px 0; }
-    .personality-card h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
-    .personality-card p { margin: 0; font-size: 18px; font-weight: 600; color: ${primary}; }
+    .personality-card { border-left: 4px solid; padding: 20px; background: ${light}; border-radius: 0 12px 12px 0; }
+    .personality-card h4 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #888; }
+    .personality-card p { margin: 0; font-size: 20px; font-weight: 600; color: ${primary}; }
     .imagery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-    .imagery-note { padding: 16px; border-radius: 8px; font-size: 14px; }
-    .imagery-note:first-child { background: #eafaf1; }
-    .imagery-note:last-child { background: #fdecec; }
+    .imagery-note { padding: 20px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+    .imagery-note:first-child { background: #eafaf1; border: 1px solid #c6f6d5; }
+    .imagery-note:last-child { background: #fdecec; border: 1px solid #fed7d7; }
   </style>
   ${body}
   `);
 }
 
 export function buildSocialMediaKitHtml(brief: Brief, direction: Direction, strategy: StrategyDoc, verbal: VerbalIdentity): string {
-  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
-  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
-  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
-  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
+  const primary = direction.colorTokens[0]?.hex || "#0F1B2D";
+  const accent = direction.colorTokens[1]?.hex || "#C9A96E";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background|ivory|linen|cloud/i.test(c.usage))?.hex || "#FAF8F5";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal|ink/i.test(c.usage))?.hex || "#1A1D23";
 
   const tagline = verbal.taglineOptions[0]?.tagline || "";
   const pillars = verbal.messagingPillars.map(p => `<li>${escapeHtml(p)}</li>`).join("");
@@ -366,10 +368,10 @@ export function buildSocialMediaKitHtml(brief: Brief, direction: Direction, stra
 }
 
 export function buildBrandInContextHtml(brief: Brief, direction: Direction, strategy: StrategyDoc, verbal: VerbalIdentity): string {
-  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
-  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
-  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
-  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
+  const primary = direction.colorTokens[0]?.hex || "#0F1B2D";
+  const accent = direction.colorTokens[1]?.hex || "#C9A96E";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background|ivory|linen|cloud/i.test(c.usage))?.hex || "#FAF8F5";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal|ink/i.test(c.usage))?.hex || "#1A1D23";
 
   const tagline = brief.desiredAdjectives[0] || "Considered";
 
@@ -485,9 +487,9 @@ export function buildBrandGuideHtml(
   verbal: VerbalIdentity,
   tier: Tier,
 ): string {
-  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
-  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal/i.test(c.usage))?.hex || "#2B2B33";
-  const light = direction.colorTokens.find((c) => /paper|mist|bone|background/i.test(c.usage))?.hex || "#F6F3EC";
+  const primary = direction.colorTokens[0]?.hex || "#0F1B2D";
+  const text = direction.colorTokens.find((c) => /text|graphite|ink|charcoal|ink/i.test(c.usage))?.hex || "#1A1D23";
+  const light = direction.colorTokens.find((c) => /paper|mist|bone|background|ivory|linen|cloud/i.test(c.usage))?.hex || "#FAF8F5";
   const accent = direction.colorTokens[1]?.hex || primary;
   const versions = renderDirectionVersions(direction);
   const byKey = (k: "full" | "mono" | "reversed" | "compact") =>
@@ -629,21 +631,21 @@ function escapeHtml(s: string): string {
 const DOC_BASE_CSS = `
   @page { margin: 18mm 16mm; }
   * { box-sizing: border-box; }
-  body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #2B2B33; background: #fff; margin: 0; line-height: 1.6; }
+  body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1A1D23; background: #fff; margin: 0; line-height: 1.6; }
   .wrap { max-width: 880px; margin: 0 auto; padding: 48px 32px; }
-  .cover { background: #1E2A78; color: #F6F3EC; border-radius: 18px; padding: 64px 48px; margin-bottom: 40px; }
+  .cover { background: #0F1B2D; color: #FAF8F5; border-radius: 18px; padding: 64px 48px; margin-bottom: 40px; }
   .cover h1 { font-size: 46px; margin: 8px 0 6px; letter-spacing: -1px; }
   .cover .tag { font-size: 19px; opacity: .85; font-style: italic; }
   .cover .meta { margin-top: 32px; font-size: 12px; opacity: .7; letter-spacing: .08em; text-transform: uppercase; }
-  h2 { font-size: 24px; margin: 40px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #d8a657; }
-  h3 { font-size: 16px; margin: 22px 0 8px; color: #1E2A78; }
+  h2 { font-size: 24px; margin: 40px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #C9A96E; }
+  h3 { font-size: 16px; margin: 22px 0 8px; color: #0F1B2D; }
   p { color: #444; }
-  .callout { background: #F6F3EC; border-left: 4px solid #d8a657; padding: 16px 18px; border-radius: 8px; margin: 16px 0; }
-  .attr { display: inline-block; background: #1E2A78; color: #F6F3EC; padding: 6px 14px; border-radius: 999px; margin: 0 8px 8px 0; font-size: 13px; }
+  .callout { background: #FAF8F5; border-left: 4px solid #C9A96E; padding: 16px 18px; border-radius: 8px; margin: 16px 0; }
+  .attr { display: inline-block; background: #0F1B2D; color: #FAF8F5; padding: 6px 14px; border-radius: 999px; margin: 0 8px 8px 0; font-size: 13px; }
   table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
   th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
-  th { background: #F6F3EC; font-weight: 600; color: #1E2A78; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-  td.name { font-weight: 600; color: #1E2A78; }
+  th { background: #FAF8F5; font-weight: 600; color: #0F1B2D; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  td.name { font-weight: 600; color: #0F1B2D; }
   .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #eee; color: #555; }
   ul { padding-left: 20px; } li { margin-bottom: 6px; color: #444; }
   .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; text-align: center; }
