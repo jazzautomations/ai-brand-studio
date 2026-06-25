@@ -135,19 +135,19 @@ export default function Home() {
           </RevealSection>
           <div className="mx-auto max-w-4xl space-y-8">
             <RevealSection>
-              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left">
+              <div className="rounded-2xl bg-card p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">DIY tools give you a logo. Your customers can tell.</h3>
                 <p className="text-secondary text-lg leading-relaxed">Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines. No system. Your developer can&apos;t use it. Your designer ignores it. And your customers know it was made in a template. <strong className="text-foreground">You saved money but lost credibility.</strong></p>
               </div>
             </RevealSection>
             <RevealSection delay={0.1}>
-              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left">
+              <div className="rounded-2xl bg-card p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
                 <p className="text-secondary text-lg leading-relaxed">6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive. There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system. <strong className="text-foreground">You paid for a document, not a system.</strong></p>
               </div>
             </RevealSection>
             <RevealSection delay={0.2}>
-              <div className="rounded-2xl bg-white p-10 shadow-soft accent-border-left">
+              <div className="rounded-2xl bg-card p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">Every week without a brand system costs you credibility.</h3>
                 <p className="text-secondary text-lg leading-relaxed">While you wait for an agency, your competitors launch. Your investors ask &ldquo;where&apos;s the brand?&rdquo; Your developer builds with default styles. Your landing page looks like everyone else&apos;s. <strong className="text-foreground">Every week without a brand system is a week you look like you don&apos;t have your shit together.</strong></p>
               </div>
@@ -176,7 +176,7 @@ export default function Home() {
               { icon: Search, title: "Research that informs every decision", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
             ].map((s, i) => (
               <RevealSection key={i} delay={i * 0.08}>
-                <div className="rounded-2xl bg-white p-8 shadow-soft premium-card h-full">
+                <div className="rounded-2xl bg-card p-8 shadow-soft premium-card h-full">
                   <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><s.icon className="h-6 w-6" /></div>
                   <h3 className="mb-3 text-xl font-bold">{s.title}</h3>
                   <p className="text-secondary leading-relaxed">{s.body}</p>
@@ -217,7 +217,7 @@ export default function Home() {
                   { feature: "Delivery time", diy: "Minutes", agency: "6-16 weeks", forge: "Hours" },
                   { feature: "Cost", diy: "$0-50", agency: "$5k-50k", forge: "$299-997" },
                 ].map((row, i) => (
-                  <div key={i} className={`grid grid-cols-4 text-sm border-t border-border/50 ${i % 2 === 0 ? "bg-white" : "bg-secondary/30"}`}>
+                  <div key={i} className={`grid grid-cols-4 text-sm border-t border-border/50 ${i % 2 === 0 ? "bg-card" : "bg-secondary/30"}`}>
                     <div className="p-5 font-semibold">{row.feature}</div>
                     <div className="p-5 text-center text-secondary">{row.diy}</div>
                     <div className="p-5 text-center text-secondary">{row.agency}</div>
@@ -244,7 +244,7 @@ export default function Home() {
             </ul>
           </RevealSection>
           <RevealSection delay={0.15}>
-            <div className="rounded-2xl bg-white p-10 shadow-premium relative overflow-hidden">
+            <div className="rounded-2xl bg-card p-10 shadow-premium relative overflow-hidden">
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-secondary/30 to-transparent" />
               <div className="relative">
                 <div className="mb-8 flex items-center gap-4">
@@ -285,7 +285,7 @@ export default function Home() {
               { role: "DTC brand", quote: "My developer dropped the tokens into Tailwind and everything just matched." },
             ].map((t, i) => (
               <RevealSection key={t.role} delay={i * 0.1}>
-                <div className="rounded-2xl bg-white p-8 shadow-soft premium-card h-full">
+                <div className="rounded-2xl bg-card p-8 shadow-soft premium-card h-full">
                   <div className="mb-5 flex gap-1 text-primary">{Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-5 w-5 fill-current" />)}</div>
                   <p className="mb-6 text-base text-foreground/90 leading-relaxed">{t.quote}</p>
                   <div className="text-sm text-secondary font-medium">{t.role} · pilot cohort</div>
@@ -345,7 +345,7 @@ export default function Home() {
       <MarketingFooter />
 
       {showSticky && (
-        <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/50 bg-white/95 backdrop-blur-xl py-4 px-6 shadow-lg animate-fade-in-up">
+        <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/50 bg-card/95 backdrop-blur-xl py-4 px-6 shadow-lg animate-fade-in-up">
           <div className="container flex items-center justify-between">
             <div className="hidden sm:block"><span className="text-base font-semibold">One brand system. Every tool.</span><span className="ml-3 text-sm text-secondary">From $299</span></div>
             <Link href="/checkout"><Button className="gap-2 px-6 py-3 font-semibold shadow-sm">Get your brand <ArrowRight className="h-4 w-4" /></Button></Link>

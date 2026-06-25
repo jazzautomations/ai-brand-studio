@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { StoreHydrator } from "@/components/store-hydrator";
 import "./globals.css";
 import { STUDIO_NAME, STUDIO_TAGLINE } from "@/lib/studio";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const poppins = Poppins({ 
+  subsets: ["latin"], 
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700"]
+});
 
 export const metadata: Metadata = {
   title: {
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`dark ${poppins.variable}`} suppressHydrationWarning>
       <body className="bg-background text-foreground font-sans antialiased min-h-screen">
         <StoreHydrator />
         {children}

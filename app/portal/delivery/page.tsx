@@ -237,7 +237,7 @@ function OverviewTab({ brief, strategy, verbal, direction, tier, versions, compe
               ))}
             </div>
           </div>
-          <div className="w-full md:w-72 bg-white p-6 flex flex-col items-center justify-center">
+          <div className="w-full md:w-72 bg-card p-6 flex flex-col items-center justify-center">
             <div dangerouslySetInnerHTML={{ __html: versions[0]?.svg || "" }} className="mb-4" />
             <div className="text-xs text-gray-500 text-center">Full-color lockup</div>
           </div>
@@ -510,7 +510,7 @@ function GuideTab({ html }: { html: string }) {
       </div>
       <iframe
         srcDoc={html}
-        className="w-full border-0 bg-white"
+        className="w-full border-0 bg-card"
         style={{ height: "70vh" }}
         title="Brand Guide Preview"
       />
@@ -574,7 +574,7 @@ function MockupsTab({ html }: { html: string }) {
       </div>
       <iframe
         srcDoc={html}
-        className="w-full border-0 bg-white"
+        className="w-full border-0 bg-card"
         style={{ height: "70vh" }}
         title="Brand in Context Preview"
       />

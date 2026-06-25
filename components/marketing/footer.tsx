@@ -3,7 +3,7 @@ import { STUDIO_NAME } from "@/lib/studio";
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-white">
+    <footer className="bg-card">
       <div className="container flex flex-col items-center justify-between gap-6 py-10 md:flex-row">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground text-xs font-bold">

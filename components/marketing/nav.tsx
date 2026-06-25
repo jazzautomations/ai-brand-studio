@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export function MarketingNav() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl">
       <nav className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">
@@ -36,7 +36,7 @@ export function MarketingNav() {
       </nav>
 
       {open && (
-        <div className="border-t border-border/30 bg-white md:hidden">
+        <div className="border-t border-border/30 bg-card md:hidden">
           <div className="container flex flex-col gap-1 py-4">
             <Link href="/#how" onClick={() => setOpen(false)} className="py-2 text-sm text-muted-foreground">What you get</Link>
             <Link href="/#pricing" onClick={() => setOpen(false)} className="py-2 text-sm text-muted-foreground">Pricing</Link>
