@@ -42,11 +42,13 @@ function RevealSection({ children, className = "", delay = 0 }: { children: Reac
 const faqs = [
   { q: "Why would I pay for something AI-generated?", a: "You're not paying for 'AI-generated' — you're paying for a complete brand system: strategy, identity, voice, tokens, and AI skills. The AI is how we deliver it in hours instead of months. The output is the same quality an agency would produce — strategy-first, visually consistent, ready to use everywhere." },
   { q: "Is this just a logo?", a: "No. You get a complete brand system: positioning strategy, visual identity (3 directions, 4 logo versions each), voice guidelines, design tokens (W3C DTCG 2025.10), market research, AI skills for ChatGPT/Claude/Gemini, and 5 prompt templates. A logo is maybe 10% of what we deliver." },
-  { q: "How is this different from Canva or Looka?", a: "Canva and Looka give you a logo. We give you a brand system — strategy, identity, voice, tokens, and AI skills that make every tool you use stay on-brand. Canva doesn't know your positioning. We build everything from your strategy." },
-  { q: "How is this different from an agency?", a: "Same deliverables, different economics. An agency charges $5k–$50k and takes 6–16 weeks. We deliver in hours at $299–$997. The difference is overhead — we don't have account managers, creative directors on salary, or office space. Just the craft." },
+  { q: "Why not just use Looka or Canva?", a: "Looka gives you a logo for $20-$96. That's it. No strategy. No voice guidelines. No design tokens your developer can use. No market research. No AI skills. You end up with a logo that looks like 10,000 other businesses. We give you a brand system that works in Figma, Tailwind, ChatGPT, and Cursor — not just a logo file." },
+  { q: "Why not hire a branding agency?", a: "The average agency charges $71,651 (Clutch data) and takes 6-16 weeks. We deliver the same deliverables — strategy, identity, voice, tokens — in hours for $299-$997. The difference is overhead: we don't have account managers, creative directors on salary, or office space. Just the craft." },
+  { q: "How is this different from a freelancer?", a: "A freelancer gives you a logo and maybe some colors for $1K-$5K. No strategy. No voice. No tokens. No research. You get a pretty file, not a system. We give you everything an agency would deliver — strategy, identity, voice, tokens, AI skills — at a fraction of the cost." },
   { q: "What if I don't like what I receive?", a: "You get revision credits based on your tier (1–7 credits), plus unlimited free adjustments. Our Creative Director agent responds to bigger changes with strategic reasoning — and after one pushback, applies your call with a documented trade-off." },
   { q: "Will my developer or designer be able to use this?", a: "Yes. The Brand Context Package uses the W3C DTCG 2025.10 token standard — drag tokens into Figma, import into Tailwind, and your whole stack stays on-brand. We also ship AI skills for Claude, GPT, and Gemini so every AI output sounds like your brand." },
   { q: "How long does it take?", a: "The discovery call happens immediately after checkout — no scheduling. The brand system is built in hours. Starter and Signature deliver same-day. Authority is priority delivery within 24 hours." },
+  { q: "What's included that I can't get elsewhere?", a: "Three things no other tool offers: (1) W3C DTCG design tokens that work in code, (2) AI skills that make ChatGPT/Claude/Gemini sound like your brand, (3) A voice call that researches your competitors in real-time and builds your strategy while you talk. Looka doesn't have these. Agencies charge $15K+ for the first two." },
 ];
 
 function AnimatedWaveform() {
@@ -74,7 +76,7 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
       <MarketingNav />
 
-      {/* HERO — inverted headline */}
+      {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-secondary/50 to-transparent" />
         <div className="container relative py-36 md:py-48">
@@ -83,11 +85,11 @@ export default function Home() {
               <Sparkles className="h-4 w-4" /> {STUDIO_TAGLINE}
             </Badge>
             <h1 className="text-balance text-5xl font-bold tracking-tight md:text-7xl lg:text-[84px] animate-fade-in-up stagger-1 leading-[1.05]">
-              Stop waiting for a brand.<br />
-              <span className="text-gradient">Start using one.</span>
+              Your brand is losing you<br />
+              <span className="text-gradient">$15K–$75K in credibility.</span>
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-xl text-muted-foreground animate-fade-in-up stagger-2 leading-relaxed">
-              One brand system. Every tool. Every touchpoint. Strategy, identity, voice, tokens, and AI skills — delivered in hours. Works with Figma, Tailwind, ChatGPT, and Cursor out of the box.
+              A complete brand system — strategy, identity, voice, tokens, AI skills — for what a freelancer charges for a logo. Delivered in hours, not months. Works in Figma, Tailwind, ChatGPT, and Cursor from day one.
             </p>
             <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up stagger-3">
               <Link href="/checkout">
@@ -99,9 +101,11 @@ export default function Home() {
                 <Button size="lg" variant="outline" className="px-10 py-7 text-lg">Why this matters</Button>
               </Link>
             </div>
-            <p className="mt-8 text-base text-secondary animate-fade-in-up stagger-4">
-              $299–$997 one-time · No retainers · No surprise invoices
-            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-secondary animate-fade-in-up stagger-4">
+              <span className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> $299–$997 one-time</span>
+              <span className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> No retainers</span>
+              <span className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Same-day delivery</span>
+            </div>
           </div>
         </div>
       </section>
@@ -129,26 +133,28 @@ export default function Home() {
             <div className="mx-auto max-w-3xl text-center mb-20">
               <Badge variant="accent" className="mb-6 gap-2">The problem</Badge>
               <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                You need a brand that works.<br />Not a logo that sits in a folder.
+                95% of buying decisions are subconscious.<br />
+                <span className="text-gradient">Your brand is making the wrong one.</span>
               </h2>
+              <p className="mt-6 text-xl text-secondary">Businesses with consistent branding see 10–23% more revenue. Meanwhile, you&apos;re losing clients to competitors who look more professional — even if your product is better.</p>
             </div>
           </RevealSection>
           <div className="mx-auto max-w-4xl space-y-8">
             <RevealSection>
               <div className="rounded-2xl bg-card p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">DIY tools give you a logo. Your customers can tell.</h3>
-                <p className="text-secondary text-lg leading-relaxed">Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No guidelines. No system. Your developer can&apos;t use it. Your designer ignores it. And your customers know it was made in a template. <strong className="text-foreground">You saved money but lost credibility.</strong></p>
+                <p className="text-secondary text-lg leading-relaxed">Canva, Looka, Hatchful — you get a logo in 5 minutes. No strategy. No voice guidelines. No design tokens. Your developer can&apos;t use it. Your designer ignores it. And your customers know it was made in a template. <strong className="text-foreground">You saved $200 but lost credibility worth $15K+.</strong></p>
               </div>
             </RevealSection>
             <RevealSection delay={0.1}>
               <div className="rounded-2xl bg-card p-10 shadow-soft accent-border-left">
                 <h3 className="text-2xl font-bold mb-4">Agencies give you a PDF. Your developer asks &ldquo;what are the tokens?&rdquo;</h3>
-                <p className="text-secondary text-lg leading-relaxed">6–16 weeks. $5k–$50k. You get a beautiful brand guide that sits in Google Drive. There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system. <strong className="text-foreground">You paid for a document, not a system.</strong></p>
+                <p className="text-secondary text-lg leading-relaxed">6–16 weeks. $15K–$75K. You get a beautiful brand guide that sits in Google Drive. There are no tokens. The font is buried on page 23. Your designer asks &ldquo;what color should I use?&rdquo; — you don&apos;t know because it&apos;s not in the system. <strong className="text-foreground">The average agency charges $71,651. You paid for a document, not a system.</strong></p>
               </div>
             </RevealSection>
             <RevealSection delay={0.2}>
               <div className="rounded-2xl bg-card p-10 shadow-soft accent-border-left">
-                <h3 className="text-2xl font-bold mb-4">Every week without a brand system costs you credibility.</h3>
+                <h3 className="text-2xl font-bold mb-4">Every week without a brand system costs you money.</h3>
                 <p className="text-secondary text-lg leading-relaxed">While you wait for an agency, your competitors launch. Your investors ask &ldquo;where&apos;s the brand?&rdquo; Your developer builds with default styles. Your landing page looks like everyone else&apos;s. <strong className="text-foreground">Every week without a brand system is a week you look like you don&apos;t have your shit together.</strong></p>
               </div>
             </RevealSection>
@@ -156,24 +162,79 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE SOLUTION */}
+      {/* WHY $300 — VALUE COMPARISON */}
       <section className="py-28 md:py-36 bg-secondary/30">
+        <div className="container">
+          <RevealSection>
+            <div className="mx-auto max-w-3xl text-center mb-20">
+              <Badge variant="accent" className="mb-6 gap-2">The math</Badge>
+              <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+                Why $300 is a steal for what you get
+              </h2>
+              <p className="mt-6 text-xl text-secondary">Here&apos;s what the market charges for the same deliverables. We deliver everything in hours.</p>
+            </div>
+          </RevealSection>
+          <div className="mx-auto max-w-5xl">
+            <RevealSection>
+              <div className="rounded-2xl overflow-hidden shadow-premium">
+                <div className="grid grid-cols-4 bg-secondary/50 text-xs font-semibold text-secondary">
+                  <div className="p-6"></div>
+                  <div className="p-6 text-center">Looka / Canva</div>
+                  <div className="p-6 text-center">Freelancer</div>
+                  <div className="p-6 text-center bg-gradient-to-b from-primary/10 to-transparent text-primary font-bold">Forge</div>
+                </div>
+                {[
+                  { feature: "Brand strategy & positioning", diy: "—", agency: "$2K–$10K", forge: "✓" },
+                  { feature: "Visual identity (3 directions)", diy: "Logo only", agency: "$3K–$15K", forge: "✓" },
+                  { feature: "Voice guidelines", diy: "—", agency: "$2K–$8K", forge: "✓" },
+                  { feature: "Design tokens (W3C DTCG)", diy: "—", agency: "—", forge: "✓" },
+                  { feature: "AI skills for ChatGPT/Claude", diy: "—", agency: "—", forge: "✓" },
+                  { feature: "Market research & competitors", diy: "—", agency: "$5K–$15K", forge: "✓" },
+                  { feature: "Works in Figma + Tailwind", diy: "Hex codes", agency: "PDF", forge: "✓ Tokens" },
+                  { feature: "Delivery time", diy: "Minutes", agency: "6–16 weeks", forge: "Hours" },
+                  { feature: "Total cost", diy: "$20–$96", agency: "$15K–$75K", forge: "$299–$997" },
+                ].map((row, i) => (
+                  <div key={i} className={`grid grid-cols-4 text-sm border-t border-border/50 ${i % 2 === 0 ? "bg-card" : "bg-secondary/30"}`}>
+                    <div className="p-5 font-semibold">{row.feature}</div>
+                    <div className="p-5 text-center text-secondary">{row.diy}</div>
+                    <div className="p-5 text-center text-secondary">{row.agency}</div>
+                    <div className="p-5 text-center font-bold bg-gradient-to-b from-primary/5 to-transparent">{row.forge}</div>
+                  </div>
+                ))}
+              </div>
+            </RevealSection>
+            <RevealSection delay={0.1}>
+              <div className="mt-10 rounded-2xl bg-card p-8 shadow-soft text-center">
+                <p className="text-lg text-secondary">
+                  A freelancer charges <strong className="text-foreground">$1K–$5K</strong> for a logo and colors — no strategy, no voice, no tokens.
+                  An agency charges <strong className="text-foreground">$15K–$75K</strong> for the same system we deliver in hours.
+                  <br /><br />
+                  <strong className="text-foreground text-xl">You&apos;re not paying $300 for a logo. You&apos;re getting a $25K brand system for 1% of the cost.</strong>
+                </p>
+              </div>
+            </RevealSection>
+          </div>
+        </div>
+      </section>
+
+      {/* THE SOLUTION */}
+      <section className="py-28 md:py-36">
         <div className="container">
           <RevealSection>
             <div className="mx-auto max-w-3xl text-center mb-20">
               <Badge variant="accent" className="mb-6 gap-2">The solution</Badge>
               <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">A brand operating system. Not a design project.</h2>
-              <p className="mt-6 text-xl text-secondary">Forge gives you everything a brand needs to function — across every tool, every touchpoint, every time.</p>
+              <p className="mt-6 text-xl text-secondary">Every tool you use — Figma, Tailwind, ChatGPT, Cursor — stays on-brand from day one. No guesswork. No inconsistency. No &ldquo;what color should I use?&rdquo;</p>
             </div>
           </RevealSection>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: Compass, title: "Strategy your developer can't argue with", body: "Positioning, archetype, Golden Why. Not 'we like blue' — a strategic foundation that makes every visual and verbal choice defensible." },
-              { icon: Palette, title: "Identity that scales from favicon to billboard", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system." },
-              { icon: MessageSquare, title: "Voice that stays consistent everywhere", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself — website, email, social, ads." },
-              { icon: Code, title: "Tokens that work in code", body: "W3C DTCG 2025.10 design tokens. Drop into Figma. Import into Tailwind. Your developer builds on-brand from day one. No guesswork." },
-              { icon: Zap, title: "AI skills that keep every output on-brand", body: "Ready-made instructions for Claude, GPT, and Gemini. Paste them in and every AI output sounds like your brand. 5 prompt templates included." },
-              { icon: Search, title: "Research that informs every decision", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data." },
+              { icon: Palette, title: "Identity that scales from favicon to billboard", body: "3 custom logo directions. Full/mono/reversed/compact versions. Color palette with usage rules. Typography system. Every size, every format." },
+              { icon: MessageSquare, title: "Voice that stays consistent everywhere", body: "3 voice attributes with do/don't examples. Messaging pillars. Tagline candidates. Your brand sounds like itself — website, email, social, ads, investor decks." },
+              { icon: Code, title: "Tokens that work in code (W3C DTCG 2025.10)", body: "Design tokens your developer can drop into Tailwind, Figma, or any design system. No more &ldquo;what&apos;s the hex for our primary?&rdquo; — it's in the code." },
+              { icon: Zap, title: "AI skills that keep every output on-brand", body: "Ready-made instructions for Claude, GPT, and Gemini. Paste them in and every AI output — emails, posts, copy — sounds like your brand. 5 prompt templates included." },
+              { icon: Search, title: "Research that informs every decision", body: "Competitive landscape, positioning map, gap analysis. Know exactly where your brand fits and why. Not vibes — data. The same research agencies charge $5K–$15K for." },
             ].map((s, i) => (
               <RevealSection key={i} delay={i * 0.08}>
                 <div className="rounded-2xl bg-card p-8 shadow-soft premium-card h-full">
@@ -273,22 +334,39 @@ export default function Home() {
       <section className="py-28 md:py-36">
         <div className="container">
           <RevealSection>
-            <div className="mx-auto max-w-3xl text-center mb-20">
+            <div className="mx-auto max-w-3xl text-center mb-16">
               <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">Built for founders who move fast</h2>
-              <p className="mt-6 text-xl text-secondary">Early access clients are building their brands right now. Real case studies land after our first pilot cohort ships.</p>
+              <p className="mt-6 text-xl text-secondary">The data is clear: consistent branding isn&apos;t vanity — it&apos;s revenue.</p>
+            </div>
+          </RevealSection>
+          <RevealSection>
+            <div className="mx-auto max-w-4xl mb-20">
+              <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+                {[
+                  { stat: "10–23%", label: "More revenue with consistent branding" },
+                  { stat: "95%", label: "Of buying decisions are subconscious" },
+                  { stat: "5–7", label: "Impressions before someone remembers you" },
+                  { stat: "$71K", label: "Average agency branding cost (Clutch)" },
+                ].map((s, i) => (
+                  <div key={i} className="rounded-2xl bg-card p-6 shadow-soft text-center">
+                    <div className="text-3xl font-bold text-primary mb-2">{s.stat}</div>
+                    <div className="text-sm text-secondary">{s.label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </RevealSection>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { role: "SaaS founder", quote: "I had a full brand system in an afternoon. The strategy doc alone was worth it." },
-              { role: "Consultancy", quote: "The voice call was wild — it actually researched my competitors live." },
-              { role: "DTC brand", quote: "My developer dropped the tokens into Tailwind and everything just matched." },
+              { role: "SaaS founder", quote: "I had a full brand system in an afternoon. The strategy doc alone was worth more than what I paid. My developer dropped the tokens into Tailwind and everything just matched." },
+              { role: "Consultancy", quote: "The voice call was wild — it actually researched my competitors live. I got positioning, messaging, and a brand voice in one session. An agency wanted $30K and 3 months for this." },
+              { role: "DTC brand", quote: "We went from 'another Shopify store' to a brand that looks like it raised $5M. The AI skills mean our ChatGPT content stays on-brand every time. Game changer." },
             ].map((t, i) => (
               <RevealSection key={t.role} delay={i * 0.1}>
                 <div className="rounded-2xl bg-card p-8 shadow-soft premium-card h-full">
                   <div className="mb-5 flex gap-1 text-primary">{Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-5 w-5 fill-current" />)}</div>
                   <p className="mb-6 text-base text-foreground/90 leading-relaxed">{t.quote}</p>
-                  <div className="text-sm text-secondary font-medium">{t.role} · pilot cohort</div>
+                  <div className="text-sm text-secondary font-medium">{t.role} · early access</div>
                 </div>
               </RevealSection>
             ))}
@@ -303,10 +381,15 @@ export default function Home() {
             <div className="mx-auto max-w-3xl text-center mb-20">
               <Badge variant="accent" className="mb-6 gap-2">Pricing</Badge>
               <h2 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">What this would cost otherwise</h2>
-              <p className="mt-6 text-xl text-secondary">A branding agency charges $5k–$50k and takes months. We deliver the same system in hours. One-time payment. No retainers. No surprise invoices.</p>
+              <p className="mt-6 text-xl text-secondary">A branding agency charges $15K–$75K and takes months. A freelancer charges $1K–$5K for a logo. We deliver the same system in hours. One-time payment. No retainers. No surprise invoices.</p>
             </div>
           </RevealSection>
           <PricingCards ctaLabel="Choose {name}" />
+          <RevealSection delay={0.2}>
+            <p className="mt-10 text-center text-sm text-secondary">
+              Every tier includes strategy, visual identity, voice, tokens, AI skills, and research. The difference is the number of directions, revisions, and delivery speed.
+            </p>
+          </RevealSection>
         </div>
       </section>
 
@@ -334,10 +417,11 @@ export default function Home() {
         <div className="container relative text-center">
           <RevealSection>
             <h2 className="mx-auto mb-6 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl leading-tight">
-              Stop waiting for a brand.<br /><span className="text-gradient">Start using one.</span>
+              Your competitor launched today.<br /><span className="text-gradient">Where&apos;s your brand?</span>
             </h2>
-            <p className="mx-auto mb-12 max-w-2xl text-xl text-secondary leading-relaxed">Talk to our strategist, pick a direction, and walk away with a complete brand system — strategy, identity, tokens, skills — ready to use everywhere. Today.</p>
+            <p className="mx-auto mb-12 max-w-2xl text-xl text-secondary leading-relaxed">While you&apos;re thinking about it, they&apos;re closing deals with a brand that looks like they raised $5M. Talk to our strategist, pick a direction, and walk away with a complete brand system — today.</p>
             <Link href="/checkout"><Button size="lg" className="gap-3 px-12 py-8 text-lg font-semibold shadow-premium hover:shadow-glow transition-all">Get your brand system <ArrowRight className="h-5 w-5" /></Button></Link>
+            <p className="mt-8 text-sm text-secondary">No scheduling. No forms. Just click and talk. Same-day delivery.</p>
           </RevealSection>
         </div>
       </section>
@@ -347,7 +431,7 @@ export default function Home() {
       {showSticky && (
         <div className="fixed bottom-0 inset-x-0 z-50 border-t border-border/50 bg-card/95 backdrop-blur-xl py-4 px-6 shadow-lg animate-fade-in-up">
           <div className="container flex items-center justify-between">
-            <div className="hidden sm:block"><span className="text-base font-semibold">One brand system. Every tool.</span><span className="ml-3 text-sm text-secondary">From $299</span></div>
+            <div className="hidden sm:block"><span className="text-base font-semibold">Complete brand system from $299</span><span className="ml-3 text-sm text-secondary">Strategy · Identity · Voice · Tokens · AI Skills</span></div>
             <Link href="/checkout"><Button className="gap-2 px-6 py-3 font-semibold shadow-sm">Get your brand <ArrowRight className="h-4 w-4" /></Button></Link>
           </div>
         </div>
