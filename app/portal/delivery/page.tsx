@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft, FileText, Package, Download, Loader2, CheckCircle2,
   Sparkles, Image as ImageIcon, RefreshCw, Search, Compass,
   Palette, Share2, Eye, ChevronDown, ChevronRight, Code,
-  MessageSquare, Globe, Zap,
+  MessageSquare, Globe, Zap, Bot, Send, Instagram, Linkedin, Mail,
 } from "lucide-react";
 import { useOrderFromQuery } from "@/lib/mock/use-order";
 import { getStore } from "@/lib/mock/store";
@@ -19,7 +19,7 @@ import {
   buildTokensJson, buildDesignMd, buildClaudeSkill, buildGptInstructions,
   buildPromptFiles,
 } from "@/lib/mock/package";
-import { renderDirectionVersions } from "@/lib/mock/directions";
+import { renderDirectionVersions, archetypeByName } from "@/lib/mock/directions";
 import { competitorResearchFor } from "@/lib/mock/transcript";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ function triggerDownload(filename: string, blob: Blob) {
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 
-type PreviewTab = "overview" | "research" | "strategy" | "tokens" | "design" | "guide" | "skills" | "mockups";
+type PreviewTab = "overview" | "agent" | "research" | "strategy" | "tokens" | "design" | "guide" | "skills" | "mockups";
 
 function DeliveryInner() {
   const { id, order, ready } = useOrderFromQuery();
@@ -114,6 +114,7 @@ function DeliveryInner() {
 
   const tabs: { key: PreviewTab; label: string; icon: React.ElementType }[] = [
     { key: "overview", label: "Overview", icon: Eye },
+    { key: "agent", label: "Brand Agent", icon: Bot },
     { key: "research", label: "Market Research", icon: Search },
     { key: "strategy", label: "Brand Strategy", icon: Compass },
     { key: "tokens", label: "Tokens & DESIGN.md", icon: Code },
@@ -165,6 +166,7 @@ function DeliveryInner() {
           >
             <t.icon className="h-4 w-4" />
             {t.label}
+            {t.key === "agent" && <span className="ml-0.5 h-1.5 w-1.5 rounded-full bg-primary" />}
           </button>
         ))}
       </div>
@@ -173,6 +175,9 @@ function DeliveryInner() {
       <div className="min-h-[400px]">
         {activeTab === "overview" && (
           <OverviewTab brief={brief} strategy={strategy} verbal={verbal} direction={direction} tier={tier!} versions={versions} competitors={competitors} />
+        )}
+        {activeTab === "agent" && (
+          <BrandAgentTab brief={brief} strategy={strategy} verbal={verbal} direction={direction} versions={versions} />
         )}
         {activeTab === "research" && (
           <ResearchTab brief={brief} competitors={competitors} />
@@ -579,6 +584,270 @@ function MockupsTab({ html }: { html: string }) {
         title="Brand in Context Preview"
       />
     </Card>
+  );
+}
+
+/* ==================== BRAND AGENT (preview) ==================== */
+
+type AgentArtifactType = "instagram" | "linkedin" | "email";
+
+interface AgentArtifact {
+  type: AgentArtifactType;
+  payload: any;
+}
+
+interface AgentMessage {
+  id: string;
+  role: "user" | "agent";
+  text: string;
+  displayed: string;
+  artifact?: AgentArtifact;
+  streaming: boolean;
+}
+
+function initials(name: string) {
+  return (
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0]?.toUpperCase() || "")
+      .join("") || "B"
+  );
+}
+
+function buildAgentReply(
+  prompt: string,
+  ctx: { brief: any; strategy: any; verbal: any; direction: any; versions: any[] },
+): { text: string; artifact?: AgentArtifact } {
+  const { brief, strategy, verbal, direction, versions } = ctx;
+  const primary = direction.colorTokens[0]?.hex || "#1E2A78";
+  const accent = direction.colorTokens[1]?.hex || "#C8A24B";
+  const tagline = verbal.taglineOptions[0]?.tagline || "Strategy you can see.";
+  const voice = verbal.voiceAttributes[0]?.name || "confident";
+  const adjective = brief.desiredAdjectives[0] || "distinct";
+  const lower = prompt.toLowerCase();
+
+  if (lower.includes("instagram") || lower.includes("drop") || lower.includes("launch")) {
+    const light = direction.colorTokens.find((c: any) => /paper|mist|bone|background|ivory|linen|cloud/i.test(c.usage))?.hex || "#ffffff";
+    const archetype = archetypeByName(direction.archetype);
+    const iconSvg = archetype ? archetype.mark(64, light) : versions.find((v: any) => v.key === "reversed")?.svg;
+    return {
+      text: `Using your ${direction.archetype} palette and ${voice} voice — here's a launch post, on-brand out of the box:`,
+      artifact: {
+        type: "instagram",
+        payload: { bg: primary, logoSvg: iconSvg, headline: "New. Now available.", sub: brief.businessName },
+      },
+    };
+  }
+  if (lower.includes("linkedin") || lower.includes("announce") || lower.includes("rebrand")) {
+    return {
+      text: `Here's a LinkedIn announcement pulling straight from your positioning and messaging pillars:`,
+      artifact: {
+        type: "linkedin",
+        payload: {
+          name: brief.businessName,
+          initials: initials(brief.businessName),
+          accent,
+          body: `We just rebuilt what ${brief.businessName} stands for. ${strategy.positioningStatement}\n\n${verbal.messagingPillars[0] || tagline}`,
+        },
+      },
+    };
+  }
+  if (lower.includes("email") || lower.includes("subject")) {
+    return {
+      text: `Three subject lines in your voice — ${adjective}, never generic:`,
+      artifact: {
+        type: "email",
+        payload: {
+          lines: [
+            tagline,
+            `The ${adjective} way to ${(brief.whatTheySell || "get this done").toLowerCase()}`,
+            `A quick look at what's next for ${brief.businessName}`,
+          ],
+        },
+      },
+    };
+  }
+  const exclusion = (brief.explicitExclusions || "generic, forgettable").toLowerCase().split(",")[0].trim();
+  return {
+    text: `Working from your brand context — ${strategy.archetypePrimary} archetype, ${adjective} tone, never ${exclusion}. Here's a first pass on "${prompt}":\n\n"${tagline}" — reframed for this ask. Want it shorter, longer, or in a different channel?`,
+  };
+}
+
+function AgentArtifactCard({ artifact }: { artifact: AgentArtifact }) {
+  if (artifact.type === "instagram") {
+    const { bg, headline, sub, logoSvg } = artifact.payload;
+    return (
+      <div className="mt-3 w-56 overflow-hidden rounded-xl border border-border/50">
+        <div className="flex aspect-square flex-col items-center justify-center gap-3 p-5 text-center" style={{ background: bg }}>
+          <div className="h-8 w-8 [&_svg]:h-full [&_svg]:w-full" dangerouslySetInnerHTML={{ __html: logoSvg || "" }} />
+          <div className="text-base font-semibold text-white">{headline}</div>
+          <div className="text-[11px] uppercase tracking-widest text-white/70">{sub}</div>
+        </div>
+        <div className="flex items-center gap-1.5 bg-card px-3 py-2 text-[11px] text-muted-foreground">
+          <Instagram className="h-3 w-3" /> Post preview
+        </div>
+      </div>
+    );
+  }
+  if (artifact.type === "linkedin") {
+    const { name, initials: init, accent, body } = artifact.payload;
+    return (
+      <div className="mt-3 w-72 rounded-xl border border-border/50 bg-card p-4">
+        <div className="mb-2 flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-white" style={{ background: accent }}>
+            {init}
+          </div>
+          <div className="text-xs font-medium">{name}</div>
+        </div>
+        <p className="whitespace-pre-wrap text-xs leading-relaxed text-foreground/90">{body}</p>
+        <div className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          <Linkedin className="h-3 w-3" /> Post preview
+        </div>
+      </div>
+    );
+  }
+  const { lines } = artifact.payload;
+  return (
+    <div className="mt-3 w-72 rounded-xl border border-border/50 bg-card p-4">
+      <div className="mb-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+        <Mail className="h-3 w-3" /> Subject line options
+      </div>
+      <ul className="space-y-1.5 text-xs">
+        {lines.map((l: string, i: number) => (
+          <li key={i} className="rounded-lg bg-secondary/40 px-2.5 py-1.5">{l}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function BrandAgentTab({ brief, strategy, verbal, direction, versions }: {
+  brief: any; strategy: any; verbal: any; direction: any; versions: any[];
+}) {
+  const greeting = `Hey — I'm ${brief.businessName}'s Brand Agent. I already know your positioning, voice, and tokens. Try one of these, or ask me anything:`;
+  const [messages, setMessages] = useState<AgentMessage[]>([
+    { id: "greet", role: "agent", text: greeting, displayed: greeting, streaming: false },
+  ]);
+  const [input, setInput] = useState("");
+  const [thinking, setThinking] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, thinking]);
+
+  function streamIn(id: string, fullText: string) {
+    const words = fullText.split(" ");
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setMessages((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, displayed: words.slice(0, i).join(" "), streaming: i < words.length } : m)),
+      );
+      if (i >= words.length) clearInterval(interval);
+    }, 28);
+  }
+
+  function handleSend(promptOverride?: string) {
+    const text = (promptOverride ?? input).trim();
+    if (!text || thinking) return;
+    const userMsg: AgentMessage = { id: `u-${Date.now()}`, role: "user", text, displayed: text, streaming: false };
+    setMessages((m) => [...m, userMsg]);
+    setInput("");
+    setThinking(true);
+    const reply = buildAgentReply(text, { brief, strategy, verbal, direction, versions });
+    setTimeout(() => {
+      setThinking(false);
+      const id = `a-${Date.now()}`;
+      setMessages((m) => [...m, { id, role: "agent", text: reply.text, displayed: "", artifact: reply.artifact, streaming: true }]);
+      streamIn(id, reply.text);
+    }, 700 + Math.random() * 500);
+  }
+
+  const suggestions = [
+    "Design an Instagram post for our next drop",
+    "Write a LinkedIn post announcing our rebrand",
+    "Give me 3 subject lines for our next email",
+  ];
+
+  return (
+    <div className="space-y-4">
+      <Card className="flex items-center justify-between p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+            <Bot className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <div className="text-sm font-medium">Brand Agent</div>
+            <div className="text-xs text-muted-foreground">Same tokens, same voice — every asset, on demand.</div>
+          </div>
+        </div>
+        <Badge variant="outline">Preview</Badge>
+      </Card>
+
+      <Card className="flex flex-col overflow-hidden">
+        <div ref={scrollRef} className="max-h-[440px] min-h-[320px] space-y-4 overflow-y-auto p-5">
+          {messages.map((m) => (
+            <div key={m.id} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}>
+              <div
+                className={cn(
+                  "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+                  m.role === "user" ? "rounded-br-sm bg-primary text-primary-foreground" : "rounded-bl-sm bg-secondary/50",
+                )}
+              >
+                <span className="whitespace-pre-wrap">{m.displayed}</span>
+                {m.streaming && <span className="ml-0.5 inline-block h-3.5 w-1.5 animate-pulse bg-current/60 align-middle" />}
+                {m.artifact && !m.streaming && <AgentArtifactCard artifact={m.artifact} />}
+              </div>
+            </div>
+          ))}
+          {thinking && (
+            <div className="flex justify-start">
+              <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-secondary/50 px-4 py-3">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.2s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.1s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {messages.length <= 1 && (
+          <div className="flex flex-wrap gap-2 border-t border-border p-3">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSend(s)}
+                className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSend();
+          }}
+          className="flex items-center gap-2 border-t border-border p-3"
+        >
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask for a post, an email, a one-pager…"
+            disabled={thinking}
+            className="flex-1 rounded-full border border-border bg-background px-4 py-2 text-sm outline-none focus:border-primary/50 disabled:opacity-60"
+          />
+          <Button type="submit" size="sm" className="gap-1.5 rounded-full" disabled={thinking || !input.trim()}>
+            <Send className="h-3.5 w-3.5" /> Send
+          </Button>
+        </form>
+      </Card>
+    </div>
   );
 }
 

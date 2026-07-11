@@ -388,6 +388,13 @@ class Store {
     ];
     const names = ["Northwind Coffee", "Atlas Strength", "Mira Automation", "Verdant Books", "Helio Finance"];
     const industries = ["Specialty food & beverage", "Health & fitness", "SaaS / software", "Publishing", "Financial services"];
+    const competitorsByIndex = [
+      ["Blue Bottle Coffee", "Stumptown Coffee Roasters"],
+      ["Equinox", "F45 Training"],
+      ["Notion", "Coda"],
+      ["Chronicle Books", "Blackwell's"],
+      ["Chime", "SoFi"],
+    ];
     samples.forEach((s, i) => {
       const t = TIERS.find((x) => x.id === s.tier)!;
       const client: Client = {
@@ -422,7 +429,7 @@ class Store {
         industry: industries[i],
         whatTheySell: `${names[i]} — their core offering, delivered with care.`,
         targetAudience: "A specific, underserved segment.",
-        competitors: ["Competitor A", "Competitor B"],
+        competitors: competitorsByIndex[i],
         existingAssetsUrls: [],
         desiredAdjectives: s.adj,
         explicitExclusions: "Generic, cold, forgettable.",
