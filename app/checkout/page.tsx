@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Lock } from "lucide-react";
-import { STUDIO_NAME } from "@/lib/studio";
+import { ShieldCheck, Lock, KeyRound } from "lucide-react";
 import { TIERS, type Tier } from "@/lib/tiers";
 import { getStore } from "@/lib/mock/store";
+import { MarketingNav } from "@/components/marketing/nav";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,14 +30,17 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <MarketingNav />
       <div className="container py-10">
-        <Link href="/" className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to {STUDIO_NAME}
-        </Link>
-
         <div className="mx-auto max-w-3xl">
           <h1 className="text-3xl font-semibold tracking-tight">Choose your tier</h1>
           <p className="mt-2 text-muted-foreground">Pick a plan and start your brand call immediately after checkout.</p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" /> Secure checkout</span>
+            <span className="inline-flex items-center gap-1.5"><KeyRound className="h-3.5 w-3.5" /> Encrypted payment details</span>
+            <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Demo mode — no real charge</span>
+          </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {TIERS.map((t) => (
@@ -55,7 +57,7 @@ export default function CheckoutPage() {
                   {t.recommended && <Badge variant="accent">Popular</Badge>}
                 </div>
                 <div className="mt-2 text-2xl font-semibold">{t.priceLabel}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{t.callMinutes}-min call · {t.directionCount} direction(s) · {t.guidePages}-pg guide</div>
+                <div className="mt-1 text-xs text-muted-foreground">{t.callMinutes}-min call · {t.directionCount} direction{t.directionCount === 1 ? "" : "s"} · {t.guidePages}-pg guide</div>
               </button>
             ))}
           </div>

@@ -339,7 +339,7 @@ function AgentLogPanel({ orderId, runs }: { orderId: string; runs: Array<{ id: s
               </div>
               <div className="flex items-center gap-2">
                 {agentLogs.length > 0 && (
-                  <Badge variant="outline" className="text-xs">{agentLogs.length} steps</Badge>
+                  <Badge variant="outline" className="text-xs">{agentLogs.length} {agentLogs.length === 1 ? "step" : "steps"}</Badge>
                 )}
                 {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
               </div>

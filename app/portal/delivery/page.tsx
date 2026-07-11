@@ -335,7 +335,7 @@ function ResearchTab({ brief, competitors }: { brief: any; competitors: any[] })
         <h3 className="font-medium mb-3">Market Gap Analysis</h3>
         <p className="text-sm text-muted-foreground">
           Where incumbents go broad and polished, <strong>{brief.businessName}</strong> can carve a defensible position by being{" "}
-          <strong>{brief.desiredAdjectives.join(", ")}</strong> — and explicitly never {brief.explicitExclusions.toLowerCase()}.
+          <strong>{brief.desiredAdjectives.join(", ")}</strong> — and explicitly never {brief.explicitExclusions.toLowerCase().split(",")[0].trim()}.
         </p>
         <div className="mt-4 rounded-lg bg-primary/5 border border-primary/20 p-4 text-sm">
           <strong className="text-primary">Recommended wedge:</strong> own the{" "}

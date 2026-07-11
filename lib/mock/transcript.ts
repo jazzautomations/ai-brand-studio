@@ -170,13 +170,17 @@ export interface CollectedAnswers {
   market?: string;
 }
 
+function stripTrailingPunctuation(s: string): string {
+  return s.replace(/[.!?]+\s*$/, "").trim();
+}
+
 export function interpolate(line: string, a: CollectedAnswers): string {
   return line
-    .replace(/\{\{business\}\}/g, a.business || "your business")
-    .replace(/\{\{audience\}\}/g, a.audience || "your ideal customer")
-    .replace(/\{\{competitor\}\}/g, (a.competitors || "the competition").split(",")[0].trim())
-    .replace(/\{\{adjectives\}\}/g, a.adjectives || "confident and considered")
-    .replace(/\{\{exclusions\}\}/g, (a.exclusions || "generic").split(",")[0].trim());
+    .replace(/\{\{business\}\}/g, stripTrailingPunctuation(a.business || "your business"))
+    .replace(/\{\{audience\}\}/g, stripTrailingPunctuation(a.audience || "your ideal customer"))
+    .replace(/\{\{competitor\}\}/g, stripTrailingPunctuation((a.competitors || "the competition").split(",")[0].trim()))
+    .replace(/\{\{adjectives\}\}/g, stripTrailingPunctuation(a.adjectives || "confident and considered"))
+    .replace(/\{\{exclusions\}\}/g, stripTrailingPunctuation((a.exclusions || "generic").split(",")[0].trim()));
 }
 
 const SAMPLE_COMPETITOR_RESEARCH: CompetitorResearch[] = [
@@ -285,13 +289,46 @@ export function competitorResearchFor(competitors: string[]): CompetitorResearch
   }));
 }
 
+const NAME_STOP_WORDS = new Set([
+  "a", "an", "the", "for", "to", "with", "helping", "that", "who", "which",
+  "and", "of", "in", "on", "at", "from", "by",
+]);
+const NAME_LEADING_VERBS = /^(we|i|our|my)\s+(are|make|build|run|do|help|offer|provide|create|sell)\b\s*/i;
+
+function capitalizeWord(w: string): string {
+  if (w === w.toUpperCase()) return w; // keep acronyms like PT, AI as-is
+  return w
+    .split("-")
+    .map((p) => (p ? p[0].toUpperCase() + p.slice(1).toLowerCase() : p))
+    .join("-");
+}
+
 function deriveBusinessName(business: string): string {
   const trimmed = business.trim();
   if (!trimmed) return "Your Brand";
-  // grab the first capitalized-looking noun chunk, else first 2 words
+
+  // Prefer an explicit proper noun if the answer names one directly.
   const words = trimmed.replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/).filter(Boolean);
-  const cap = words.find((w) => /^[A-Z]/.test(w));
+  const cap = words.find((w) => /^[A-Z]/.test(w) && !["We", "I", "Our", "My"].includes(w));
   if (cap && cap.length > 2) return cap;
+
+  // Otherwise, the answer is usually a description ("We build automation
+  // tools for..."). Strip the leading pronoun+verb and take the first
+  // meaningful noun phrase instead of chopping the raw sentence.
+  const firstSentence = trimmed.split(/[.!?]/)[0];
+  const rest = firstSentence.replace(NAME_LEADING_VERBS, "");
+  const chunk: string[] = [];
+  for (const raw of rest.split(/\s+/)) {
+    const clean = raw.replace(/[^a-zA-Z0-9-]/g, "");
+    if (!clean) continue;
+    if (NAME_STOP_WORDS.has(clean.toLowerCase())) {
+      if (chunk.length) break;
+      continue;
+    }
+    chunk.push(clean);
+    if (chunk.length >= 3) break;
+  }
+  if (chunk.length) return chunk.map(capitalizeWord).join(" ");
   return words.slice(0, 2).join(" ") || "Your Brand";
 }
 
